@@ -1,6 +1,6 @@
 # Agent Engine Deploy
 
-A Agy skill for deploying, managing, and querying ADK agents on Vertex AI Agent Engine -- the managed runtime for production agent hosting.
+An Agy skill for deploying, managing, and querying ADK agents on Vertex AI Agent Engine -- the managed runtime for production agent hosting.
 
 ## What It Does
 
@@ -34,21 +34,25 @@ The skill activates when you mention:
 
 ## Installation
 
-### Option B: One-liner
+### Method 1: One-liner with curl (Recommended)
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh | bash -s -- agent-engine-deploy
 ```
 
-For user-scope installation (available across all projects):
+For user-scope installation (available globally across all projects):
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh | bash -s -- agent-engine-deploy --scope user
 ```
 
-### Option C: Manual
+### Method 2: Manual Copy
 
 ```bash
+# Workspace scope
+cp -r skills/agent-engine-deploy .agents/skills/agent-engine-deploy
+
+# User scope
 cp -r skills/agent-engine-deploy ~/.gemini/config/skills/agent-engine-deploy
 ```
 
