@@ -7,31 +7,23 @@ description: "Build single-agent and multi-agent systems using Google's Agent De
 
 ## Overview
 
-ADK is Google's open-source framework for building AI agents powered by Agy models. It supports single-agent and multi-agent architectures with built-in tool integration, state management, callbacks, guardrails, and deployment options.
+ADK is Google's open-source framework for building AI agents powered by Gemini and Vertex AI models. It supports single-agent and multi-agent architectures with built-in tool integration, state management, callbacks, guardrails, and deployment options.
 
 ## Documentation & Resources
 
 For up-to-date API references and detailed guides beyond this skill, always consult:
-- **ADK Docs Index**: https://google.github.io/adk-docs/llms.txt
-- **ADK Full Docs**: https://google.github.io/adk-docs/llms-full.txt
+- **Official Portal & Docs**: https://adk.dev
+- **ADK Docs Index (`llms.txt`)**: https://adk.dev/llms.txt
+- **ADK Full Docs (`llms-full.txt`)**: https://adk.dev/llms-full.txt
+- **API Reference**: https://adk.dev/api-reference/
 - **Official Samples**: https://github.com/google/adk-samples (Python, Java, TypeScript)
-
-### Agy Integration
-
-The ADK documentation supports the `/llms.txt` standard. For Agy users, install the ADK Docs Extension for live documentation queries:
-
-```bash
-gemini extensions install https://github.com/derailed-dash/adk-docs-ext
-```
-
-Once installed, Agy can autonomously search and read ADK docs while planning tasks and generating code.
 
 ## Supported Languages
 
 | Language | Package | Install |
 |----------|---------|---------|
 | Python | `google-adk` | `pip install google-adk` |
-| Java | `com.google.adk:google-adk` | Maven/Gradle |
+| Java / Kotlin | `com.google.adk:google-adk` | Maven / Gradle |
 | Go | `google.golang.org/adk` | `go get` |
 | TypeScript | `@google/adk` | `npm install @google/adk` |
 
@@ -45,6 +37,9 @@ This guide shows Python examples. For Java, Go, and TypeScript patterns, see [re
 | Sequential pipeline | `SequentialAgent` with ordered sub_agents |
 | Parallel execution | `ParallelAgent` with independent sub_agents |
 | Iterative refinement | `LoopAgent` with max_iterations or checker agent |
+| Live streaming agent | `LiveAgent` for bidirectional audio/video/text streaming |
+| Context caching | `context_cache_config` for long system prompts & documents |
+| Grounding | `google_search` or Vertex AI Search grounding tools |
 | Agent-as-tool | Wrap agent with `AgentTool` for on-demand delegation |
 | Remote agent (A2A) | `RemoteA2aAgent` + `to_a2a()` for cross-service agents |
 | Custom tools | Python functions with type hints + docstrings |

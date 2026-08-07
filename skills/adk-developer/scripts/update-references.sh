@@ -15,18 +15,13 @@ echo "Updating ADK reference documentation..."
 
 # ADK Python SDK - condensed API reference
 echo "  Fetching llms.txt (condensed API reference)..."
-curl -sL "https://google.github.io/adk-docs/llms.txt" \
+curl -sL "https://adk.dev/llms.txt" \
     -o "${REFERENCES_DIR}/llms.txt"
 
 # ADK Documentation - full text dump
 echo "  Fetching llms-full.txt (full documentation)..."
-curl -sL "https://google.github.io/adk-docs/llms-full.txt" \
+curl -sL "https://adk.dev/llms-full.txt" \
     -o "${REFERENCES_DIR}/llms-full.txt"
-
-# ADK Python getting started guide
-echo "  Fetching Python quickstart..."
-curl -sL "https://raw.githubusercontent.com/google/adk-docs/main/docs/get-started/python.md" \
-    -o "${REFERENCES_DIR}/getting-started-python.md"
 
 # Fix relative image/link paths to absolute GitHub URLs
 if [[ "$(uname)" == "Darwin" ]]; then
@@ -41,7 +36,7 @@ echo ""
 echo "References updated in ${REFERENCES_DIR}/"
 echo ""
 echo "Files:"
-ls -lh "${REFERENCES_DIR}/llms.txt" "${REFERENCES_DIR}/llms-full.txt" "${REFERENCES_DIR}/getting-started-python.md" 2>/dev/null
+ls -lh "${REFERENCES_DIR}/llms.txt" "${REFERENCES_DIR}/llms-full.txt"
 echo ""
 echo "These files provide the latest ADK API details and documentation."
 echo "The skill's curated guides (architecture-guide.md, etc.) are maintained manually."
