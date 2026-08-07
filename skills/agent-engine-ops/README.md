@@ -1,6 +1,6 @@
 # Agent Engine Ops
 
-A Agy skill for monitoring, tracing, securing, and evaluating agents on Vertex AI Agent Engine.
+An Agy skill for monitoring, tracing, securing, and evaluating agents on Vertex AI Agent Engine.
 
 ## What It Does
 
@@ -36,21 +36,25 @@ The skill activates when you mention:
 
 ## Installation
 
-### Option B: One-liner
+### Method 1: One-liner with curl (Recommended)
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh | bash -s -- agent-engine-ops
 ```
 
-For user-scope installation (available across all projects):
+For user-scope installation (available globally across all projects):
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh | bash -s -- agent-engine-ops --scope user
 ```
 
-### Option C: Manual
+### Method 2: Manual Copy
 
 ```bash
+# Workspace scope
+cp -r skills/agent-engine-ops .agents/skills/agent-engine-ops
+
+# User scope
 cp -r skills/agent-engine-ops ~/.gemini/config/skills/agent-engine-ops
 ```
 

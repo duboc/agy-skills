@@ -53,13 +53,14 @@ root_agent = Agent(
 
 adk_app = AdkApp(agent=root_agent)
 
-# Enable tracing via environment variable
+# Enable tracing and telemetry via environment variables
 agent_engine = client.agent_engines.create(
     agent_engine=adk_app,
     display_name="traced-agent",
     requirements=["google-cloud-aiplatform[adk,agent_engines]"],
     env_vars={
         "ENABLE_TRACING": "true",
+        "GOOGLE_CLOUD_AGENT_ENGINE_ENABLE_TELEMETRY": "true",
     },
 )
 ```
