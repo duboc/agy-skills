@@ -1,0 +1,9 @@
+{
+  "name": "html-to-pptx-skill",
+  "version": "1.0.0",
+  "description": "Convert MARP HTML slides to editable PowerPoint presentations",
+  "private": true,
+  "dependencies": {
+    "pptxgenjs": "^3.12.0"
+  }
+}

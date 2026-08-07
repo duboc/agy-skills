@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Architecture Diagram &mdash; Visual Explainer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Custom Properties ─────────────────────────────────── */
+    :root {
+      --bg:         #0f1923;
+      --surface:    #182633;
+      --surface-hi: #1e3044;
+      --border:     #2a4157;
+      --text:       #d4dce6;
+      --text-dim:   #7e96ad;
+      --accent:     #4ea8de;
+      --accent-dim: #2a6f9e;
+      --success:    #4ade80;
+      --warning:    #fbbf24;
+      --danger:     #f87171;
+      --grid-line:  rgba(78,168,222,0.06);
+      --radius:     10px;
+      --font-sans:  'DM Sans', system-ui, sans-serif;
+      --font-mono:  'Fira Code', ui-monospace, monospace;
+    }
+
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg:         #edf2f7;
+        --surface:    #ffffff;
+        --surface-hi: #f7fafc;
+        --border:     #cbd5e1;
+        --text:       #1e293b;
+        --text-dim:   #64748b;
+        --accent:     #2563eb;
+        --accent-dim: #93b4f5;
+        --grid-line:  rgba(37,99,235,0.05);
+      }
+    }
+
+    /* ── Reset & Base ──────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100dvh;
+      display: flex;
+      justify-content: center;
+      padding: 3rem 1.5rem;
+      /* Blueprint grid background */
+      background-image:
+        linear-gradient(var(--grid-line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+
+    /* ── Page Container ────────────────────────────────────── */
+    .ve-page {
+      width: 100%;
+      max-width: 820px;
+    }
+
+    .ve-page > header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    .ve-page > header h1 {
+      font-size: 1.75rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.35rem;
+    }
+
+    .ve-page > header p {
+      color: var(--text-dim);
+      font-size: 0.92rem;
+    }
+
+    /* ── Architecture Grid ─────────────────────────────────── */
+    .arch-grid {
+      display: grid;
+      grid-template-areas:
+        "client"
+        "arrow1"
+        "api"
+        "arrow2"
+        "service"
+        "arrow3"
+        "data"
+        "arrow4"
+        "infra";
+      gap: 0;
+      justify-items: center;
+    }
+
+    .arch-grid > .area-client  { grid-area: client; }
+    .arch-grid > .area-api     { grid-area: api; }
+    .arch-grid > .area-service { grid-area: service; }
+    .arch-grid > .area-data    { grid-area: data; }
+    .arch-grid > .area-infra   { grid-area: infra; }
+
+    .arch-grid > .arrow-1 { grid-area: arrow1; }
+    .arch-grid > .arrow-2 { grid-area: arrow2; }
+    .arch-grid > .arrow-3 { grid-area: arrow3; }
+    .arch-grid > .arrow-4 { grid-area: arrow4; }
+
+    /* ── Card Component ────────────────────────────────────── */
+    .ve-card {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem 1.75rem;
+      position: relative;
+      transition: border-color 0.2s ease;
+    }
+
+    .ve-card:hover {
+      border-color: var(--accent-dim);
+    }
+
+    .ve-card--hero {
+      background: linear-gradient(135deg, var(--surface) 60%, var(--surface-hi));
+      border-color: var(--accent);
+      box-shadow: 0 0 24px rgba(78,168,222,0.08);
+    }
+
+    .ve-card--recessed {
+      background: var(--bg);
+      border-style: dashed;
+    }
+
+    .ve-card__label {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+      background: rgba(78,168,222,0.1);
+      padding: 0.2rem 0.55rem;
+      border-radius: 4px;
+      margin-bottom: 0.75rem;
+    }
+
+    .ve-card h2 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .ve-card p {
+      color: var(--text-dim);
+      font-size: 0.88rem;
+      line-height: 1.55;
+    }
+
+    .ve-card__tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 0.85rem;
+    }
+
+    .ve-card__tag {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      background: var(--surface-hi);
+      border: 1px solid var(--border);
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+    }
+
+    /* ── SVG Flow Arrows ───────────────────────────────────── */
+    .flow-arrow {
+      display: flex;
+      justify-content: center;
+      padding: 0.25rem 0;
+    }
+
+    .flow-arrow svg {
+      display: block;
+    }
+
+    /* ── Staggered Fade-in Animation ───────────────────────── */
+    .ve-card,
+    .flow-arrow {
+      opacity: 0;
+      transform: translateY(18px);
+      animation: fadeSlideIn 0.5s ease forwards;
+    }
+
+    .arch-grid > :nth-child(1) { animation-delay: 0.05s; }
+    .arch-grid > :nth-child(2) { animation-delay: 0.15s; }
+    .arch-grid > :nth-child(3) { animation-delay: 0.25s; }
+    .arch-grid > :nth-child(4) { animation-delay: 0.35s; }
+    .arch-grid > :nth-child(5) { animation-delay: 0.45s; }
+    .arch-grid > :nth-child(6) { animation-delay: 0.55s; }
+    .arch-grid > :nth-child(7) { animation-delay: 0.65s; }
+    .arch-grid > :nth-child(8) { animation-delay: 0.75s; }
+    .arch-grid > :nth-child(9) { animation-delay: 0.85s; }
+
+    @keyframes fadeSlideIn {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .ve-card,
+      .flow-arrow {
+        animation: none;
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    /* ── Responsive ────────────────────────────────────────── */
+    @media (max-width: 600px) {
+      body { padding: 1.5rem 1rem; }
+      .ve-card { padding: 1.15rem 1.25rem; }
+      .ve-page > header h1 { font-size: 1.35rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="ve-page">
+  <header>
+    <h1>Order Processing Platform</h1>
+    <p>End-to-end architecture &mdash; client to infrastructure</p>
+  </header>
+
+  <div class="arch-grid">
+
+    <!-- Client Layer -->
+    <div class="ve-card ve-card--hero area-client">
+      <span class="ve-card__label">Client Layer</span>
+      <h2>Web &amp; Mobile Clients</h2>
+      <p>Single-page application and native mobile apps consuming the public API via HTTPS. Handles authentication flows, local caching, and optimistic UI updates.</p>
+      <div class="ve-card__tags">
+        <span class="ve-card__tag">React 19</span>
+        <span class="ve-card__tag">Swift UI</span>
+        <span class="ve-card__tag">Kotlin Compose</span>
+      </div>
+    </div>
+
+    <!-- Arrow 1 -->
+    <div class="flow-arrow arrow-1">
+      <svg width="2" height="38" viewBox="0 0 2 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <line x1="1" y1="0" x2="1" y2="30" stroke="var(--accent)" stroke-width="2" stroke-dasharray="4 3"/>
+        <polygon points="1,38 -3,28 5,28" fill="var(--accent)"/>
+      </svg>
+    </div>
+
+    <!-- API Gateway Layer -->
+    <div class="ve-card area-api">
+      <span class="ve-card__label">API Gateway</span>
+      <h2>Edge &amp; Routing</h2>
+      <p>Rate limiting, JWT validation, request routing, and response caching. Acts as the single entry point for all external traffic and enforces CORS policies.</p>
+      <div class="ve-card__tags">
+        <span class="ve-card__tag">Cloud Endpoints</span>
+        <span class="ve-card__tag">Envoy Proxy</span>
+        <span class="ve-card__tag">OAuth 2.0</span>
+      </div>
+    </div>
+
+    <!-- Arrow 2 -->
+    <div class="flow-arrow arrow-2">
+      <svg width="2" height="38" viewBox="0 0 2 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <line x1="1" y1="0" x2="1" y2="30" stroke="var(--accent)" stroke-width="2" stroke-dasharray="4 3"/>
+        <polygon points="1,38 -3,28 5,28" fill="var(--accent)"/>
+      </svg>
+    </div>
+
+    <!-- Service Layer -->
+    <div class="ve-card area-service">
+      <span class="ve-card__label">Service Layer</span>
+      <h2>Domain Services</h2>
+      <p>Stateless microservices implementing core business logic. Each service owns its bounded context and communicates via asynchronous events for cross-domain workflows.</p>
+      <div class="ve-card__tags">
+        <span class="ve-card__tag">order-svc</span>
+        <span class="ve-card__tag">payment-svc</span>
+        <span class="ve-card__tag">inventory-svc</span>
+        <span class="ve-card__tag">notification-svc</span>
+      </div>
+    </div>
+
+    <!-- Arrow 3 -->
+    <div class="flow-arrow arrow-3">
+      <svg width="2" height="38" viewBox="0 0 2 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <line x1="1" y1="0" x2="1" y2="30" stroke="var(--accent)" stroke-width="2" stroke-dasharray="4 3"/>
+        <polygon points="1,38 -3,28 5,28" fill="var(--accent)"/>
+      </svg>
+    </div>
+
+    <!-- Data Layer -->
+    <div class="ve-card area-data">
+      <span class="ve-card__label">Data Layer</span>
+      <h2>Persistence &amp; Messaging</h2>
+      <p>Polyglot persistence strategy with event sourcing for order state. Pub/Sub handles inter-service communication while Cloud SQL stores transactional data.</p>
+      <div class="ve-card__tags">
+        <span class="ve-card__tag">Cloud SQL</span>
+        <span class="ve-card__tag">Firestore</span>
+        <span class="ve-card__tag">Pub/Sub</span>
+        <span class="ve-card__tag">Memorystore</span>
+      </div>
+    </div>
+
+    <!-- Arrow 4 -->
+    <div class="flow-arrow arrow-4">
+      <svg width="2" height="38" viewBox="0 0 2 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <line x1="1" y1="0" x2="1" y2="30" stroke="var(--accent)" stroke-width="2" stroke-dasharray="4 3"/>
+        <polygon points="1,38 -3,28 5,28" fill="var(--accent)"/>
+      </svg>
+    </div>
+
+    <!-- Infrastructure Layer -->
+    <div class="ve-card ve-card--recessed area-infra">
+      <span class="ve-card__label">Infrastructure</span>
+      <h2>Platform &amp; Observability</h2>
+      <p>Kubernetes-managed compute with auto-scaling, centralized logging, distributed tracing, and SLO-based alerting. Infrastructure defined and versioned as code.</p>
+      <div class="ve-card__tags">
+        <span class="ve-card__tag">GKE</span>
+        <span class="ve-card__tag">Terraform</span>
+        <span class="ve-card__tag">Cloud Monitoring</span>
+        <span class="ve-card__tag">Cloud Trace</span>
+      </div>
+    </div>
+
+  </div><!-- /arch-grid -->
+</div><!-- /ve-page -->
+
+</body>
+</html>

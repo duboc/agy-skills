@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Data Table &mdash; Visual Explainer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Custom Properties ─────────────────────────────────── */
+    :root {
+      --bg:           #faf7f5;
+      --surface:      #ffffff;
+      --border:       #e8e0d8;
+      --border-light: #f0ebe6;
+      --text:         #2d2520;
+      --text-dim:     #8a7e74;
+      --accent:       #b84c2e;
+      --accent-soft:  #fbeee9;
+      --sage:         #5a7a64;
+      --sage-soft:    #eaf2ec;
+      --amber:        #a16207;
+      --amber-soft:   #fef3c7;
+      --danger:       #be3a3a;
+      --danger-soft:  #fee2e2;
+      --row-alt:      #fcfaf8;
+      --row-hover:    #f7f1ec;
+      --thead-bg:     #f5efe9;
+      --radius:       8px;
+      --font-sans:    'DM Sans', system-ui, sans-serif;
+      --font-mono:    'Fira Code', ui-monospace, monospace;
+    }
+
+    /* ── Reset & Base ──────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 3rem 1.5rem;
+    }
+
+    /* ── Page Header ───────────────────────────────────────── */
+    .page-header {
+      text-align: center;
+      max-width: 600px;
+      margin-bottom: 2rem;
+    }
+
+    .page-header h1 {
+      font-size: 1.65rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.35rem;
+    }
+
+    .page-header p {
+      color: var(--text-dim);
+      font-size: 0.9rem;
+    }
+
+    /* ── Table Wrapper ─────────────────────────────────────── */
+    .table-wrapper {
+      width: 100%;
+      max-width: 1020px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow-x: auto;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+    }
+
+    /* ── Table ─────────────────────────────────────────────── */
+    table {
+      width: 100%;
+      min-width: 760px;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+
+    colgroup .col-name    { width: 20%; }
+    colgroup .col-status  { width: 12%; }
+    colgroup .col-version { width: 12%; }
+    colgroup .col-risk    { width: 12%; }
+    colgroup .col-deps    { width: 10%; }
+    colgroup .col-action  { width: 34%; }
+
+    /* ── Sticky Header ─────────────────────────────────────── */
+    thead {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+
+    thead th {
+      background: var(--thead-bg);
+      border-bottom: 2px solid var(--border);
+      padding: 0.75rem 1rem;
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-dim);
+      white-space: nowrap;
+    }
+
+    thead th.num {
+      text-align: right;
+    }
+
+    /* ── Sticky First Column ───────────────────────────────── */
+    thead th:first-child,
+    tbody td:first-child {
+      position: sticky;
+      left: 0;
+      z-index: 1;
+    }
+
+    thead th:first-child {
+      z-index: 3;
+      background: var(--thead-bg);
+    }
+
+    tbody td:first-child {
+      background: inherit;
+    }
+
+    /* ── Body ──────────────────────────────────────────────── */
+    tbody tr {
+      border-bottom: 1px solid var(--border-light);
+      transition: background 0.12s;
+    }
+
+    tbody tr:nth-child(even) {
+      background: var(--row-alt);
+    }
+
+    tbody tr:hover {
+      background: var(--row-hover);
+    }
+
+    tbody td {
+      padding: 0.7rem 1rem;
+      vertical-align: top;
+      line-height: 1.5;
+    }
+
+    tbody td.num {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+    }
+
+    /* ── Component Name ────────────────────────────────────── */
+    .comp-name {
+      font-weight: 600;
+      display: block;
+    }
+
+    .comp-detail {
+      display: block;
+      color: var(--text-dim);
+      font-size: 0.8rem;
+      margin-top: 0.15rem;
+    }
+
+    /* ── Code References ───────────────────────────────────── */
+    code {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      background: var(--border-light);
+      border: 1px solid var(--border);
+      padding: 0.1rem 0.35rem;
+      border-radius: 3px;
+      white-space: nowrap;
+    }
+
+    /* ── Status Badges ─────────────────────────────────────── */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.78rem;
+      font-weight: 500;
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    .badge--ok {
+      color: var(--sage);
+      background: var(--sage-soft);
+    }
+
+    .badge--warn {
+      color: var(--amber);
+      background: var(--amber-soft);
+    }
+
+    .badge--error {
+      color: var(--danger);
+      background: var(--danger-soft);
+    }
+
+    .badge__icon {
+      display: inline-flex;
+      width: 14px;
+      height: 14px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .badge__icon svg {
+      width: 12px;
+      height: 12px;
+    }
+
+    /* ── Risk Indicator ────────────────────────────────────── */
+    .risk {
+      font-weight: 600;
+      font-size: 0.82rem;
+    }
+
+    .risk--low    { color: var(--sage); }
+    .risk--medium { color: var(--amber); }
+    .risk--high   { color: var(--danger); }
+
+    /* ── Footer ────────────────────────────────────────────── */
+    .table-footer {
+      padding: 0.65rem 1rem;
+      border-top: 1px solid var(--border-light);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      color: var(--text-dim);
+    }
+
+    .table-footer strong {
+      color: var(--text);
+    }
+
+    /* ── Responsive ────────────────────────────────────────── */
+    @media (max-width: 600px) {
+      body { padding: 1.5rem 0.75rem; }
+      .page-header h1 { font-size: 1.3rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>Frontend Component Audit</h1>
+  <p>Dependency health check &mdash; Q1 2026 review cycle</p>
+</div>
+
+<div class="table-wrapper">
+  <table>
+    <colgroup>
+      <col class="col-name" />
+      <col class="col-status" />
+      <col class="col-version" />
+      <col class="col-risk" />
+      <col class="col-deps" />
+      <col class="col-action" />
+    </colgroup>
+    <thead>
+      <tr>
+        <th>Component</th>
+        <th>Status</th>
+        <th>Version</th>
+        <th>Risk</th>
+        <th class="num">Deps</th>
+        <th>Action Required</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <span class="comp-name">AuthProvider</span>
+          <small class="comp-detail"><code>@app/auth</code></small>
+        </td>
+        <td>
+          <span class="badge badge--ok">
+            <span class="badge__icon"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6.5L5 9l4.5-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            Healthy
+          </span>
+        </td>
+        <td><code>3.2.1</code></td>
+        <td><span class="risk risk--low">Low</span></td>
+        <td class="num">4</td>
+        <td>None &mdash; last audited 12 days ago</td>
+      </tr>
+      <tr>
+        <td>
+          <span class="comp-name">DataGrid</span>
+          <small class="comp-detail"><code>@app/ui/data-grid</code></small>
+        </td>
+        <td>
+          <span class="badge badge--warn">
+            <span class="badge__icon"><svg viewBox="0 0 12 12" fill="none"><path d="M6 3v4M6 9h.005" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+            Outdated
+          </span>
+        </td>
+        <td><code>2.8.0</code></td>
+        <td><span class="risk risk--medium">Medium</span></td>
+        <td class="num">11</td>
+        <td>Upgrade to <code>3.x</code> &mdash; breaking change in column API</td>
+      </tr>
+      <tr>
+        <td>
+          <span class="comp-name">PaymentForm</span>
+          <small class="comp-detail"><code>@app/checkout</code></small>
+        </td>
+        <td>
+          <span class="badge badge--error">
+            <span class="badge__icon"><svg viewBox="0 0 12 12" fill="none"><path d="M3 3l6 6M9 3l-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+            Vulnerable
+          </span>
+        </td>
+        <td><code>1.4.3</code></td>
+        <td><span class="risk risk--high">High</span></td>
+        <td class="num">7</td>
+        <td>CVE-2026-1182 in <code>card-validator</code> &mdash; patch immediately</td>
+      </tr>
+      <tr>
+        <td>
+          <span class="comp-name">NotificationBell</span>
+          <small class="comp-detail"><code>@app/ui/notifications</code></small>
+        </td>
+        <td>
+          <span class="badge badge--ok">
+            <span class="badge__icon"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6.5L5 9l4.5-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            Healthy
+          </span>
+        </td>
+        <td><code>5.0.2</code></td>
+        <td><span class="risk risk--low">Low</span></td>
+        <td class="num">2</td>
+        <td>None</td>
+      </tr>
+      <tr>
+        <td>
+          <span class="comp-name">SearchAutocomplete</span>
+          <small class="comp-detail"><code>@app/search</code></small>
+        </td>
+        <td>
+          <span class="badge badge--warn">
+            <span class="badge__icon"><svg viewBox="0 0 12 12" fill="none"><path d="M6 3v4M6 9h.005" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+            Outdated
+          </span>
+        </td>
+        <td><code>4.1.0</code></td>
+        <td><span class="risk risk--medium">Medium</span></td>
+        <td class="num">9</td>
+        <td>Peer dep conflict with <code>react@19</code> &mdash; awaiting upstream fix</td>
+      </tr>
+      <tr>
+        <td>
+          <span class="comp-name">ChartEngine</span>
+          <small class="comp-detail"><code>@app/analytics/charts</code></small>
+        </td>
+        <td>
+          <span class="badge badge--ok">
+            <span class="badge__icon"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6.5L5 9l4.5-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            Healthy
+          </span>
+        </td>
+        <td><code>7.3.0</code></td>
+        <td><span class="risk risk--low">Low</span></td>
+        <td class="num">3</td>
+        <td>None &mdash; tree-shaking verified, 42 kB gzipped</td>
+      </tr>
+      <tr>
+        <td>
+          <span class="comp-name">FileUploader</span>
+          <small class="comp-detail"><code>@app/ui/uploads</code></small>
+        </td>
+        <td>
+          <span class="badge badge--error">
+            <span class="badge__icon"><svg viewBox="0 0 12 12" fill="none"><path d="M3 3l6 6M9 3l-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+            Vulnerable
+          </span>
+        </td>
+        <td><code>2.0.1</code></td>
+        <td><span class="risk risk--high">High</span></td>
+        <td class="num">6</td>
+        <td>Path traversal in <code>mime-check</code> &mdash; upgrade to <code>2.1.0</code></td>
+      </tr>
+      <tr>
+        <td>
+          <span class="comp-name">FeatureFlags</span>
+          <small class="comp-detail"><code>@app/platform/flags</code></small>
+        </td>
+        <td>
+          <span class="badge badge--warn">
+            <span class="badge__icon"><svg viewBox="0 0 12 12" fill="none"><path d="M6 3v4M6 9h.005" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+            Outdated
+          </span>
+        </td>
+        <td><code>1.9.4</code></td>
+        <td><span class="risk risk--low">Low</span></td>
+        <td class="num">1</td>
+        <td>Migrate to <code>@openfeature/sdk</code> per ADR-047</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="table-footer">
+    <span>Showing <strong>8</strong> of 8 components</span>
+    <span>Last scan: <strong>2026-03-28 14:32 UTC</strong></span>
+  </div>
+</div>
+
+</body>
+</html>

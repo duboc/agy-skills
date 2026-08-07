@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Slide Deck &mdash; Visual Explainer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Custom Properties ─────────────────────────────────── */
+    :root {
+      --bg:         #0c1220;
+      --surface:    #111827;
+      --border:     #1f2937;
+      --text:       #e5e7eb;
+      --text-dim:   #6b7280;
+      --gold:       #d4a017;
+      --gold-soft:  rgba(212,160,23,0.12);
+      --gold-glow:  rgba(212,160,23,0.25);
+      --navy:       #1e3a5f;
+      --radius:     6px;
+      --font-serif: 'Instrument Serif', Georgia, serif;
+      --font-mono:  'JetBrains Mono', ui-monospace, monospace;
+    }
+
+    /* ── Reset & Base ──────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      font-family: var(--font-serif);
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    /* ── Progress Bar ──────────────────────────────────────── */
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: var(--gold);
+      z-index: 100;
+      transition: width 0.35s ease;
+    }
+
+    /* ── Slide Counter ─────────────────────────────────────── */
+    .slide-counter {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 2rem;
+      z-index: 100;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      color: var(--text-dim);
+      user-select: none;
+    }
+
+    /* ── Navigation Buttons ────────────────────────────────── */
+    .nav-btn {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 100;
+      width: 44px;
+      height: 44px;
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      background: var(--surface);
+      color: var(--text-dim);
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.2s, color 0.2s;
+      user-select: none;
+    }
+
+    .nav-btn:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    .nav-btn--prev { left: 1.25rem; }
+    .nav-btn--next { right: 1.25rem; }
+
+    .nav-btn:disabled {
+      opacity: 0.25;
+      cursor: default;
+    }
+
+    /* ── Slide Container ───────────────────────────────────── */
+    .slides-wrapper {
+      position: relative;
+      width: 100%;
+      height: 100dvh;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4rem 6rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.45s ease;
+    }
+
+    .slide.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .slide__inner {
+      width: 100%;
+      max-width: 960px;
+    }
+
+    /* ── Typography Scale ──────────────────────────────────── */
+    .slide h1 {
+      font-size: 3.5rem;
+      font-weight: 400;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+    }
+
+    .slide h2 {
+      font-size: 2.4rem;
+      font-weight: 400;
+      line-height: 1.2;
+      letter-spacing: -0.01em;
+      margin-bottom: 1.5rem;
+    }
+
+    .slide h3 {
+      font-size: 1.5rem;
+      font-weight: 400;
+      margin-bottom: 1rem;
+    }
+
+    .slide p,
+    .slide li {
+      font-size: 1.5rem;
+      line-height: 1.6;
+    }
+
+    .slide .subtitle {
+      font-family: var(--font-mono);
+      font-size: 1.1rem;
+      color: var(--gold);
+      margin-top: 1rem;
+    }
+
+    .slide .dim {
+      color: var(--text-dim);
+    }
+
+    /* ── Gold Accent Divider ───────────────────────────────── */
+    .gold-rule {
+      width: 60px;
+      height: 2px;
+      background: var(--gold);
+      border: none;
+      margin: 1.5rem 0;
+    }
+
+    /* ── Bullet List ───────────────────────────────────────── */
+    .slide ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .slide ul li {
+      padding: 0.5rem 0;
+      padding-left: 1.6rem;
+      position: relative;
+    }
+
+    .slide ul li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 1rem;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--gold);
+    }
+
+    .slide code {
+      font-family: var(--font-mono);
+      font-size: 0.85em;
+      background: var(--gold-soft);
+      color: var(--gold);
+      padding: 0.15em 0.45em;
+      border-radius: 4px;
+    }
+
+    /* ── Title Slide ───────────────────────────────────────── */
+    .slide--title {
+      text-align: center;
+    }
+
+    .slide--title .slide__inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .slide--title .gold-rule {
+      margin: 1.5rem auto;
+    }
+
+    /* ── Split Slide ───────────────────────────────────────── */
+    .split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: center;
+    }
+
+    .split__diagram {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      aspect-ratio: 4 / 3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      color: var(--text-dim);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .split__diagram::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(rgba(212,160,23,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(212,160,23,0.03) 1px, transparent 1px);
+      background-size: 30px 30px;
+    }
+
+    /* ── Table Slide ───────────────────────────────────────── */
+    .slide-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 1.15rem;
+    }
+
+    .slide-table thead th {
+      text-align: left;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--gold);
+      padding: 0.75rem 1rem;
+      border-bottom: 2px solid var(--border);
+    }
+
+    .slide-table tbody td {
+      padding: 0.65rem 1rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    .slide-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .slide-table .num {
+      text-align: right;
+      font-family: var(--font-mono);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* ── Quote Slide ───────────────────────────────────────── */
+    .slide--quote {
+      text-align: center;
+    }
+
+    .slide--quote blockquote {
+      font-size: 2.4rem;
+      font-style: italic;
+      line-height: 1.4;
+      max-width: 780px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .slide--quote blockquote::before {
+      content: '\201C';
+      font-size: 6rem;
+      color: var(--gold);
+      position: absolute;
+      top: -2.5rem;
+      left: -2.5rem;
+      line-height: 1;
+      opacity: 0.5;
+    }
+
+    .slide--quote cite {
+      display: block;
+      margin-top: 1.5rem;
+      font-style: normal;
+      font-family: var(--font-mono);
+      font-size: 1rem;
+      color: var(--text-dim);
+    }
+
+    /* ── Responsive ────────────────────────────────────────── */
+    @media (max-width: 768px) {
+      .slide { padding: 2.5rem 2rem; }
+      .slide h1 { font-size: 2.2rem; }
+      .slide h2 { font-size: 1.7rem; }
+      .slide p, .slide li { font-size: 1.15rem; }
+      .slide--quote blockquote { font-size: 1.6rem; }
+      .split { grid-template-columns: 1fr; gap: 1.5rem; }
+      .nav-btn--prev { left: 0.5rem; }
+      .nav-btn--next { right: 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Progress Bar -->
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- Navigation -->
+<button class="nav-btn nav-btn--prev" id="prevBtn" aria-label="Previous slide">&#8592;</button>
+<button class="nav-btn nav-btn--next" id="nextBtn" aria-label="Next slide">&#8594;</button>
+
+<!-- Slide Counter -->
+<div class="slide-counter" id="slideCounter"></div>
+
+<!-- Slides -->
+<div class="slides-wrapper">
+
+  <!-- Slide 1: Title -->
+  <div class="slide slide--title active" data-slide="1">
+    <div class="slide__inner">
+      <h1>Platform Modernization</h1>
+      <hr class="gold-rule" />
+      <p class="subtitle">Engineering Strategy &mdash; Q2 2026</p>
+      <p class="dim" style="font-size:1rem; margin-top:2rem; font-family:var(--font-mono);">Architecture Review Board &bull; March 30, 2026</p>
+    </div>
+  </div>
+
+  <!-- Slide 2: Content / Bullets -->
+  <div class="slide" data-slide="2">
+    <div class="slide__inner">
+      <h2>Why Now?</h2>
+      <hr class="gold-rule" />
+      <ul>
+        <li>Monolith deployment cycle has grown to <code>4.5 hours</code> &mdash; blocking weekly releases</li>
+        <li>Database connection pool saturation at <code>82%</code> during peak traffic</li>
+        <li>Three critical CVEs in legacy auth module remain unpatched due to coupling</li>
+        <li>New market launch requires independent scaling of payment processing</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Slide 3: Split (text + diagram) -->
+  <div class="slide" data-slide="3">
+    <div class="slide__inner">
+      <div class="split">
+        <div>
+          <h2>Target Architecture</h2>
+          <hr class="gold-rule" />
+          <p style="font-size:1.2rem;">Domain-driven decomposition into six bounded contexts, each independently deployable on Cloud Run.</p>
+          <ul style="margin-top:1rem;">
+            <li>Event-driven via Pub/Sub</li>
+            <li>Shared-nothing data stores</li>
+            <li>API Gateway at edge</li>
+          </ul>
+        </div>
+        <div class="split__diagram">
+          <span>[ Architecture Diagram ]</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 4: Table -->
+  <div class="slide" data-slide="4">
+    <div class="slide__inner">
+      <h2>Migration Timeline</h2>
+      <hr class="gold-rule" />
+      <table class="slide-table">
+        <thead>
+          <tr>
+            <th>Phase</th>
+            <th>Scope</th>
+            <th>Duration</th>
+            <th class="num">Team Size</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Strangler Fig Setup</td>
+            <td>API Gateway + routing layer</td>
+            <td>4 weeks</td>
+            <td class="num">3</td>
+          </tr>
+          <tr>
+            <td>Auth Extraction</td>
+            <td>OAuth 2.1 service + token migration</td>
+            <td>6 weeks</td>
+            <td class="num">4</td>
+          </tr>
+          <tr>
+            <td>Payment Decomposition</td>
+            <td>Payment processing + ledger</td>
+            <td>8 weeks</td>
+            <td class="num">5</td>
+          </tr>
+          <tr>
+            <td>Data Migration</td>
+            <td>Event sourcing + CQRS rollout</td>
+            <td>6 weeks</td>
+            <td class="num">4</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Slide 5: Quote -->
+  <div class="slide slide--quote" data-slide="5">
+    <div class="slide__inner">
+      <blockquote>
+        The best time to modernize was two years ago. The second best time is before the next outage.
+      </blockquote>
+      <cite>&mdash; Engineering Retrospective, January 2026</cite>
+    </div>
+  </div>
+
+</div><!-- /slides-wrapper -->
+
+<script>
+(function () {
+  'use strict';
+
+  const slides      = document.querySelectorAll('.slide');
+  const progressBar = document.getElementById('progressBar');
+  const counter     = document.getElementById('slideCounter');
+  const prevBtn     = document.getElementById('prevBtn');
+  const nextBtn     = document.getElementById('nextBtn');
+  const total       = slides.length;
+  let current       = 0;
+
+  // ── Render ───────────────────────────────────────────────
+  function render() {
+    slides.forEach(function (s, i) {
+      s.classList.toggle('active', i === current);
+    });
+    progressBar.style.width = ((current + 1) / total * 100) + '%';
+    counter.textContent = (current + 1) + ' / ' + total;
+    prevBtn.disabled = current === 0;
+    nextBtn.disabled = current === total - 1;
+  }
+
+  function goTo(index) {
+    current = Math.max(0, Math.min(total - 1, index));
+    render();
+  }
+
+  function next() { goTo(current + 1); }
+  function prev() { goTo(current - 1); }
+
+  // ── Button Nav ───────────────────────────────────────────
+  prevBtn.addEventListener('click', prev);
+  nextBtn.addEventListener('click', next);
+
+  // ── Keyboard Nav ─────────────────────────────────────────
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowRight' || e.key === ' ') {
+      e.preventDefault();
+      next();
+    }
+    if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      prev();
+    }
+    if (e.key === 'Home') { e.preventDefault(); goTo(0); }
+    if (e.key === 'End')  { e.preventDefault(); goTo(total - 1); }
+  });
+
+  // ── Touch / Swipe Nav ────────────────────────────────────
+  let touchStartX = 0;
+  let touchStartY = 0;
+
+  document.addEventListener('touchstart', function (e) {
+    touchStartX = e.changedTouches[0].clientX;
+    touchStartY = e.changedTouches[0].clientY;
+  }, { passive: true });
+
+  document.addEventListener('touchend', function (e) {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    const dy = e.changedTouches[0].clientY - touchStartY;
+    // Only trigger if horizontal swipe is dominant and > 50px
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+      if (dx < 0) next();
+      else        prev();
+    }
+  }, { passive: true });
+
+  // ── Init ─────────────────────────────────────────────────
+  render();
+})();
+</script>
+
+</body>
+</html>
