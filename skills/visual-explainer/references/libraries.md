@@ -317,3 +317,101 @@ body {
   letter-spacing: -0.02em;
 }
 ```
+
+---
+
+## Prism.js Syntax Highlighting
+
+### CDN URLs
+
+```html
+<link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-typescript.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-go.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-yaml.min.js"></script>
+```
+
+---
+
+## Zero-Dependency Pan & Zoom Engine
+
+```javascript
+const viewport = document.getElementById('viewport');
+const canvas = document.getElementById('canvas');
+let scale = 1, panX = 0, panY = 0, isDragging = false, startX = 0, startY = 0;
+
+function updateTransform() {
+  canvas.style.transform = `translate(${panX}px, ${panY}px) scale(${scale})`;
+}
+
+viewport.addEventListener('mousedown', (e) => {
+  if (e.target.closest('button') || e.target.closest('input')) return;
+  isDragging = true;
+  startX = e.clientX - panX;
+  startY = e.clientY - panY;
+  viewport.style.cursor = 'grabbing';
+});
+
+window.addEventListener('mousemove', (e) => {
+  if (!isDragging) return;
+  panX = e.clientX - startX;
+  panY = e.clientY - startY;
+  updateTransform();
+});
+
+window.addEventListener('mouseup', () => {
+  isDragging = false;
+  viewport.style.cursor = 'grab';
+});
+
+viewport.addEventListener('wheel', (e) => {
+  e.preventDefault();
+  const zoomFactor = e.deltaY < 0 ? 1.1 : 0.9;
+  scale = Math.min(Math.max(0.3, scale * zoomFactor), 3.0);
+  updateTransform();
+}, { passive: false });
+```
+
+---
+
+## Client-Side SVG & PNG Export
+
+```javascript
+// Export SVG
+function exportSVG(svgElement, filename = 'diagram.svg') {
+  const serializer = new XMLSerializer();
+  const source = serializer.serializeToString(svgElement);
+  const blob = new Blob([source], { type: 'image/svg+xml;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename;
+  link.click();
+}
+
+// Export PNG (retina 2x resolution)
+function exportPNG(svgElement, filename = 'diagram.png', bgColor = '#ffffff') {
+  const serializer = new XMLSerializer();
+  const svgString = serializer.serializeToString(svgElement);
+  const img = new Image();
+  const blob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+
+  img.onload = () => {
+    const canvas = document.createElement('canvas');
+    canvas.width = img.width * 2;
+    canvas.height = img.height * 2;
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = bgColor;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    const link = document.createElement('a');
+    link.href = canvas.toDataURL('image/png');
+    link.download = filename;
+    link.click();
+  };
+  img.src = url;
+}
+```

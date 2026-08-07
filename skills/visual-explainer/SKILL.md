@@ -61,9 +61,10 @@ Vary the choice each time. If the last diagram was dark and technical, make the 
 ### 2. Structure
 Read the reference material before generating. Don't memorize it — read it each time to absorb the patterns.
 
-- For text-heavy architecture overviews (card content matters more than topology): read ./templates/architecture.html
-- For flowcharts, sequence diagrams, ER, state machines, mind maps, class diagrams, C4: read ./templates/mermaid-flowchart.html
-- For data tables, comparisons, audits, feature matrices: read ./templates/data-table.html
+- For text-heavy architecture overviews (card content matters more than topology): read ./templates/architecture.html (with tier filtering and hover dependency highlighters)
+- For flowcharts, sequence diagrams, ER, state machines, mind maps, class diagrams, C4: read ./templates/mermaid-flowchart.html (with Pan/Zoom, SVG/PNG export, Node Inspector drawer, and Step Scrubber)
+- For data tables, comparisons, audits, feature matrices: read ./templates/data-table.html (with Live Search, Multi-column sorting, Status Pills, and CSV/Markdown export)
+- For visual diff reviews, PR audits, code comparisons: read ./templates/diff-review.html (with Side-by-Side vs Unified diffs, KPI cards, and syntax highlighting)
 - For slide deck presentations (when --slides flag is present or /generate-slides is invoked): read ./templates/slide-deck.html and ./references/slide-patterns.md
 - For prose-heavy publishable pages (READMEs, articles, blog posts, essays): read the "Prose Page Elements" section in ./references/css-patterns.md and "Typography by Content Voice" in ./references/libraries.md
 - For CSS/layout patterns and SVG connectors, read ./references/css-patterns.md.
@@ -83,13 +84,21 @@ Read the reference material before generating. Don't memorize it — read it eac
 | Mind map | Mermaid | Hierarchical branching needs automatic positioning |
 | Class diagram | Mermaid | Inheritance, composition, aggregation lines with automatic routing |
 | C4 architecture | Mermaid | Use graph TD + subgraph for C4 (not native C4Context — it ignores themes) |
-| Data table | HTML `<table>` | Semantic markup, accessibility, copy-paste behavior |
+| Data table | HTML `<table>` with JS search/sort | Semantic markup, instant search, sortable headers, CSV export |
+| Code diff / review | Side-by-Side diff card | Clear additions/deletions, risk assessment, KPI metrics |
 | Timeline | CSS (central line + cards) | Simple linear layout doesn't need a layout engine |
 | Dashboard | CSS Grid + Chart.js | Card grid with embedded charts |
 
+**Interactive Diagram Features:**
+- **Pan & Zoom Canvas**: Always embed mouse drag-to-pan and mousewheel zoom controls with `[+]`, `[-]`, `[1:1]`, `[Fit]`, and `[Fullscreen]` buttons.
+- **Export to SVG / PNG**: Include 1-click export buttons so users can instantly download and paste visual artifacts into docs, slides, or chat.
+- **Node Inspector Drawer**: When presenting multi-stage pipelines or architectures, clicking a node slides out an inspector panel showing configuration, commands, and telemetry.
+- **Step-by-Step Scrubber**: When visualizing a sequence or multi-step workflow, include Previous/Next/Play buttons that highlight active nodes sequentially.
+- **Live Search & Column Sort**: When generating tabular data, always enable instant search input, status filter pills, and clickable sortable column headers.
+
 **Mermaid theming:** Always use theme: 'base' with custom themeVariables so colors match your page palette. Use layout: 'elk' for complex graphs. Override Mermaid's SVG classes with CSS for pixel-perfect control. See ./references/libraries.md for full theming guide.
 
-**Mermaid containers:** Always center Mermaid diagrams with display: flex; justify-content: center;. Add zoom controls (+/−/reset/expand) to every .mermaid-wrap container. Include the click-to-expand JavaScript so clicking the diagram (or the ⛶ button) opens it full-size in a new tab.
+**Mermaid containers:** Always center Mermaid diagrams with display: flex; justify-content: center;. Add zoom controls (+/−/reset/expand) to every .mermaid-wrap container.
 
 ⚠️ Never use bare `<pre class="mermaid">`. Always use the full diagram-shell pattern from templates/mermaid-flowchart.html.
 

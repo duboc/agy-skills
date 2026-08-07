@@ -21,22 +21,22 @@ The skill activates when you ask for visual explanations or when complex tabular
 
 | Area | Details |
 |------|---------|
-| **HTML generation** | Self-contained HTML files with inline CSS and JavaScript |
-| **Mermaid diagrams** | Flowcharts, sequence diagrams, ER diagrams, state machines, mind maps, class diagrams, C4 |
-| **Data tables** | Styled tables with sticky headers, alternating rows, status indicators |
+| **HTML generation** | Self-contained HTML files with inline CSS, responsive layouts, and zero-dependency scripts |
+| **Interactive diagrams** | Pan & Zoom canvas, node inspector slide-out drawer, step-by-step scrubber, 1-click SVG/PNG export |
+| **Dynamic data tables** | Live search filtering, multi-column click-to-sort, status filter pills, expandable row details, and CSV/Markdown export |
+| **Visual diff review** | Side-by-side vs unified diff viewer, KPI metrics, file risk indicators, syntax highlighting |
+| **Architecture visualization** | Tier filters, card connection highlighters, Prism code snippets with copy buttons, dark/light theme toggles |
 | **Slide decks** | Magazine-quality presentations with 10 slide types |
-| **Architecture visualization** | CSS Grid cards, Mermaid topology, hybrid patterns for complex systems |
-| **CSS styling** | Curated aesthetics (Blueprint, Editorial, Paper/ink, Terminal), forbidden anti-patterns |
-| **Responsive design** | Sticky sidebar TOC on desktop, horizontal scrollable bar on mobile |
+| **CSS styling** | Curated aesthetics (Blueprint, Editorial, Paper/ink, Slate, Terminal, Google Cloud) |
 
 ## Commands
 
 | Command | What it does |
 |---------|-------------|
-| `generate-web-diagram` | Generate an HTML diagram for any topic |
-| `generate-visual-plan` | Generate a visual implementation plan for a feature |
+| `generate-web-diagram` | Generate an HTML diagram with Pan/Zoom, Node Inspector, and PNG/SVG export |
+| `generate-visual-plan` | Generate a visual implementation plan with step scrubber and syntax-highlighted code |
 | `generate-slides` | Generate a magazine-quality slide deck |
-| `diff-review` | Visual diff review with architecture comparison and code review |
+| `diff-review` | Visual diff review with side-by-side comparisons, impact map, and risk KPIs |
 | `plan-review` | Compare a plan against the codebase with risk assessment |
 | `project-recap` | Mental model snapshot for context-switching back to a project |
 | `fact-check` | Verify accuracy of a document against actual code |
@@ -44,21 +44,25 @@ The skill activates when you ask for visual explanations or when complex tabular
 
 ## Installation
 
-### Option B: One-liner
+### Method 1: One-liner with curl (Recommended)
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh | bash -s -- visual-explainer
 ```
 
-For user-scope installation (available across all projects):
+For user-scope installation (available globally across all projects):
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh | bash -s -- visual-explainer --scope user
 ```
 
-### Option C: Manual
+### Method 2: Manual Copy
 
 ```bash
+# Workspace scope
+cp -r skills/visual-explainer .agents/skills/visual-explainer
+
+# User scope
 cp -r skills/visual-explainer ~/.gemini/config/skills/visual-explainer
 ```
 
@@ -66,8 +70,8 @@ cp -r skills/visual-explainer ~/.gemini/config/skills/visual-explainer
 
 | File | Description |
 |------|-------------|
-| **references/css-patterns.md** | CSS layout patterns, SVG connectors, and prose page elements |
-| **references/libraries.md** | Font pairings, Mermaid theming guide, and typography by content voice |
+| **references/css-patterns.md** | CSS layout patterns, SVG connectors, inspector drawers, and prose elements |
+| **references/libraries.md** | Font pairings, Pan-Zoom engine, SVG/PNG export utilities, Prism.js CDN, and Mermaid theming |
 | **references/responsive-nav.md** | Section navigation with sticky sidebar TOC and mobile horizontal bar |
 | **references/slide-patterns.md** | Slide deck patterns and slide type definitions |
 
@@ -75,7 +79,8 @@ cp -r skills/visual-explainer ~/.gemini/config/skills/visual-explainer
 
 | File | Description |
 |------|-------------|
-| **templates/architecture.html** | Text-heavy architecture overview with CSS Grid cards |
-| **templates/mermaid-flowchart.html** | Mermaid diagram shell with zoom controls and click-to-expand |
-| **templates/data-table.html** | Styled data table with sticky headers and status indicators |
+| **templates/mermaid-flowchart.html** | Interactive diagram shell with Pan/Zoom, Node Inspector, Step Scrubber, Theme Switcher, and SVG/PNG Export |
+| **templates/data-table.html** | Dynamic data table with live search, multi-column sort, status pills, and CSV/Markdown export |
+| **templates/architecture.html** | Architecture overview with layer filters, hover dependency highlighters, Prism syntax, and copy buttons |
+| **templates/diff-review.html** | Pull request and diff review with side-by-side split view, KPI cards, and risk metrics |
 | **templates/slide-deck.html** | Slide deck template with 100dvh slides and 10 slide types |

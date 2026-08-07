@@ -3,33 +3,60 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Data Table &mdash; Visual Explainer</title>
+  <title>Interactive Data Table &mdash; Visual Explainer</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet" />
   <style>
-    /* ── Custom Properties ─────────────────────────────────── */
+    /* ── Custom Properties & Themes ────────────────────────── */
     :root {
       --bg:           #faf7f5;
       --surface:      #ffffff;
+      --surface-hi:   #f5efe9;
       --border:       #e8e0d8;
       --border-light: #f0ebe6;
       --text:         #2d2520;
       --text-dim:     #8a7e74;
       --accent:       #b84c2e;
       --accent-soft:  #fbeee9;
-      --sage:         #5a7a64;
-      --sage-soft:    #eaf2ec;
-      --amber:        #a16207;
+      --sage:         #15803d;
+      --sage-soft:    #dcfce7;
+      --amber:        #b45309;
       --amber-soft:   #fef3c7;
-      --danger:       #be3a3a;
+      --danger:       #b91c1c;
       --danger-soft:  #fee2e2;
       --row-alt:      #fcfaf8;
       --row-hover:    #f7f1ec;
       --thead-bg:     #f5efe9;
-      --radius:       8px;
+      --radius:       10px;
+      --radius-sm:    6px;
+      --shadow-sm:    0 1px 3px rgba(0,0,0,0.04);
+      --shadow:       0 4px 12px rgba(0,0,0,0.06);
       --font-sans:    'DM Sans', system-ui, sans-serif;
       --font-mono:    'Fira Code', ui-monospace, monospace;
+    }
+
+    [data-theme="dark"] {
+      --bg:           #0f172a;
+      --surface:      #1e293b;
+      --surface-hi:   #334155;
+      --border:       #334155;
+      --border-light: #1e293b;
+      --text:         #f1f5f9;
+      --text-dim:     #94a3b8;
+      --accent:       #38bdf8;
+      --accent-soft:  rgba(56, 189, 248, 0.15);
+      --sage:         #4ade80;
+      --sage-soft:    rgba(74, 222, 128, 0.15);
+      --amber:        #fbbf24;
+      --amber-soft:   rgba(251, 191, 36, 0.15);
+      --danger:       #f87171;
+      --danger-soft:  rgba(248, 113, 113, 0.15);
+      --row-alt:      #1e293b;
+      --row-hover:    #334155;
+      --thead-bg:     #0f172a;
+      --shadow-sm:    0 1px 3px rgba(0,0,0,0.3);
+      --shadow:       0 4px 12px rgba(0,0,0,0.5);
     }
 
     /* ── Reset & Base ──────────────────────────────────────── */
@@ -43,55 +70,141 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 3rem 1.5rem;
+      padding: 2.5rem 1.5rem;
+      transition: background 0.2s ease, color 0.2s ease;
     }
 
-    /* ── Page Header ───────────────────────────────────────── */
+    /* ── Header ────────────────────────────────────────────── */
     .page-header {
       text-align: center;
-      max-width: 600px;
-      margin-bottom: 2rem;
+      max-width: 680px;
+      margin-bottom: 1.75rem;
     }
 
     .page-header h1 {
-      font-size: 1.65rem;
-      font-weight: 600;
+      font-size: 1.85rem;
+      font-weight: 700;
       letter-spacing: -0.02em;
       margin-bottom: 0.35rem;
     }
 
     .page-header p {
       color: var(--text-dim);
-      font-size: 0.9rem;
+      font-size: 0.92rem;
+    }
+
+    /* ── Control Bar ───────────────────────────────────────── */
+    .controls-card {
+      width: 100%;
+      max-width: 1060px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.85rem 1.25rem;
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 0.4rem 0.75rem;
+      flex: 1;
+      min-width: 240px;
+      max-width: 360px;
+    }
+
+    .search-box input {
+      border: none;
+      background: transparent;
+      outline: none;
+      font-family: var(--font-sans);
+      font-size: 0.88rem;
+      color: var(--text);
+      width: 100%;
+    }
+
+    .filter-pills {
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-pill {
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+      padding: 0.3rem 0.65rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-dim);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .filter-pill:hover,
+    .filter-pill.active {
+      background: var(--accent-soft);
+      border-color: var(--accent);
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .action-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.4rem 0.75rem;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .btn-action:hover {
+      background: var(--accent-soft);
+      border-color: var(--accent);
+      color: var(--accent);
     }
 
     /* ── Table Wrapper ─────────────────────────────────────── */
     .table-wrapper {
       width: 100%;
-      max-width: 1020px;
+      max-width: 1060px;
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius);
       overflow-x: auto;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+      box-shadow: var(--shadow);
     }
 
-    /* ── Table ─────────────────────────────────────────────── */
     table {
       width: 100%;
-      min-width: 760px;
+      min-width: 800px;
       border-collapse: collapse;
       font-size: 0.88rem;
     }
 
-    colgroup .col-name    { width: 20%; }
-    colgroup .col-status  { width: 12%; }
-    colgroup .col-version { width: 12%; }
-    colgroup .col-risk    { width: 12%; }
-    colgroup .col-deps    { width: 10%; }
-    colgroup .col-action  { width: 34%; }
-
-    /* ── Sticky Header ─────────────────────────────────────── */
+    /* ── Sticky Sortable Header ────────────────────────────── */
     thead {
       position: sticky;
       top: 0;
@@ -101,40 +214,40 @@
     thead th {
       background: var(--thead-bg);
       border-bottom: 2px solid var(--border);
-      padding: 0.75rem 1rem;
+      padding: 0.85rem 1rem;
       text-align: left;
       font-weight: 600;
       font-size: 0.78rem;
       text-transform: uppercase;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.05em;
       color: var(--text-dim);
       white-space: nowrap;
+      cursor: pointer;
+      user-select: none;
+      transition: color 0.15s;
     }
 
-    thead th.num {
-      text-align: right;
+    thead th:hover {
+      color: var(--accent);
     }
 
-    /* ── Sticky First Column ───────────────────────────────── */
-    thead th:first-child,
-    tbody td:first-child {
-      position: sticky;
-      left: 0;
-      z-index: 1;
+    thead th .sort-arrow {
+      display: inline-block;
+      margin-left: 0.3rem;
+      opacity: 0.3;
+      font-size: 0.7rem;
     }
 
-    thead th:first-child {
-      z-index: 3;
-      background: var(--thead-bg);
+    thead th.sorted-asc .sort-arrow,
+    thead th.sorted-desc .sort-arrow {
+      opacity: 1;
+      color: var(--accent);
     }
 
-    tbody td:first-child {
-      background: inherit;
-    }
-
-    /* ── Body ──────────────────────────────────────────────── */
+    /* ── Table Body ────────────────────────────────────────── */
     tbody tr {
       border-bottom: 1px solid var(--border-light);
+      cursor: pointer;
       transition: background 0.12s;
     }
 
@@ -147,278 +260,334 @@
     }
 
     tbody td {
-      padding: 0.7rem 1rem;
-      vertical-align: top;
+      padding: 0.8rem 1rem;
+      vertical-align: middle;
       line-height: 1.5;
     }
 
-    tbody td.num {
-      text-align: right;
-      font-variant-numeric: tabular-nums;
-      font-family: var(--font-mono);
-      font-size: 0.82rem;
-    }
-
-    /* ── Component Name ────────────────────────────────────── */
     .comp-name {
       font-weight: 600;
       display: block;
     }
 
     .comp-detail {
-      display: block;
-      color: var(--text-dim);
       font-size: 0.8rem;
-      margin-top: 0.15rem;
+      color: var(--text-dim);
+      margin-top: 0.1rem;
     }
 
-    /* ── Code References ───────────────────────────────────── */
     code {
       font-family: var(--font-mono);
       font-size: 0.78rem;
-      background: var(--border-light);
+      background: var(--surface-hi);
       border: 1px solid var(--border);
-      padding: 0.1rem 0.35rem;
-      border-radius: 3px;
-      white-space: nowrap;
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
     }
 
-    /* ── Status Badges ─────────────────────────────────────── */
+    /* ── Badges ────────────────────────────────────────────── */
     .badge {
       display: inline-flex;
       align-items: center;
       gap: 0.35rem;
-      font-size: 0.78rem;
-      font-weight: 500;
+      font-size: 0.76rem;
+      font-weight: 600;
       padding: 0.2rem 0.6rem;
       border-radius: 999px;
       white-space: nowrap;
     }
 
-    .badge--ok {
-      color: var(--sage);
-      background: var(--sage-soft);
+    .badge--ok    { color: var(--sage);   background: var(--sage-soft); }
+    .badge--warn  { color: var(--amber);  background: var(--amber-soft); }
+    .badge--error { color: var(--danger); background: var(--danger-soft); }
+
+    /* ── Expandable Detail Row ─────────────────────────────── */
+    .detail-row {
+      display: none;
+      background: var(--bg) !important;
     }
 
-    .badge--warn {
-      color: var(--amber);
-      background: var(--amber-soft);
+    .detail-row.expanded {
+      display: table-row;
     }
 
-    .badge--error {
-      color: var(--danger);
-      background: var(--danger-soft);
+    .detail-content {
+      padding: 1rem 1.25rem;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      border-left: 3px solid var(--accent);
     }
-
-    .badge__icon {
-      display: inline-flex;
-      width: 14px;
-      height: 14px;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .badge__icon svg {
-      width: 12px;
-      height: 12px;
-    }
-
-    /* ── Risk Indicator ────────────────────────────────────── */
-    .risk {
-      font-weight: 600;
-      font-size: 0.82rem;
-    }
-
-    .risk--low    { color: var(--sage); }
-    .risk--medium { color: var(--amber); }
-    .risk--high   { color: var(--danger); }
 
     /* ── Footer ────────────────────────────────────────────── */
     .table-footer {
-      padding: 0.65rem 1rem;
+      padding: 0.85rem 1.25rem;
       border-top: 1px solid var(--border-light);
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 0.8rem;
+      font-size: 0.84rem;
       color: var(--text-dim);
     }
 
-    .table-footer strong {
+    .counter-text strong {
       color: var(--text);
-    }
-
-    /* ── Responsive ────────────────────────────────────────── */
-    @media (max-width: 600px) {
-      body { padding: 1.5rem 0.75rem; }
-      .page-header h1 { font-size: 1.3rem; }
     }
   </style>
 </head>
 <body>
 
-<div class="page-header">
-  <h1>Frontend Component Audit</h1>
-  <p>Dependency health check &mdash; Q1 2026 review cycle</p>
+<header class="page-header">
+  <h1>Microservices Migration Audit</h1>
+  <p>Live status, breaking changes, and risk evaluation across service modules</p>
+</header>
+
+<div class="controls-card">
+  <!-- Search -->
+  <div class="search-box">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+    <input type="text" id="table-search" placeholder="Filter by name, status, risk, action..." />
+  </div>
+
+  <!-- Status Filter Pills -->
+  <div class="filter-pills">
+    <button class="filter-pill active" data-filter="all">All (<span id="count-all">0</span>)</button>
+    <button class="filter-pill" data-filter="ok">OK (<span id="count-ok">0</span>)</button>
+    <button class="filter-pill" data-filter="warn">Warning (<span id="count-warn">0</span>)</button>
+    <button class="filter-pill" data-filter="error">Blocked (<span id="count-error">0</span>)</button>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="action-group">
+    <button class="btn-action" id="btn-export-csv" title="Download CSV">Export CSV</button>
+    <button class="btn-action" id="btn-copy-md" title="Copy Markdown Table">Copy MD</button>
+    <button class="btn-action" id="btn-theme" title="Toggle Dark/Light Mode">&#9681; Theme</button>
+  </div>
 </div>
 
 <div class="table-wrapper">
-  <table>
-    <colgroup>
-      <col class="col-name" />
-      <col class="col-status" />
-      <col class="col-version" />
-      <col class="col-risk" />
-      <col class="col-deps" />
-      <col class="col-action" />
-    </colgroup>
+  <table id="data-table">
     <thead>
       <tr>
-        <th>Component</th>
-        <th>Status</th>
-        <th>Version</th>
-        <th>Risk</th>
-        <th class="num">Deps</th>
-        <th>Action Required</th>
+        <th data-sort="name">Component Name <span class="sort-arrow">&updownarrow;</span></th>
+        <th data-sort="status">Migration Status <span class="sort-arrow">&updownarrow;</span></th>
+        <th data-sort="version">Target Runtime <span class="sort-arrow">&updownarrow;</span></th>
+        <th data-sort="risk">Risk Tier <span class="sort-arrow">&updownarrow;</span></th>
+        <th data-sort="deps">Dependencies <span class="sort-arrow">&updownarrow;</span></th>
+        <th>Recommended Remediation</th>
       </tr>
     </thead>
-    <tbody>
-      <tr>
+    <tbody id="table-body">
+      <tr data-status="ok" data-risk="low">
         <td>
-          <span class="comp-name">AuthProvider</span>
-          <small class="comp-detail"><code>@app/auth</code></small>
+          <span class="comp-name">auth-gateway</span>
+          <span class="comp-detail">JWT validation &amp; rate limiter</span>
         </td>
-        <td>
-          <span class="badge badge--ok">
-            <span class="badge__icon"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6.5L5 9l4.5-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-            Healthy
-          </span>
-        </td>
-        <td><code>3.2.1</code></td>
-        <td><span class="risk risk--low">Low</span></td>
-        <td class="num">4</td>
-        <td>None &mdash; last audited 12 days ago</td>
+        <td><span class="badge badge--ok">&bull; Migrated</span></td>
+        <td><code>Go 1.23</code></td>
+        <td><span style="color: var(--sage); font-weight:600;">Low</span></td>
+        <td><code>Redis 7</code></td>
+        <td>Deploy canary traffic split (10%). No breaking schema changes detected.</td>
       </tr>
-      <tr>
-        <td>
-          <span class="comp-name">DataGrid</span>
-          <small class="comp-detail"><code>@app/ui/data-grid</code></small>
+      <tr class="detail-row">
+        <td colspan="6">
+          <div class="detail-content">
+            <strong>Detailed Inspection:</strong> Converted from Express.js to Go Gin. Latency reduced from 38ms to 4.2ms. All OAuth2 test suites passing with 94% coverage.
+          </div>
         </td>
-        <td>
-          <span class="badge badge--warn">
-            <span class="badge__icon"><svg viewBox="0 0 12 12" fill="none"><path d="M6 3v4M6 9h.005" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
-            Outdated
-          </span>
-        </td>
-        <td><code>2.8.0</code></td>
-        <td><span class="risk risk--medium">Medium</span></td>
-        <td class="num">11</td>
-        <td>Upgrade to <code>3.x</code> &mdash; breaking change in column API</td>
       </tr>
-      <tr>
+
+      <tr data-status="warn" data-risk="medium">
         <td>
-          <span class="comp-name">PaymentForm</span>
-          <small class="comp-detail"><code>@app/checkout</code></small>
+          <span class="comp-name">order-dispatcher</span>
+          <span class="comp-detail">Message consumer &amp; queue orchestrator</span>
         </td>
-        <td>
-          <span class="badge badge--error">
-            <span class="badge__icon"><svg viewBox="0 0 12 12" fill="none"><path d="M3 3l6 6M9 3l-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
-            Vulnerable
-          </span>
-        </td>
-        <td><code>1.4.3</code></td>
-        <td><span class="risk risk--high">High</span></td>
-        <td class="num">7</td>
-        <td>CVE-2026-1182 in <code>card-validator</code> &mdash; patch immediately</td>
+        <td><span class="badge badge--warn">&bull; In Progress</span></td>
+        <td><code>Spring Boot 4.0</code></td>
+        <td><span style="color: var(--amber); font-weight:600;">Medium</span></td>
+        <td><code>Kafka, Postgres</code></td>
+        <td>Update Jackson 2 annotations to Jackson 3 tools. Schema v2 contract review pending.</td>
       </tr>
-      <tr>
-        <td>
-          <span class="comp-name">NotificationBell</span>
-          <small class="comp-detail"><code>@app/ui/notifications</code></small>
+      <tr class="detail-row">
+        <td colspan="6">
+          <div class="detail-content">
+            <strong>Detailed Inspection:</strong> Upgraded dependencies in `pom.xml`. Deprecated `org.codehaus.jackson` mappings require replacement before E2E testing.
+          </div>
         </td>
-        <td>
-          <span class="badge badge--ok">
-            <span class="badge__icon"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6.5L5 9l4.5-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-            Healthy
-          </span>
-        </td>
-        <td><code>5.0.2</code></td>
-        <td><span class="risk risk--low">Low</span></td>
-        <td class="num">2</td>
-        <td>None</td>
       </tr>
-      <tr>
+
+      <tr data-status="error" data-risk="high">
         <td>
-          <span class="comp-name">SearchAutocomplete</span>
-          <small class="comp-detail"><code>@app/search</code></small>
+          <span class="comp-name">billing-ledger</span>
+          <span class="comp-detail">Double-entry accounting transaction engine</span>
         </td>
-        <td>
-          <span class="badge badge--warn">
-            <span class="badge__icon"><svg viewBox="0 0 12 12" fill="none"><path d="M6 3v4M6 9h.005" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
-            Outdated
-          </span>
-        </td>
-        <td><code>4.1.0</code></td>
-        <td><span class="risk risk--medium">Medium</span></td>
-        <td class="num">9</td>
-        <td>Peer dep conflict with <code>react@19</code> &mdash; awaiting upstream fix</td>
+        <td><span class="badge badge--error">&bull; Blocked</span></td>
+        <td><code>Cloud Spanner</code></td>
+        <td><span style="color: var(--danger); font-weight:600;">Critical</span></td>
+        <td><code>Spanner, PubSub</code></td>
+        <td>Resolve Sybase T-SQL stored proc cursor dependencies. Implement idempotent CDC pipeline.</td>
       </tr>
-      <tr>
-        <td>
-          <span class="comp-name">ChartEngine</span>
-          <small class="comp-detail"><code>@app/analytics/charts</code></small>
+      <tr class="detail-row">
+        <td colspan="6">
+          <div class="detail-content">
+            <strong>Detailed Inspection:</strong> Hard dependency on Sybase transacted locks. Migration team must refactor transaction boundaries to Spanner mutation groups.
+          </div>
         </td>
-        <td>
-          <span class="badge badge--ok">
-            <span class="badge__icon"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6.5L5 9l4.5-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-            Healthy
-          </span>
-        </td>
-        <td><code>7.3.0</code></td>
-        <td><span class="risk risk--low">Low</span></td>
-        <td class="num">3</td>
-        <td>None &mdash; tree-shaking verified, 42 kB gzipped</td>
       </tr>
-      <tr>
+
+      <tr data-status="ok" data-risk="low">
         <td>
-          <span class="comp-name">FileUploader</span>
-          <small class="comp-detail"><code>@app/ui/uploads</code></small>
+          <span class="comp-name">notification-worker</span>
+          <span class="comp-detail">Push notification &amp; email delivery</span>
         </td>
-        <td>
-          <span class="badge badge--error">
-            <span class="badge__icon"><svg viewBox="0 0 12 12" fill="none"><path d="M3 3l6 6M9 3l-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
-            Vulnerable
-          </span>
-        </td>
-        <td><code>2.0.1</code></td>
-        <td><span class="risk risk--high">High</span></td>
-        <td class="num">6</td>
-        <td>Path traversal in <code>mime-check</code> &mdash; upgrade to <code>2.1.0</code></td>
+        <td><span class="badge badge--ok">&bull; Migrated</span></td>
+        <td><code>Node 22 LTS</code></td>
+        <td><span style="color: var(--sage); font-weight:600;">Low</span></td>
+        <td><code>SendGrid, FCM</code></td>
+        <td>Ready for production release. Verified retry backoff and webhook idempotency.</td>
       </tr>
-      <tr>
-        <td>
-          <span class="comp-name">FeatureFlags</span>
-          <small class="comp-detail"><code>@app/platform/flags</code></small>
+      <tr class="detail-row">
+        <td colspan="6">
+          <div class="detail-content">
+            <strong>Detailed Inspection:</strong> Replaced worker queue with Cloud Tasks. Zero open issues.
+          </div>
         </td>
-        <td>
-          <span class="badge badge--warn">
-            <span class="badge__icon"><svg viewBox="0 0 12 12" fill="none"><path d="M6 3v4M6 9h.005" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
-            Outdated
-          </span>
-        </td>
-        <td><code>1.9.4</code></td>
-        <td><span class="risk risk--low">Low</span></td>
-        <td class="num">1</td>
-        <td>Migrate to <code>@openfeature/sdk</code> per ADR-047</td>
       </tr>
     </tbody>
   </table>
 
   <div class="table-footer">
-    <span>Showing <strong>8</strong> of 8 components</span>
-    <span>Last scan: <strong>2026-03-28 14:32 UTC</strong></span>
+    <span class="counter-text">Showing <strong id="visible-count">4</strong> of <strong id="total-count">4</strong> items</span>
+    <span>Click any row for detailed audit notes</span>
   </div>
 </div>
+
+<script>
+  /* ── Search & Filter Engine ────────────────────────────── */
+  const searchInput = document.getElementById('table-search');
+  const filterPills = document.querySelectorAll('.filter-pills .filter-pill');
+  const tbody = document.getElementById('table-body');
+  const allRows = Array.from(tbody.querySelectorAll('tr:not(.detail-row)'));
+
+  function updateCounts() {
+    document.getElementById('count-all').textContent = allRows.length;
+    document.getElementById('count-ok').textContent = allRows.filter(r => r.dataset.status === 'ok').length;
+    document.getElementById('count-warn').textContent = allRows.filter(r => r.dataset.status === 'warn').length;
+    document.getElementById('count-error').textContent = allRows.filter(r => r.dataset.status === 'error').length;
+    document.getElementById('total-count').textContent = allRows.length;
+  }
+
+  function filterTable() {
+    const q = searchInput.value.toLowerCase().trim();
+    const activePill = document.querySelector('.filter-pill.active').dataset.filter;
+    let visible = 0;
+
+    allRows.forEach(row => {
+      const detailRow = row.nextElementSibling;
+      const text = row.innerText.toLowerCase();
+      const status = row.dataset.status;
+
+      const matchesSearch = !q || text.includes(q);
+      const matchesFilter = activePill === 'all' || status === activePill;
+
+      if (matchesSearch && matchesFilter) {
+        row.style.display = '';
+        visible++;
+      } else {
+        row.style.display = 'none';
+        if (detailRow && detailRow.classList.contains('detail-row')) {
+          detailRow.classList.remove('expanded');
+        }
+      }
+    });
+
+    document.getElementById('visible-count').textContent = visible;
+  }
+
+  searchInput.addEventListener('input', filterTable);
+
+  filterPills.forEach(pill => {
+    pill.addEventListener('click', () => {
+      filterPills.forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+      filterTable();
+    });
+  });
+
+  /* ── Click-to-Expand Row ───────────────────────────────── */
+  allRows.forEach(row => {
+    row.addEventListener('click', () => {
+      const detailRow = row.nextElementSibling;
+      if (detailRow && detailRow.classList.contains('detail-row')) {
+        detailRow.classList.toggle('expanded');
+      }
+    });
+  });
+
+  /* ── Multi-Column Sorting ──────────────────────────────── */
+  const headers = document.querySelectorAll('thead th[data-sort]');
+  headers.forEach(th => {
+    th.addEventListener('click', () => {
+      const colIndex = Array.from(th.parentNode.children).indexOf(th);
+      const isAsc = th.classList.contains('sorted-asc');
+      headers.forEach(h => h.classList.remove('sorted-asc', 'sorted-desc'));
+      th.classList.add(isAsc ? 'sorted-desc' : 'sorted-asc');
+
+      const pairs = [];
+      for (let i = 0; i < tbody.children.length; i += 2) {
+        pairs.push({
+          row: tbody.children[i],
+          detail: tbody.children[i + 1]
+        });
+      }
+
+      pairs.sort((a, b) => {
+        const valA = a.row.children[colIndex].innerText.trim().toLowerCase();
+        const valB = b.row.children[colIndex].innerText.trim().toLowerCase();
+        return isAsc ? valB.localeCompare(valA, undefined, { numeric: true }) : valA.localeCompare(valB, undefined, { numeric: true });
+      });
+
+      pairs.forEach(p => {
+        tbody.appendChild(p.row);
+        if (p.detail) tbody.appendChild(p.detail);
+      });
+    });
+  });
+
+  /* ── Theme Toggle ──────────────────────────────────────── */
+  document.getElementById('btn-theme').addEventListener('click', () => {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  });
+
+  /* ── Export CSV ────────────────────────────────────────── */
+  document.getElementById('btn-export-csv').addEventListener('click', () => {
+    let csv = [];
+    const rows = document.querySelectorAll('#data-table tr:not(.detail-row)');
+    rows.forEach(r => {
+      const cols = Array.from(r.querySelectorAll('th, td')).map(c => `"${c.innerText.replace(/\n/g, ' ').replace(/"/g, '""').trim()}"`);
+      csv.push(cols.join(','));
+    });
+    const blob = new Blob([csv.join('\n')], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'audit-table.csv';
+    link.click();
+  });
+
+  /* ── Copy Markdown ─────────────────────────────────────── */
+  document.getElementById('btn-copy-md').addEventListener('click', () => {
+    let md = '| Component | Status | Target | Risk | Dependencies | Remediation |\n|---|---|---|---|---|---|\n';
+    allRows.forEach(r => {
+      const c = r.querySelectorAll('td');
+      md += `| ${c[0].innerText.replace(/\n/g, ' ')} | ${c[1].innerText} | ${c[2].innerText} | ${c[3].innerText} | ${c[4].innerText} | ${c[5].innerText} |\n`;
+    });
+    navigator.clipboard.writeText(md).then(() => {
+      alert('Markdown table copied to clipboard!');
+    });
+  });
+
+  updateCounts();
+</script>
 
 </body>
 </html>

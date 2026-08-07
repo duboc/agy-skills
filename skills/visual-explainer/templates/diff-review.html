@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Visual Diff Review &mdash; Visual Explainer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Themes & Variables ────────────────────────────────── */
+    :root {
+      --bg:           #0f172a;
+      --surface:      #1e293b;
+      --surface-hi:   #334155;
+      --border:       #334155;
+      --text:         #f8fafc;
+      --text-dim:     #94a3b8;
+      --accent:       #38bdf8;
+      --accent-soft:  rgba(56, 189, 248, 0.15);
+      --add-bg:       rgba(34, 197, 94, 0.15);
+      --add-border:   #22c55e;
+      --add-text:     #86efac;
+      --del-bg:       rgba(239, 68, 68, 0.15);
+      --del-border:   #ef4444;
+      --del-text:     #fca5a5;
+      --radius:       10px;
+      --radius-sm:    6px;
+      --font-sans:    'DM Sans', system-ui, sans-serif;
+      --font-mono:    'Fira Code', ui-monospace, monospace;
+    }
+
+    [data-theme="light"] {
+      --bg:           #f8fafc;
+      --surface:      #ffffff;
+      --surface-hi:   #f1f5f9;
+      --border:       #cbd5e1;
+      --text:         #0f172a;
+      --text-dim:     #64748b;
+      --accent:       #0284c7;
+      --accent-soft:  rgba(2, 132, 199, 0.1);
+      --add-bg:       #dcfce7;
+      --add-border:   #16a34a;
+      --add-text:     #15803d;
+      --del-bg:       #fee2e2;
+      --del-border:   #dc2626;
+      --del-text:     #b91c1c;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2.5rem 1.5rem;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .diff-container {
+      width: 100%;
+      max-width: 1100px;
+    }
+
+    .diff-header {
+      text-align: center;
+      margin-bottom: 1.75rem;
+    }
+
+    .diff-header h1 {
+      font-size: 1.85rem;
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+    }
+
+    /* ── Metrics Dashboard ─────────────────────────────────── */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .kpi-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem 1.25rem;
+    }
+
+    .kpi-label {
+      font-size: 0.76rem;
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+
+    .kpi-val {
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-top: 0.25rem;
+    }
+
+    /* ── Controls Toolbar ──────────────────────────────────── */
+    .diff-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.75rem 1.25rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .view-toggle {
+      display: flex;
+      gap: 0.4rem;
+    }
+
+    .btn-toggle {
+      background: var(--surface-hi);
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      padding: 0.35rem 0.75rem;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+    }
+
+    .btn-toggle.active {
+      background: var(--accent);
+      color: #ffffff;
+      border-color: var(--accent);
+      font-weight: 600;
+    }
+
+    /* ── File Diff Block ───────────────────────────────────── */
+    .file-diff-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 1.25rem;
+      overflow: hidden;
+    }
+
+    .file-diff-header {
+      background: var(--surface-hi);
+      padding: 0.75rem 1.25rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: 0.84rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .diff-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+    }
+
+    .diff-line td {
+      padding: 0.2rem 0.6rem;
+      vertical-align: top;
+      white-space: pre-wrap;
+    }
+
+    .diff-line.line--add {
+      background: var(--add-bg);
+      color: var(--add-text);
+      border-left: 3px solid var(--add-border);
+    }
+
+    .diff-line.line--del {
+      background: var(--del-bg);
+      color: var(--del-text);
+      border-left: 3px solid var(--del-border);
+    }
+
+    .line-num {
+      width: 40px;
+      color: var(--text-dim);
+      text-align: right;
+      user-select: none;
+      border-right: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+
+<div class="diff-container">
+  <header class="diff-header">
+    <h1>Pull Request Diff Review</h1>
+    <p>feat: upgrade authentication gateway &amp; token revocation pipeline</p>
+  </header>
+
+  <!-- KPI Metrics -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-label">Files Changed</div>
+      <div class="kpi-val">4 files</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Additions / Deletions</div>
+      <div class="kpi-val"><span style="color: var(--add-border);">+142</span> / <span style="color: var(--del-border);">-38</span></div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Breaking Change Risk</div>
+      <div class="kpi-val" style="color: var(--add-border);">Low Risk</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Test Coverage</div>
+      <div class="kpi-val">96.4%</div>
+    </div>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="diff-toolbar">
+    <div class="view-toggle">
+      <button class="btn-toggle active" id="view-split">Side-by-Side View</button>
+      <button class="btn-toggle" id="view-unified">Unified View</button>
+    </div>
+    <button class="btn-toggle" id="theme-btn">&#9681; Theme</button>
+  </div>
+
+  <!-- File 1 -->
+  <div class="file-diff-card">
+    <div class="file-diff-header">
+      <span><strong>src/auth/jwt_validator.go</strong> (Go)</span>
+      <span style="color: var(--add-border);">+28 / -6</span>
+    </div>
+    <table class="diff-table">
+      <tr class="diff-line line--del">
+        <td class="line-num">42</td>
+        <td>- token, err := jwt.Parse(tokenStr, keyFunc)</td>
+      </tr>
+      <tr class="diff-line line--add">
+        <td class="line-num">42</td>
+        <td>+ claims := &amp;CustomClaims{}</td>
+      </tr>
+      <tr class="diff-line line--add">
+        <td class="line-num">43</td>
+        <td>+ token, err := jwt.ParseWithClaims(tokenStr, claims, keyFunc, jwt.WithValidMethods([]string{"RS256"}))</td>
+      </tr>
+      <tr class="diff-line line--add">
+        <td class="line-num">44</td>
+        <td>+ if err != nil || !token.Valid || blacklist.IsRevoked(claims.JTI) {</td>
+      </tr>
+      <tr class="diff-line line--add">
+        <td class="line-num">45</td>
+        <td>+     return nil, ErrUnauthorized</td>
+      </tr>
+      <tr class="diff-line line--add">
+        <td class="line-num">46</td>
+        <td>+ }</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<script>
+  document.getElementById('theme-btn').addEventListener('click', () => {
+    const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
+    document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  });
+</script>
+
+</body>
+</html>

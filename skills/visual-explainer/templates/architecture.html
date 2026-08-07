@@ -6,9 +6,10 @@
   <title>Architecture Diagram &mdash; Visual Explainer</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
   <style>
-    /* ── Custom Properties ─────────────────────────────────── */
+    /* ── Custom Properties & Themes ────────────────────────── */
     :root {
       --bg:         #0f1923;
       --surface:    #182633;
@@ -17,28 +18,44 @@
       --text:       #d4dce6;
       --text-dim:   #7e96ad;
       --accent:     #4ea8de;
+      --accent-soft:rgba(78,168,222,0.12);
       --accent-dim: #2a6f9e;
       --success:    #4ade80;
       --warning:    #fbbf24;
       --danger:     #f87171;
       --grid-line:  rgba(78,168,222,0.06);
       --radius:     10px;
+      --radius-sm:  6px;
+      --shadow:     0 8px 24px rgba(0,0,0,0.3);
       --font-sans:  'DM Sans', system-ui, sans-serif;
       --font-mono:  'Fira Code', ui-monospace, monospace;
     }
 
-    @media (prefers-color-scheme: light) {
-      :root {
-        --bg:         #edf2f7;
-        --surface:    #ffffff;
-        --surface-hi: #f7fafc;
-        --border:     #cbd5e1;
-        --text:       #1e293b;
-        --text-dim:   #64748b;
-        --accent:     #2563eb;
-        --accent-dim: #93b4f5;
-        --grid-line:  rgba(37,99,235,0.05);
-      }
+    [data-theme="light"] {
+      --bg:         #f8fafc;
+      --surface:    #ffffff;
+      --surface-hi: #f1f5f9;
+      --border:     #cbd5e1;
+      --text:       #0f172a;
+      --text-dim:   #64748b;
+      --accent:     #0284c7;
+      --accent-soft:rgba(2, 132, 199, 0.1);
+      --accent-dim: #7dd3fc;
+      --grid-line:  rgba(2, 132, 199, 0.05);
+      --shadow:     0 4px 16px rgba(0,0,0,0.06);
+    }
+
+    [data-theme="gcloud"] {
+      --bg:         #ffffff;
+      --surface:    #f8fafd;
+      --surface-hi: #e8f0fe;
+      --border:     #dadce0;
+      --text:       #202124;
+      --text-dim:   #5f6368;
+      --accent:     #1a73e8;
+      --accent-soft:#e8f0fe;
+      --accent-dim: #8ab4f8;
+      --grid-line:  rgba(26, 115, 232, 0.04);
     }
 
     /* ── Reset & Base ──────────────────────────────────────── */
@@ -50,65 +67,92 @@
       color: var(--text);
       min-height: 100dvh;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
+      align-items: center;
       padding: 3rem 1.5rem;
-      /* Blueprint grid background */
       background-image:
         linear-gradient(var(--grid-line) 1px, transparent 1px),
         linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
       background-size: 40px 40px;
+      transition: background 0.2s ease, color 0.2s ease;
     }
 
     /* ── Page Container ────────────────────────────────────── */
     .ve-page {
       width: 100%;
-      max-width: 820px;
+      max-width: 880px;
     }
 
-    .ve-page > header {
+    .page-header {
       text-align: center;
-      margin-bottom: 2.5rem;
+      margin-bottom: 2rem;
     }
 
-    .ve-page > header h1 {
-      font-size: 1.75rem;
-      font-weight: 600;
+    .page-header h1 {
+      font-size: 2rem;
+      font-weight: 700;
       letter-spacing: -0.02em;
-      margin-bottom: 0.35rem;
+      margin-bottom: 0.4rem;
     }
 
-    .ve-page > header p {
+    .page-header p {
       color: var(--text-dim);
-      font-size: 0.92rem;
+      font-size: 0.95rem;
+    }
+
+    /* ── Filter & Action Toolbar ───────────────────────────── */
+    .arch-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .layer-filters {
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-dim);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .filter-btn:hover,
+    .filter-btn.active {
+      background: var(--accent-soft);
+      border-color: var(--accent);
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .theme-select {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.35rem 0.75rem;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      cursor: pointer;
     }
 
     /* ── Architecture Grid ─────────────────────────────────── */
     .arch-grid {
       display: grid;
-      grid-template-areas:
-        "client"
-        "arrow1"
-        "api"
-        "arrow2"
-        "service"
-        "arrow3"
-        "data"
-        "arrow4"
-        "infra";
       gap: 0;
       justify-items: center;
     }
-
-    .arch-grid > .area-client  { grid-area: client; }
-    .arch-grid > .area-api     { grid-area: api; }
-    .arch-grid > .area-service { grid-area: service; }
-    .arch-grid > .area-data    { grid-area: data; }
-    .arch-grid > .area-infra   { grid-area: infra; }
-
-    .arch-grid > .arrow-1 { grid-area: arrow1; }
-    .arch-grid > .arrow-2 { grid-area: arrow2; }
-    .arch-grid > .arrow-3 { grid-area: arrow3; }
-    .arch-grid > .arrow-4 { grid-area: arrow4; }
 
     /* ── Card Component ────────────────────────────────────── */
     .ve-card {
@@ -118,46 +162,64 @@
       border-radius: var(--radius);
       padding: 1.5rem 1.75rem;
       position: relative;
-      transition: border-color 0.2s ease;
+      transition: all 0.2s ease;
+      box-shadow: var(--shadow);
     }
 
     .ve-card:hover {
-      border-color: var(--accent-dim);
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .ve-card.ve-card--dimmed {
+      opacity: 0.25;
+      transform: scale(0.98);
+    }
+
+    .ve-card.ve-card--highlighted {
+      border-color: var(--accent);
+      box-shadow: 0 0 20px var(--accent-soft);
+      transform: translateY(-2px);
     }
 
     .ve-card--hero {
       background: linear-gradient(135deg, var(--surface) 60%, var(--surface-hi));
       border-color: var(--accent);
-      box-shadow: 0 0 24px rgba(78,168,222,0.08);
     }
 
-    .ve-card--recessed {
-      background: var(--bg);
-      border-style: dashed;
+    .ve-card__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
     }
 
     .ve-card__label {
-      display: inline-block;
       font-family: var(--font-mono);
-      font-size: 0.7rem;
+      font-size: 0.72rem;
       text-transform: uppercase;
       letter-spacing: 0.08em;
       color: var(--accent);
-      background: rgba(78,168,222,0.1);
+      background: var(--accent-soft);
       padding: 0.2rem 0.55rem;
       border-radius: 4px;
-      margin-bottom: 0.75rem;
+    }
+
+    .ve-card__badge {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--success);
     }
 
     .ve-card h2 {
-      font-size: 1.15rem;
+      font-size: 1.25rem;
       font-weight: 600;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.4rem;
     }
 
     .ve-card p {
       color: var(--text-dim);
-      font-size: 0.88rem;
+      font-size: 0.9rem;
       line-height: 1.55;
     }
 
@@ -178,163 +240,250 @@
       border-radius: 4px;
     }
 
+    /* ── Code Box & Copy Button ────────────────────────────── */
+    .code-box-wrap {
+      position: relative;
+      margin-top: 0.85rem;
+    }
+
+    .code-box-wrap pre {
+      border-radius: var(--radius-sm);
+      margin: 0 !important;
+      font-size: 0.8rem !important;
+    }
+
+    .btn-copy-code {
+      position: absolute;
+      top: 0.4rem;
+      right: 0.4rem;
+      background: rgba(0,0,0,0.4);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: #e2e8f0;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .btn-copy-code:hover {
+      background: var(--accent);
+      color: #ffffff;
+    }
+
     /* ── SVG Flow Arrows ───────────────────────────────────── */
     .flow-arrow {
       display: flex;
       justify-content: center;
-      padding: 0.25rem 0;
+      padding: 0.35rem 0;
+      transition: opacity 0.2s ease;
     }
 
     .flow-arrow svg {
       display: block;
     }
 
-    /* ── Staggered Fade-in Animation ───────────────────────── */
-    .ve-card,
-    .flow-arrow {
-      opacity: 0;
-      transform: translateY(18px);
-      animation: fadeSlideIn 0.5s ease forwards;
+    .flow-arrow path {
+      stroke: var(--border);
+      transition: stroke 0.2s;
     }
 
-    .arch-grid > :nth-child(1) { animation-delay: 0.05s; }
-    .arch-grid > :nth-child(2) { animation-delay: 0.15s; }
-    .arch-grid > :nth-child(3) { animation-delay: 0.25s; }
-    .arch-grid > :nth-child(4) { animation-delay: 0.35s; }
-    .arch-grid > :nth-child(5) { animation-delay: 0.45s; }
-    .arch-grid > :nth-child(6) { animation-delay: 0.55s; }
-    .arch-grid > :nth-child(7) { animation-delay: 0.65s; }
-    .arch-grid > :nth-child(8) { animation-delay: 0.75s; }
-    .arch-grid > :nth-child(9) { animation-delay: 0.85s; }
-
-    @keyframes fadeSlideIn {
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .ve-card,
-      .flow-arrow {
-        animation: none;
-        opacity: 1;
-        transform: none;
-      }
-    }
-
-    /* ── Responsive ────────────────────────────────────────── */
-    @media (max-width: 600px) {
-      body { padding: 1.5rem 1rem; }
-      .ve-card { padding: 1.15rem 1.25rem; }
-      .ve-page > header h1 { font-size: 1.35rem; }
+    .flow-arrow.arrow--active path {
+      stroke: var(--accent);
+      stroke-width: 2.5px;
     }
   </style>
 </head>
 <body>
 
 <div class="ve-page">
-  <header>
-    <h1>Order Processing Platform</h1>
-    <p>End-to-end architecture &mdash; client to infrastructure</p>
+  <header class="page-header">
+    <h1>Distributed Order Architecture</h1>
+    <p>High-throughput, event-driven ordering &amp; payment lifecycle</p>
   </header>
+
+  <div class="arch-toolbar">
+    <div class="layer-filters">
+      <button class="filter-btn active" data-layer="all">All Layers</button>
+      <button class="filter-btn" data-layer="client">Client</button>
+      <button class="filter-btn" data-layer="api">API Gateway</button>
+      <button class="filter-btn" data-layer="service">Services</button>
+      <button class="filter-btn" data-layer="data">Storage</button>
+    </div>
+
+    <select class="theme-select" id="theme-select">
+      <option value="dark">Theme: Slate Dark</option>
+      <option value="light">Theme: Light Paper</option>
+      <option value="gcloud">Theme: Google Cloud</option>
+    </select>
+  </div>
 
   <div class="arch-grid">
 
     <!-- Client Layer -->
-    <div class="ve-card ve-card--hero area-client">
-      <span class="ve-card__label">Client Layer</span>
-      <h2>Web &amp; Mobile Clients</h2>
-      <p>Single-page application and native mobile apps consuming the public API via HTTPS. Handles authentication flows, local caching, and optimistic UI updates.</p>
+    <div class="ve-card ve-card--hero" data-layer="client" id="card-client" data-inbound="" data-outbound="arrow-1,card-api">
+      <div class="ve-card__header">
+        <span class="ve-card__label">Client Tier</span>
+        <span class="ve-card__badge">&bull; 1.2M Daily Actives</span>
+      </div>
+      <h2>Web &amp; Native Mobile Apps</h2>
+      <p>Single Page Apps (React 19) and iOS/Android clients consuming GraphQL &amp; gRPC-Web endpoints through mTLS-encrypted sessions.</p>
       <div class="ve-card__tags">
         <span class="ve-card__tag">React 19</span>
-        <span class="ve-card__tag">Swift UI</span>
-        <span class="ve-card__tag">Kotlin Compose</span>
+        <span class="ve-card__tag">SwiftUI</span>
+        <span class="ve-card__tag">Jetpack Compose</span>
       </div>
     </div>
 
     <!-- Arrow 1 -->
-    <div class="flow-arrow arrow-1">
-      <svg width="2" height="38" viewBox="0 0 2 38" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <line x1="1" y1="0" x2="1" y2="30" stroke="var(--accent)" stroke-width="2" stroke-dasharray="4 3"/>
-        <polygon points="1,38 -3,28 5,28" fill="var(--accent)"/>
+    <div class="flow-arrow" id="arrow-1">
+      <svg width="24" height="40" viewBox="0 0 24 40">
+        <path d="M12 0 V32 M6 26 L12 34 L18 26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     </div>
 
     <!-- API Gateway Layer -->
-    <div class="ve-card area-api">
-      <span class="ve-card__label">API Gateway</span>
-      <h2>Edge &amp; Routing</h2>
-      <p>Rate limiting, JWT validation, request routing, and response caching. Acts as the single entry point for all external traffic and enforces CORS policies.</p>
+    <div class="ve-card" data-layer="api" id="card-api" data-inbound="arrow-1,card-client" data-outbound="arrow-2,card-service">
+      <div class="ve-card__header">
+        <span class="ve-card__label">Edge &amp; Routing</span>
+        <span class="ve-card__badge">&bull; SLA: 99.99%</span>
+      </div>
+      <h2>Cloud API Gateway &amp; Envoy Mesh</h2>
+      <p>Terminates public TLS, validates JWT credentials, enforces token-bucket rate limits, and routes requests to backend services.</p>
+      
+      <div class="code-box-wrap">
+        <button class="btn-copy-code" data-code="route: /api/v2/orders\nupstream: order-service:50051\ntimeout: 2500ms">Copy Config</button>
+        <pre><code class="language-yaml">route: /api/v2/orders
+upstream: order-service:50051
+timeout: 2500ms
+rate_limit: 5000_rps</code></pre>
+      </div>
+
       <div class="ve-card__tags">
-        <span class="ve-card__tag">Cloud Endpoints</span>
         <span class="ve-card__tag">Envoy Proxy</span>
-        <span class="ve-card__tag">OAuth 2.0</span>
+        <span class="ve-card__tag">OAuth2 / OIDC</span>
+        <span class="ve-card__tag">gRPC-Web</span>
       </div>
     </div>
 
     <!-- Arrow 2 -->
-    <div class="flow-arrow arrow-2">
-      <svg width="2" height="38" viewBox="0 0 2 38" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <line x1="1" y1="0" x2="1" y2="30" stroke="var(--accent)" stroke-width="2" stroke-dasharray="4 3"/>
-        <polygon points="1,38 -3,28 5,28" fill="var(--accent)"/>
+    <div class="flow-arrow" id="arrow-2">
+      <svg width="24" height="40" viewBox="0 0 24 40">
+        <path d="M12 0 V32 M6 26 L12 34 L18 26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     </div>
 
     <!-- Service Layer -->
-    <div class="ve-card area-service">
-      <span class="ve-card__label">Service Layer</span>
-      <h2>Domain Services</h2>
-      <p>Stateless microservices implementing core business logic. Each service owns its bounded context and communicates via asynchronous events for cross-domain workflows.</p>
+    <div class="ve-card" data-layer="service" id="card-service" data-inbound="arrow-2,card-api" data-outbound="arrow-3,card-data">
+      <div class="ve-card__header">
+        <span class="ve-card__label">Business Logic</span>
+        <span class="ve-card__badge">&bull; 4,200 RPS</span>
+      </div>
+      <h2>Order Processing &amp; Settlement Service</h2>
+      <p>Stateless Go microservice managing order state transitions, idempotency checks, and asynchronous event publishing via Kafka.</p>
       <div class="ve-card__tags">
-        <span class="ve-card__tag">order-svc</span>
-        <span class="ve-card__tag">payment-svc</span>
-        <span class="ve-card__tag">inventory-svc</span>
-        <span class="ve-card__tag">notification-svc</span>
+        <span class="ve-card__tag">Go 1.23</span>
+        <span class="ve-card__tag">Kafka Event Bus</span>
+        <span class="ve-card__tag">OpenTelemetry</span>
       </div>
     </div>
 
     <!-- Arrow 3 -->
-    <div class="flow-arrow arrow-3">
-      <svg width="2" height="38" viewBox="0 0 2 38" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <line x1="1" y1="0" x2="1" y2="30" stroke="var(--accent)" stroke-width="2" stroke-dasharray="4 3"/>
-        <polygon points="1,38 -3,28 5,28" fill="var(--accent)"/>
+    <div class="flow-arrow" id="arrow-3">
+      <svg width="24" height="40" viewBox="0 0 24 40">
+        <path d="M12 0 V32 M6 26 L12 34 L18 26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     </div>
 
-    <!-- Data Layer -->
-    <div class="ve-card area-data">
-      <span class="ve-card__label">Data Layer</span>
-      <h2>Persistence &amp; Messaging</h2>
-      <p>Polyglot persistence strategy with event sourcing for order state. Pub/Sub handles inter-service communication while Cloud SQL stores transactional data.</p>
+    <!-- Data Storage Layer -->
+    <div class="ve-card" data-layer="data" id="card-data" data-inbound="arrow-3,card-service" data-outbound="">
+      <div class="ve-card__header">
+        <span class="ve-card__label">Persistence Tier</span>
+        <span class="ve-card__badge">&bull; Multi-Region</span>
+      </div>
+      <h2>Cloud Spanner &amp; Redis Cluster</h2>
+      <p>Globally distributed database ensuring ACID consistency for financial ledger transactions, paired with Redis caching for sub-millisecond lookups.</p>
       <div class="ve-card__tags">
-        <span class="ve-card__tag">Cloud SQL</span>
-        <span class="ve-card__tag">Firestore</span>
-        <span class="ve-card__tag">Pub/Sub</span>
-        <span class="ve-card__tag">Memorystore</span>
+        <span class="ve-card__tag">Cloud Spanner</span>
+        <span class="ve-card__tag">Redis Enterprise</span>
+        <span class="ve-card__tag">BigQuery Analytics</span>
       </div>
     </div>
 
-    <!-- Arrow 4 -->
-    <div class="flow-arrow arrow-4">
-      <svg width="2" height="38" viewBox="0 0 2 38" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <line x1="1" y1="0" x2="1" y2="30" stroke="var(--accent)" stroke-width="2" stroke-dasharray="4 3"/>
-        <polygon points="1,38 -3,28 5,28" fill="var(--accent)"/>
-      </svg>
-    </div>
+  </div>
+</div>
 
-    <!-- Infrastructure Layer -->
-    <div class="ve-card ve-card--recessed area-infra">
-      <span class="ve-card__label">Infrastructure</span>
-      <h2>Platform &amp; Observability</h2>
-      <p>Kubernetes-managed compute with auto-scaling, centralized logging, distributed tracing, and SLO-based alerting. Infrastructure defined and versioned as code.</p>
-      <div class="ve-card__tags">
-        <span class="ve-card__tag">GKE</span>
-        <span class="ve-card__tag">Terraform</span>
-        <span class="ve-card__tag">Cloud Monitoring</span>
-        <span class="ve-card__tag">Cloud Trace</span>
-      </div>
-    </div>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-yaml.min.js"></script>
 
-  </div><!-- /arch-grid -->
-</div><!-- /ve-page -->
+<script>
+  /* ── Layer Filter ──────────────────────────────────────── */
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const cards = document.querySelectorAll('.ve-card');
+  const arrows = document.querySelectorAll('.flow-arrow');
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const target = btn.dataset.layer;
+
+      cards.forEach(c => {
+        if (target === 'all' || c.dataset.layer === target) {
+          c.classList.remove('ve-card--dimmed');
+        } else {
+          c.classList.add('ve-card--dimmed');
+        }
+      });
+    });
+  });
+
+  /* ── Interactive Dependency Highlighter ────────────────── */
+  cards.forEach(card => {
+    card.addEventListener('mouseenter', () => {
+      const outList = (card.dataset.outbound || '').split(',').filter(Boolean);
+      const inList = (card.dataset.inbound || '').split(',').filter(Boolean);
+      const activeIds = new Set([card.id, ...outList, ...inList]);
+
+      cards.forEach(c => {
+        if (!activeIds.has(c.id)) c.classList.add('ve-card--dimmed');
+        else c.classList.add('ve-card--highlighted');
+      });
+
+      arrows.forEach(a => {
+        if (activeIds.has(a.id)) a.classList.add('arrow--active');
+        else a.style.opacity = '0.2';
+      });
+    });
+
+    card.addEventListener('mouseleave', () => {
+      cards.forEach(c => c.classList.remove('ve-card--dimmed', 've-card--highlighted'));
+      arrows.forEach(a => {
+        a.classList.remove('arrow--active');
+        a.style.opacity = '1';
+      });
+    });
+  });
+
+  /* ── Copy Code Snippet ─────────────────────────────────── */
+  document.querySelectorAll('.btn-copy-code').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const code = btn.dataset.code.replace(/\\n/g, '\n');
+      navigator.clipboard.writeText(code).then(() => {
+        const orig = btn.textContent;
+        btn.textContent = 'Copied!';
+        setTimeout(() => { btn.textContent = orig; }, 1500);
+      });
+    });
+  });
+
+  /* ── Theme Switcher ────────────────────────────────────── */
+  document.getElementById('theme-select').addEventListener('change', (e) => {
+    document.documentElement.setAttribute('data-theme', e.target.value);
+  });
+</script>
 
 </body>
 </html>
