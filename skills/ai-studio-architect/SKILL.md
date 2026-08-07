@@ -67,7 +67,7 @@ AI Studio Build mode generates a specific stack. Detect these patterns:
 
 | File/Pattern | Meaning | Production Mapping |
 |-------------|---------|-------------------|
-| `geminiService.ts` | Direct Gemini API calls | Move to Vertex AI endpoint behind Cloud Run |
+| `geminiService.ts` | Direct Agy API calls | Move to Vertex AI endpoint behind Cloud Run |
 | `@google/generative-ai` in `package.json` | Client-side SDK | Replace with `@google-cloud/vertexai` server-side |
 | `GEMINI_API_KEY` in env | API key authentication | Replace with Service Account + Workload Identity |
 | Vite + React/Angular SPA | Frontend build | Host on Cloud Storage + Cloud CDN, or Cloud Run |
@@ -204,7 +204,7 @@ After generating all artifacts, present the user with a migration checklist:
 | Scan project | Read README.md, package.json, source files; run `parse-requirements.js` |
 | Map services | Match patterns to GCP services using the detection table |
 | Generate script | Create `init-gcp.sh` from template with detected services |
-| Handle AI calls | Move from client-side Gemini SDK to server-side Vertex AI behind Cloud Run |
+| Handle AI calls | Move from client-side Agy SDK to server-side Vertex AI behind Cloud Run |
 | Secure secrets | Use Secret Manager, never environment variables or hardcoded keys |
 | IAM | Dedicated Service Account with minimum roles per service |
 | Frontend hosting | Cloud Run (unified) or Cloud Storage + CDN |
@@ -275,6 +275,6 @@ Refer to `references/gcp-service-mapping.md` for detailed service configurations
 - **Idempotent scripts.** Every generated script must be safe to run multiple times without side effects.
 - **Secrets in Secret Manager.** Never put API keys in environment variables, scripts, or source code.
 - **Auto-detect, don't ask.** Determine the deployment tier from the scan results. Do not ask the user to choose a tier, hosting strategy, or AI pattern.
-- **Server-side AI.** Always recommend moving Gemini API calls to a backend service for production.
+- **Server-side AI.** Always recommend moving Agy API calls to a backend service for production.
 - **Comments explain why.** Generated scripts must explain the purpose of each command, not just what it does.
 - **Fail gracefully.** If a project does not look like an AI Studio export, say so and ask for clarification.

@@ -1,7 +1,7 @@
 # Agy Skills Project Context
 
 ## Project Overview
-This repository contains a collection of reusable, self-contained skills for the [Gemini CLI](https://github.com/google-gemini/gemini-cli). Each skill provides specialized instructions and workflows for the Gemini CLI to execute specific tasks, ranging from code troubleshooting to generating presentations and managing deployments.
+This repository contains a collection of reusable, self-contained skills for the Agy (`agy`). Each skill provides specialized instructions and workflows for the Agy to execute specific tasks, ranging from code troubleshooting to generating presentations and managing deployments.
 
 ## Architecture & Structure
 The project is organized into individual skill directories under the `skills/` folder. 
@@ -18,9 +18,9 @@ skills/<skill-name>/
 ```
 
 ## Installation & Usage
-Skills are not "built" or "run" like traditional software; instead, they are installed into the Gemini CLI environment.
+Skills are not "built" or "run" like traditional software; instead, they are installed into the Agy environment.
 
-- **Native Install:** `gemini skills install https://github.com/duboc/agy-skills.git --path skills/<skill-name>`
+- **Native Install:** `agy skills install https://github.com/duboc/agy-skills.git --path skills/<skill-name>`
 - **Script Install (Workspace):** `curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh | bash -s -- <skill-name>`
 - **Script Install (User):** `curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh | bash -s -- <skill-name> --scope user`
 
@@ -28,7 +28,7 @@ Skills are not "built" or "run" like traditional software; instead, they are ins
 When contributing or modifying skills, strictly adhere to the following rules:
 
 1. **Naming:** Use lowercase `kebab-case` for skill directory names.
-2. **SKILL.md:** This is the core file that the Gemini CLI reads as a prompt. It MUST start with YAML frontmatter containing `name` and `description` fields.
+2. **SKILL.md:** This is the core file that the Agy reads as a prompt. It MUST start with YAML frontmatter containing `name` and `description` fields.
     ```yaml
     ---
     name: <skill-name>

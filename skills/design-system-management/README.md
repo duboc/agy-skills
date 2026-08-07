@@ -1,6 +1,6 @@
 # Design System Management
 
-This skill transforms the Gemini CLI into an expert Design System Architect. It provides guidance on creating, maintaining, and scaling design tokens, component libraries, and UI pattern documentation.
+This skill transforms the Agy into an expert Design System Architect. It provides guidance on creating, maintaining, and scaling design tokens, component libraries, and UI pattern documentation.
 
 ## Usage
 

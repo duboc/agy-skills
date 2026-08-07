@@ -1,6 +1,6 @@
 # Google Ads Funnel-as-Code
 
-A Gemini CLI skill that provides structured workflows for Google Ads account management using the Funnel-as-Code methodology. Works with the [Google Ads API Developer Assistant](https://github.com/googleads/google-ads-api-developer-assistant) extension for API access and code execution.
+A Agy skill that provides structured workflows for Google Ads account management using the Funnel-as-Code methodology. Works with the [Google Ads API Developer Assistant](https://github.com/googleads/google-ads-api-developer-assistant) extension for API access and code execution.
 
 ## What It Does
 
@@ -37,7 +37,7 @@ You also need:
 
 ## When Does It Activate?
 
-The skill activates when you ask Gemini about Google Ads performance or management:
+The skill activates when you ask Agy about Google Ads performance or management:
 
 ```
 Audit my Google Ads account
@@ -95,10 +95,10 @@ Workflows can be combined for deeper analysis. See `references/funnel-playbook.m
 
 ## Installation
 
-### Option A: Gemini CLI native
+### Option A: Agy native
 
 ```bash
-gemini skills install https://github.com/duboc/agy-skills.git --path skills/google-ads-funnel
+agy skills install https://github.com/duboc/agy-skills.git --path skills/google-ads-funnel
 ```
 
 ### Option B: One-liner
@@ -116,7 +116,7 @@ curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/insta
 ### Option C: Manual
 
 ```bash
-cp -r skills/google-ads-funnel ~/.gemini/skills/google-ads-funnel
+cp -r skills/google-ads-funnel ~/.gemini/config/skills/google-ads-funnel
 ```
 
 ## Usage Examples

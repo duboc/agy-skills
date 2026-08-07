@@ -1,6 +1,6 @@
 # Technical Documentation
 
-This skill transforms the Gemini CLI into an expert Technical Writer. It helps you draft clear, maintainable, and audience-focused technical documentation, ranging from open-source READMEs to operational runbooks.
+This skill transforms the Agy into an expert Technical Writer. It helps you draft clear, maintainable, and audience-focused technical documentation, ranging from open-source READMEs to operational runbooks.
 
 ## Usage
 

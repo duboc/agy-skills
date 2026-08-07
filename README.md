@@ -1,6 +1,6 @@
 # Agy Skills
 
-A collection of reusable skills for [Gemini CLI](https://github.com/google-gemini/gemini-cli). Each skill is self-contained and can be installed independently.
+A collection of reusable skills for Agy (`agy`). Each skill is self-contained and can be installed independently.
 
 ---
 
@@ -16,7 +16,7 @@ A collection of reusable skills for [Gemini CLI](https://github.com/google-gemin
 | [zen-presenter](skills/zen-presenter/) | Generate MARP presentation decks following Presentation Zen principles with Google identity styling, self-contained HTML output, and optional PowerPoint export | `curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh \| bash -s -- zen-presenter` |
 | [ai-studio-architect](skills/ai-studio-architect/) | Convert AI Studio Build mode prototypes to production on GCP with auto-generated infrastructure scripts | `curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh \| bash -s -- ai-studio-architect` |
 | [clarity-presenter](skills/clarity-presenter/) | Generate MARP decks using SCQA narrative + assertion-evidence design with dual-perspective slides, Google identity styling, and optional PowerPoint export | `curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh \| bash -s -- clarity-presenter` |
-| [developer-growth-analysis](skills/developer-growth-analysis/) | Analyze Gemini CLI session history to surface development patterns, friction points, and growth opportunities with curated resources | `curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh \| bash -s -- developer-growth-analysis` |
+| [developer-growth-analysis](skills/developer-growth-analysis/) | Analyze Agy session history to surface development patterns, friction points, and growth opportunities with curated resources | `curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh \| bash -s -- developer-growth-analysis` |
 | [google-ads-funnel](skills/google-ads-funnel/) | Funnel-as-Code workflows for Google Ads account audits, spend analysis, creative testing, and conversion diagnostics via the Ads API | `curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh \| bash -s -- google-ads-funnel` |
 | [using-git-worktrees](skills/using-git-worktrees/) | Create isolated git worktrees with smart directory selection, gitignore safety checks, dependency setup, and baseline test verification | `curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh \| bash -s -- using-git-worktrees` |
 | [webapp-testing](skills/webapp-testing/) | Toolkit for testing local web applications using Playwright with server lifecycle management, screenshots, and console log capture | `curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh \| bash -s -- webapp-testing` |
@@ -37,16 +37,16 @@ Sybase migration skills have moved to their own repository: [sybase-migration-to
 
 ## Installation
 
-### Method 1: Gemini CLI native install
+### Method 1: Agy native install
 
 ```bash
-gemini skills install https://github.com/duboc/agy-skills.git --path skills/<skill-name>
+agy skills install https://github.com/duboc/agy-skills.git --path skills/<skill-name>
 ```
 
 Example:
 
 ```bash
-gemini skills install https://github.com/duboc/agy-skills.git --path skills/software-troubleshooter
+agy skills install https://github.com/duboc/agy-skills.git --path skills/software-troubleshooter
 ```
 
 ### Method 2: One-liner with curl
@@ -57,7 +57,7 @@ The install script downloads only the requested skill from GitHub (no git clone 
 curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh | bash -s -- <skill-name>
 ```
 
-By default, skills install to the **workspace** scope (`.gemini/skills/<name>/` in your current directory). To install for your user profile instead:
+By default, skills install to the **workspace** scope (`.agents/skills/<name>/` in your current directory). To install for your user profile instead:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh | bash -s -- <skill-name> --scope user
@@ -66,9 +66,9 @@ curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/insta
 ### Method 3: Manual download
 
 1. Download or clone this repository.
-2. Copy the desired skill folder into your Gemini skills directory:
+2. Copy the desired skill folder into your Agy skills directory:
    ```bash
-   cp -r skills/software-troubleshooter ~/.gemini/skills/software-troubleshooter
+   cp -r skills/software-troubleshooter ~/.gemini/config/skills/software-troubleshooter
    ```
 
 ## Contributing

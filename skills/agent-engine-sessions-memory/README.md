@@ -1,6 +1,6 @@
 # Agent Engine Sessions & Memory
 
-A Gemini CLI skill for managing sessions and long-term memory for agents on Vertex AI Agent Engine.
+A Agy skill for managing sessions and long-term memory for agents on Vertex AI Agent Engine.
 
 ## What It Does
 
@@ -37,10 +37,10 @@ The skill activates when you mention:
 
 ## Installation
 
-### Option A: Gemini CLI native
+### Option A: Agy native
 
 ```bash
-gemini skills install https://github.com/duboc/agy-skills.git --path skills/agent-engine-sessions-memory
+agy skills install https://github.com/duboc/agy-skills.git --path skills/agent-engine-sessions-memory
 ```
 
 ### Option B: One-liner
@@ -58,7 +58,7 @@ curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/insta
 ### Option C: Manual
 
 ```bash
-cp -r skills/agent-engine-sessions-memory ~/.gemini/skills/agent-engine-sessions-memory
+cp -r skills/agent-engine-sessions-memory ~/.gemini/config/skills/agent-engine-sessions-memory
 ```
 
 ## Usage Examples

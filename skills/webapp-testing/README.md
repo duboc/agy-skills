@@ -1,6 +1,6 @@
 # Web Application Testing
 
-A Gemini CLI skill for interacting with and testing local web applications using Playwright. Supports verifying frontend functionality, debugging UI behavior, capturing browser screenshots, and viewing browser logs.
+A Agy skill for interacting with and testing local web applications using Playwright. Supports verifying frontend functionality, debugging UI behavior, capturing browser screenshots, and viewing browser logs.
 
 ## What It Does
 
@@ -15,7 +15,7 @@ This skill provides a structured toolkit for browser-based testing and automatio
 
 ## When Does It Activate
 
-The skill activates when you ask Gemini to:
+The skill activates when you ask Agy to:
 
 - Test or interact with a web application
 - Take screenshots of a web page
@@ -26,10 +26,10 @@ The skill activates when you ask Gemini to:
 
 ## Installation
 
-### Option A: Gemini CLI native
+### Option A: Agy native
 
 ```bash
-gemini skills install https://github.com/duboc/agy-skills.git --path skills/webapp-testing
+agy skills install https://github.com/duboc/agy-skills.git --path skills/webapp-testing
 ```
 
 ### Option B: One-liner
@@ -47,7 +47,7 @@ curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/insta
 ### Option C: Manual
 
 ```bash
-cp -r skills/webapp-testing ~/.gemini/skills/webapp-testing
+cp -r skills/webapp-testing ~/.gemini/config/skills/webapp-testing
 ```
 
 ## Prerequisites

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# collect-sessions.sh — Aggregates Gemini CLI session data within a time window
+# collect-sessions.sh — Aggregates Agy session data within a time window
 #
 # Usage: collect-sessions.sh [HOURS]
 #   HOURS: lookback window in hours (default: 48)
@@ -15,7 +15,7 @@ TMP_DIR="${GEMINI_DIR}/tmp"
 PROJECTS_FILE="${GEMINI_DIR}/projects.json"
 
 if [[ ! -d "$TMP_DIR" ]]; then
-  echo '{"error": "Gemini CLI tmp directory not found at '"${TMP_DIR}"'"}' >&2
+  echo '{"error": "Agy tmp directory not found at '"${TMP_DIR}"'"}' >&2
   exit 1
 fi
 

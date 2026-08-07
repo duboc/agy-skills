@@ -1,6 +1,6 @@
 # Writing Plans
 
-A Gemini CLI skill for generating detailed, step-by-step implementation plans before writing any code. Plans assume the implementing developer has zero codebase context and follow strict TDD discipline with frequent commits.
+A Agy skill for generating detailed, step-by-step implementation plans before writing any code. Plans assume the implementing developer has zero codebase context and follow strict TDD discipline with frequent commits.
 
 ## What It Does
 
@@ -17,7 +17,7 @@ This skill produces zero-ambiguity implementation plans that break features into
 The skill activates when you:
 
 - Have a spec, requirements doc, or feature description and want a plan before coding
-- Ask Gemini to plan an implementation, break down a feature, or create a task list
+- Ask Agy to plan an implementation, break down a feature, or create a task list
 - Want to prepare work for another developer (or a future session) to execute
 
 ## Core Principles
@@ -29,10 +29,10 @@ The skill activates when you:
 
 ## Installation
 
-### Option A: Gemini CLI native
+### Option A: Agy native
 
 ```bash
-gemini skills install https://github.com/duboc/agy-skills.git --path skills/writing-plans
+agy skills install https://github.com/duboc/agy-skills.git --path skills/writing-plans
 ```
 
 ### Option B: One-liner
@@ -50,7 +50,7 @@ curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/insta
 ### Option C: Manual
 
 ```bash
-cp -r skills/writing-plans ~/.gemini/skills/writing-plans
+cp -r skills/writing-plans ~/.gemini/config/skills/writing-plans
 ```
 
 ## Usage Examples

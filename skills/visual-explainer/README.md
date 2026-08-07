@@ -44,10 +44,10 @@ The skill activates when you ask for visual explanations or when complex tabular
 
 ## Installation
 
-### Option A: Gemini CLI native
+### Option A: Agy native
 
 ```bash
-gemini skills install https://github.com/duboc/agy-skills.git --path skills/visual-explainer
+agy skills install https://github.com/duboc/agy-skills.git --path skills/visual-explainer
 ```
 
 ### Option B: One-liner
@@ -65,7 +65,7 @@ curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/insta
 ### Option C: Manual
 
 ```bash
-cp -r skills/visual-explainer ~/.gemini/skills/visual-explainer
+cp -r skills/visual-explainer ~/.gemini/config/skills/visual-explainer
 ```
 
 ## References

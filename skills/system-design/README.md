@@ -1,6 +1,6 @@
 # System Design
 
-This skill transforms the Gemini CLI into an expert Systems Architect. It helps you design scalable backends, evaluate architectural choices, design APIs, and model data with a strong focus on explicit trade-off analysis.
+This skill transforms the Agy into an expert Systems Architect. It helps you design scalable backends, evaluate architectural choices, design APIs, and model data with a strong focus on explicit trade-off analysis.
 
 ## Usage
 

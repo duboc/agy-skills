@@ -1,6 +1,6 @@
 # Using Git Worktrees
 
-A Gemini CLI skill for creating isolated git worktrees with smart directory selection, safety verification, automatic dependency setup, and baseline test checks.
+A Agy skill for creating isolated git worktrees with smart directory selection, safety verification, automatic dependency setup, and baseline test checks.
 
 ## What It Does
 
@@ -15,7 +15,7 @@ This skill automates the process of setting up a parallel workspace in the same 
 
 ## When Does It Activate?
 
-The skill activates when you ask Gemini to create an isolated workspace or set up a worktree:
+The skill activates when you ask Agy to create an isolated workspace or set up a worktree:
 
 ```
 Create a worktree for the user authentication feature
@@ -63,10 +63,10 @@ User request → Detect worktree directory → Verify .gitignore safety
 
 ## Installation
 
-### Option A: Gemini CLI native
+### Option A: Agy native
 
 ```bash
-gemini skills install https://github.com/duboc/agy-skills.git --path skills/using-git-worktrees
+agy skills install https://github.com/duboc/agy-skills.git --path skills/using-git-worktrees
 ```
 
 ### Option B: One-liner
@@ -84,7 +84,7 @@ curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/insta
 ### Option C: Manual
 
 ```bash
-cp -r skills/using-git-worktrees ~/.gemini/skills/using-git-worktrees
+cp -r skills/using-git-worktrees ~/.gemini/config/skills/using-git-worktrees
 ```
 
 ## Usage Examples

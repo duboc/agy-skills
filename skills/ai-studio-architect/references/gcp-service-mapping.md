@@ -4,7 +4,7 @@ Detailed configuration reference for each GCP service used when migrating AI Stu
 
 ## Service Configurations
 
-### Vertex AI (Gemini)
+### Vertex AI (Agy)
 
 **API**: `aiplatform.googleapis.com`
 

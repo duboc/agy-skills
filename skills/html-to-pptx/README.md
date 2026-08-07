@@ -1,6 +1,6 @@
 # HTML to PPTX
 
-A Gemini CLI skill that converts MARP HTML slide presentations into fully editable PowerPoint (`.pptx`) files. Every text element, list, table, and image becomes a native PowerPoint object — not a screenshot.
+A Agy skill that converts MARP HTML slide presentations into fully editable PowerPoint (`.pptx`) files. Every text element, list, table, and image becomes a native PowerPoint object — not a screenshot.
 
 ## What It Does
 
@@ -11,7 +11,7 @@ This skill uses a two-step pipeline to produce editable PowerPoint files from HT
 
 ## When Does It Activate?
 
-The skill activates when you ask Gemini to convert HTML slides to PowerPoint:
+The skill activates when you ask Agy to convert HTML slides to PowerPoint:
 
 | Trigger | Example |
 |---------|---------|
@@ -53,14 +53,14 @@ The Google identity styling (colors, gradient bars, slide type classes) is prese
 ## Prerequisites
 
 - **Node.js** v18+ (for running the build script)
-- **agent-browser** (Gemini CLI browser tool for DOM extraction)
+- **agent-browser** (Agy browser tool for DOM extraction)
 
 ## Installation
 
-### Option A: Gemini CLI native
+### Option A: Agy native
 
 ```bash
-gemini skills install https://github.com/duboc/agy-skills.git --path skills/html-to-pptx
+agy skills install https://github.com/duboc/agy-skills.git --path skills/html-to-pptx
 ```
 
 ### Option B: One-liner
@@ -78,8 +78,8 @@ curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/insta
 ### Option C: Manual
 
 ```bash
-cp -r skills/html-to-pptx ~/.gemini/skills/html-to-pptx
-cd ~/.gemini/skills/html-to-pptx && npm install
+cp -r skills/html-to-pptx ~/.gemini/config/skills/html-to-pptx
+cd ~/.gemini/config/skills/html-to-pptx && npm install
 ```
 
 ## Usage Examples

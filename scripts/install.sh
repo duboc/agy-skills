@@ -9,14 +9,14 @@ usage() {
   cat <<EOF
 Usage: $(basename "$0") <skill-name> [--scope user|workspace]
 
-Install a Gemini CLI skill from the agy-skills repository.
+Install an Agy skill from the agy-skills repository.
 
 Arguments:
   skill-name          Name of the skill to install (e.g., software-troubleshooter)
 
 Options:
-  --scope user        Install to ~/.gemini/skills/<name>/ (user scope)
-  --scope workspace   Install to .gemini/skills/<name>/ in current directory (default)
+  --scope user        Install to ~/.gemini/config/skills/<name>/ (user scope)
+  --scope workspace   Install to .agents/skills/<name>/ in current directory (default)
   -h, --help          Show this help message
 
 Examples:
@@ -31,7 +31,7 @@ Available skills:
   agent-engine-ops          Monitor, trace, secure, and evaluate Agent Engine agents
   ai-studio-architect       Convert AI Studio prototypes to production on GCP
   clarity-presenter         MARP decks with SCQA narrative + assertion-evidence design
-  developer-growth-analysis Analyze Gemini CLI session history for growth patterns
+  developer-growth-analysis Analyze Agy session history for growth patterns
   google-ads-funnel         Funnel-as-Code workflows for Google Ads
   spring-boot-upgrader      Migrate Spring Boot apps to 4.0 with phased upgrade plans
   using-git-worktrees       Create isolated git worktrees with safety checks
@@ -93,9 +93,9 @@ fi
 
 # --- Determine install directory ---
 if [[ "$SCOPE" == "user" ]]; then
-  INSTALL_DIR="${HOME}/.gemini/skills/${SKILL_NAME}"
+  INSTALL_DIR="${HOME}/.gemini/config/skills/${SKILL_NAME}"
 else
-  INSTALL_DIR=".gemini/skills/${SKILL_NAME}"
+  INSTALL_DIR=".agents/skills/${SKILL_NAME}"
 fi
 
 echo "Installing skill '${SKILL_NAME}' to ${INSTALL_DIR} ..."
@@ -152,4 +152,4 @@ fi
 echo ""
 echo "Skill '${SKILL_NAME}' installed successfully to ${INSTALL_DIR}"
 echo ""
-echo "The skill will be available the next time you start Gemini CLI."
+echo "The skill will be available the next time you start Agy."

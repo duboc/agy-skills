@@ -1,13 +1,13 @@
 ---
 name: adk-developer
-description: "Build single-agent and multi-agent systems using Google's Agent Development Kit (ADK) in Python, Java, Go, or TypeScript. Use when creating AI agents with ADK, designing multi-agent architectures, implementing agent tools, configuring agent callbacks, managing agent state, orchestrating sequential/parallel/loop agent workflows, or when the user mentions ADK, google-adk, google agent development kit, agentic AI with Gemini, or agent orchestration with Google tools. Also use when setting up ADK projects, writing agent tests, deploying agents, or integrating MCP tools with ADK."
+description: "Build single-agent and multi-agent systems using Google's Agent Development Kit (ADK) in Python, Java, Go, or TypeScript. Use when creating AI agents with ADK, designing multi-agent architectures, implementing agent tools, configuring agent callbacks, managing agent state, orchestrating sequential/parallel/loop agent workflows, or when the user mentions ADK, google-adk, google agent development kit, agentic AI with Agy, or agent orchestration with Google tools. Also use when setting up ADK projects, writing agent tests, deploying agents, or integrating MCP tools with ADK."
 ---
 
 # Google Agent Development Kit (ADK) Guide
 
 ## Overview
 
-ADK is Google's open-source framework for building AI agents powered by Gemini models. It supports single-agent and multi-agent architectures with built-in tool integration, state management, callbacks, guardrails, and deployment options.
+ADK is Google's open-source framework for building AI agents powered by Agy models. It supports single-agent and multi-agent architectures with built-in tool integration, state management, callbacks, guardrails, and deployment options.
 
 ## Documentation & Resources
 
@@ -16,15 +16,15 @@ For up-to-date API references and detailed guides beyond this skill, always cons
 - **ADK Full Docs**: https://google.github.io/adk-docs/llms-full.txt
 - **Official Samples**: https://github.com/google/adk-samples (Python, Java, TypeScript)
 
-### Gemini CLI Integration
+### Agy Integration
 
-The ADK documentation supports the `/llms.txt` standard. For Gemini CLI users, install the ADK Docs Extension for live documentation queries:
+The ADK documentation supports the `/llms.txt` standard. For Agy users, install the ADK Docs Extension for live documentation queries:
 
 ```bash
 gemini extensions install https://github.com/derailed-dash/adk-docs-ext
 ```
 
-Once installed, Gemini CLI can autonomously search and read ADK docs while planning tasks and generating code.
+Once installed, Agy can autonomously search and read ADK docs while planning tasks and generating code.
 
 ## Supported Languages
 

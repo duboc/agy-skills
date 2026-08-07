@@ -1,10 +1,10 @@
 # Software Troubleshooter
 
-A Gemini CLI skill for structured code inspection, troubleshooting, and root cause analysis of software issues.
+A Agy skill for structured code inspection, troubleshooting, and root cause analysis of software issues.
 
 ## What It Does
 
-This skill guides Gemini through a systematic code inspection workflow that produces a structured **Troubleshoot & Code Inspection Report**:
+This skill guides Agy through a systematic code inspection workflow that produces a structured **Troubleshoot & Code Inspection Report**:
 
 1. **Issue intake** — Gathers symptoms, environment, and observed evidence.
 2. **Code inspection** — Reads source code, traces execution paths, quotes specific code blocks, and identifies conflicting logic.
@@ -16,10 +16,10 @@ This skill guides Gemini through a systematic code inspection workflow that prod
 
 ## Installation
 
-### Option A: Gemini CLI native
+### Option A: Agy native
 
 ```bash
-gemini skills install https://github.com/duboc/agy-skills.git --path skills/software-troubleshooter
+agy skills install https://github.com/duboc/agy-skills.git --path skills/software-troubleshooter
 ```
 
 ### Option B: One-liner
@@ -37,12 +37,12 @@ curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/insta
 ### Option C: Manual
 
 ```bash
-cp -r skills/software-troubleshooter ~/.gemini/skills/software-troubleshooter
+cp -r skills/software-troubleshooter ~/.gemini/config/skills/software-troubleshooter
 ```
 
 ## Usage Examples
 
-Once installed, the skill activates when you ask Gemini to troubleshoot or inspect code.
+Once installed, the skill activates when you ask Agy to troubleshoot or inspect code.
 
 ### Investigating a bug in code
 

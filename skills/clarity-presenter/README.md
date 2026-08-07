@@ -1,10 +1,10 @@
 # Clarity Presenter
 
-A Gemini CLI skill for generating MARP presentation decks using the **SCQA** (Situation-Complication-Question-Answer) narrative framework with **assertion-evidence** slide design and **dual-perspective** paired slides for mixed technical and business audiences. Uses Google identity styling and outputs self-contained HTML with optional PowerPoint export.
+A Agy skill for generating MARP presentation decks using the **SCQA** (Situation-Complication-Question-Answer) narrative framework with **assertion-evidence** slide design and **dual-perspective** paired slides for mixed technical and business audiences. Uses Google identity styling and outputs self-contained HTML with optional PowerPoint export.
 
 ## What It Does
 
-This skill transforms any technical topic into a structured slide deck that bridges engineers and stakeholders. It guides Gemini through:
+This skill transforms any technical topic into a structured slide deck that bridges engineers and stakeholders. It guides Agy through:
 
 1. **Topic discovery** — Captures the subject, audience, key concepts (3-5), and core takeaway.
 2. **Design consultation** — Asks about background images, audience balance, and mood preferences.
@@ -16,7 +16,7 @@ This skill transforms any technical topic into a structured slide deck that brid
 
 ## When Does It Activate?
 
-The skill activates when you ask Gemini to create structured, dual-audience presentations. Keywords include:
+The skill activates when you ask Agy to create structured, dual-audience presentations. Keywords include:
 
 | Trigger | Example |
 |---------|---------|
@@ -53,10 +53,10 @@ The skill activates when you ask Gemini to create structured, dual-audience pres
 
 ## Installation
 
-### Option A: Gemini CLI native
+### Option A: Agy native
 
 ```bash
-gemini skills install https://github.com/duboc/agy-skills.git --path skills/clarity-presenter
+agy skills install https://github.com/duboc/agy-skills.git --path skills/clarity-presenter
 ```
 
 ### Option B: One-liner
@@ -74,12 +74,12 @@ curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/insta
 ### Option C: Manual
 
 ```bash
-cp -r skills/clarity-presenter ~/.gemini/skills/clarity-presenter
+cp -r skills/clarity-presenter ~/.gemini/config/skills/clarity-presenter
 ```
 
 ## Usage Examples
 
-Once installed, the skill activates when you ask Gemini to create structured, dual-audience presentations.
+Once installed, the skill activates when you ask Agy to create structured, dual-audience presentations.
 
 ### Basic SCQA deck
 

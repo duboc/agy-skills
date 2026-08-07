@@ -1,6 +1,6 @@
 # Design Critique Skill
 
-An expert Design Reviewer and UX Auditor skill for the Gemini CLI and AI coding agents.
+An expert Design Reviewer and UX Auditor skill for the Agy and AI coding agents.
 
 This skill equips the agent to systematically evaluate UI/UX designs, wireframes, mockups, screenshots, and front-end code (HTML, Tailwind CSS, React, Vue) for usability, visual hierarchy, consistency, accessibility (WCAG), and design principles.
 

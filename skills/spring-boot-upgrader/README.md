@@ -1,6 +1,6 @@
 # Spring Boot Upgrader
 
-A Gemini CLI skill for migrating Spring Boot applications to version 4.0. Scans the project, auto-detects the migration path, and generates a phased upgrade plan — no questions asked.
+A Agy skill for migrating Spring Boot applications to version 4.0. Scans the project, auto-detects the migration path, and generates a phased upgrade plan — no questions asked.
 
 ## What It Does
 
@@ -14,7 +14,7 @@ This skill reads your Spring Boot project, identifies the current version and al
 
 ## When Does It Activate?
 
-The skill activates when you ask Gemini to upgrade or migrate a Spring Boot application. It scans the project and auto-detects everything — no setup questions required.
+The skill activates when you ask Agy to upgrade or migrate a Spring Boot application. It scans the project and auto-detects everything — no setup questions required.
 
 | Trigger | Example |
 |---------|---------|
@@ -39,10 +39,10 @@ The skill activates when you ask Gemini to upgrade or migrate a Spring Boot appl
 
 ## Installation
 
-### Option A: Gemini CLI native
+### Option A: Agy native
 
 ```bash
-gemini skills install https://github.com/duboc/agy-skills.git --path skills/spring-boot-upgrader
+agy skills install https://github.com/duboc/agy-skills.git --path skills/spring-boot-upgrader
 ```
 
 ### Option B: One-liner
@@ -60,12 +60,12 @@ curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/insta
 ### Option C: Manual
 
 ```bash
-cp -r skills/spring-boot-upgrader ~/.gemini/skills/spring-boot-upgrader
+cp -r skills/spring-boot-upgrader ~/.gemini/config/skills/spring-boot-upgrader
 ```
 
 ## Usage Examples
 
-Once installed, the skill activates when you ask Gemini to upgrade or migrate Spring Boot projects.
+Once installed, the skill activates when you ask Agy to upgrade or migrate Spring Boot projects.
 
 ### Full migration to Spring Boot 4
 

@@ -1,6 +1,6 @@
 # Feature Spec Skill
 
-An expert Product Manager, Technical Program Manager, and Product Architect skill for the Gemini CLI and AI coding agents.
+An expert Product Manager, Technical Program Manager, and Product Architect skill for the Agy and AI coding agents.
 
 This skill equips the agent to write engineering-ready Product Requirements Documents (PRDs), traceable user stories with Given/When/Then acceptance criteria (`AC-US01-1`), WCAG 2.1 AA accessibility specs, structured API contract tables, database schema migration rules, PII data governance telemetry schemas, feature flag rollout schedules, and MoSCoW scope management.
 

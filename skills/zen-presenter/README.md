@@ -1,10 +1,10 @@
 # Zen Presenter
 
-A Gemini CLI skill for generating MARP presentation decks that follow the **Presentation Zen** philosophy — minimal text, high visual impact, and storytelling-driven design. Uses Google identity styling and outputs self-contained HTML with optional PowerPoint export.
+A Agy skill for generating MARP presentation decks that follow the **Presentation Zen** philosophy — minimal text, high visual impact, and storytelling-driven design. Uses Google identity styling and outputs self-contained HTML with optional PowerPoint export.
 
 ## What It Does
 
-This skill transforms any topic into a visually striking slide deck by applying Garr Reynolds' Presentation Zen principles. It guides Gemini through:
+This skill transforms any topic into a visually striking slide deck by applying Garr Reynolds' Presentation Zen principles. It guides Agy through:
 
 1. **Topic discovery** — Captures the subject, audience, and core takeaway.
 2. **Design consultation** — Asks about background images (optional), mood, and typography preferences before generating anything.
@@ -15,7 +15,7 @@ This skill transforms any topic into a visually striking slide deck by applying 
 
 ## When Does It Activate?
 
-The skill activates when you ask Gemini to create presentations, slides, or decks. Keywords include:
+The skill activates when you ask Agy to create presentations, slides, or decks. Keywords include:
 
 | Trigger | Example |
 |---------|---------|
@@ -39,10 +39,10 @@ The skill activates when you ask Gemini to create presentations, slides, or deck
 
 ## Installation
 
-### Option A: Gemini CLI native
+### Option A: Agy native
 
 ```bash
-gemini skills install https://github.com/duboc/agy-skills.git --path skills/zen-presenter
+agy skills install https://github.com/duboc/agy-skills.git --path skills/zen-presenter
 ```
 
 ### Option B: One-liner
@@ -60,12 +60,12 @@ curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/insta
 ### Option C: Manual
 
 ```bash
-cp -r skills/zen-presenter ~/.gemini/skills/zen-presenter
+cp -r skills/zen-presenter ~/.gemini/config/skills/zen-presenter
 ```
 
 ## Usage Examples
 
-Once installed, the skill activates when you ask Gemini to create presentations.
+Once installed, the skill activates when you ask Agy to create presentations.
 
 ### Basic deck generation
 

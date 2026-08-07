@@ -1,6 +1,6 @@
 # ADK Developer
 
-A Gemini CLI skill for building single-agent and multi-agent systems with Google's Agent Development Kit (ADK) in Python, Java, Go, and TypeScript.
+A Agy skill for building single-agent and multi-agent systems with Google's Agent Development Kit (ADK) in Python, Java, Go, and TypeScript.
 
 ## What It Does
 
@@ -11,7 +11,7 @@ This skill gives your coding agent deep knowledge of ADK architecture, patterns,
 The skill activates when you mention:
 
 - ADK, google-adk, Google Agent Development Kit
-- Building AI agents with Gemini in Python, Java, Go, or TypeScript
+- Building AI agents with Agy in Python, Java, Go, or TypeScript
 - Multi-agent architectures or agent orchestration
 - Sequential, parallel, or loop agent workflows
 - Agent tools, callbacks, state management
@@ -40,10 +40,10 @@ The skill activates when you mention:
 
 ## Installation
 
-### Option A: Gemini CLI native
+### Option A: Agy native
 
 ```bash
-gemini skills install https://github.com/duboc/agy-skills.git --path skills/adk-developer
+agy skills install https://github.com/duboc/agy-skills.git --path skills/adk-developer
 ```
 
 ### Option B: One-liner
@@ -61,7 +61,7 @@ curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/insta
 ### Option C: Manual
 
 ```bash
-cp -r skills/adk-developer ~/.gemini/skills/adk-developer
+cp -r skills/adk-developer ~/.gemini/config/skills/adk-developer
 ```
 
 ## Keeping Knowledge Fresh
@@ -74,7 +74,7 @@ skills/adk-developer/scripts/update-references.sh
 
 This downloads `llms.txt`, `llms-full.txt`, and the Python quickstart from official ADK repositories. Run it periodically or set up a CI job.
 
-For Gemini CLI users, the [ADK Docs Extension](https://github.com/derailed-dash/adk-docs-ext) provides live documentation queries:
+For Agy users, the [ADK Docs Extension](https://github.com/derailed-dash/adk-docs-ext) provides live documentation queries:
 
 ```bash
 gemini extensions install https://github.com/derailed-dash/adk-docs-ext

@@ -1,6 +1,6 @@
 # Funnel-as-Code Playbook
 
-This reference describes the Funnel-as-Code methodology and how to apply it to Google Ads management using the Gemini CLI.
+This reference describes the Funnel-as-Code methodology and how to apply it to Google Ads management using the Agy.
 
 ---
 

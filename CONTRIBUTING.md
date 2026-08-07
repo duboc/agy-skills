@@ -18,7 +18,7 @@ skills/<skill-name>/
 
 ### SKILL.md Format
 
-The `SKILL.md` file is the entry point that Gemini CLI reads. It must start with YAML frontmatter:
+The `SKILL.md` file is the entry point that Agy reads. It must start with YAML frontmatter:
 
 ```yaml
 ---
@@ -27,7 +27,7 @@ description: A short one-line description of what the skill does
 ---
 ```
 
-After the frontmatter, write the full instructions that Gemini should follow when the skill is active. This is free-form markdown — treat it as a system prompt for the skill's behavior.
+After the frontmatter, write the full instructions that Agy should follow when the skill is active. This is free-form markdown — treat it as a system prompt for the skill's behavior.
 
 ### Naming Conventions
 
@@ -50,7 +50,7 @@ Before submitting a PR, verify:
 - [ ] `README.md` exists with usage examples
 - [ ] All scripts are executable and run on both macOS and Linux
 - [ ] The skill works when installed via `scripts/install.sh <skill-name>`
-- [ ] The skill works when copied manually to `~/.gemini/skills/<name>/`
+- [ ] The skill works when copied manually to `~/.gemini/config/skills/<name>/`
 - [ ] No hardcoded absolute paths in any file
 
 ## Pull Request Guidelines

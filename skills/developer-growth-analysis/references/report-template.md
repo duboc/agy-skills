@@ -123,4 +123,4 @@ Based on the top growth opportunity, here is a focused exercise for your next se
 
 ---
 
-*This report reflects activity observed in Gemini CLI sessions only. It does not represent your full skill set or all work completed during this period.*
+*This report reflects activity observed in Agy sessions only. It does not represent your full skill set or all work completed during this period.*

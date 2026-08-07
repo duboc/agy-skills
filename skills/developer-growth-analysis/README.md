@@ -1,10 +1,10 @@
 # Developer Growth Analysis
 
-A Gemini CLI skill that analyzes your recent session history to surface development patterns, friction points, and growth opportunities, then curates learning resources tailored to your actual work.
+A Agy skill that analyzes your recent session history to surface development patterns, friction points, and growth opportunities, then curates learning resources tailored to your actual work.
 
 ## What It Does
 
-This skill reads your local Gemini CLI session data and produces a **Developer Momentum Report** using three analytical signals:
+This skill reads your local Agy session data and produces a **Developer Momentum Report** using three analytical signals:
 
 1. **Velocity** — Where you work efficiently, showing established skills and productive workflows.
 2. **Friction** — Where momentum breaks down due to knowledge gaps, tooling issues, or architectural uncertainty.
@@ -14,7 +14,7 @@ The report includes prioritized growth opportunities with curated resources and 
 
 ## When Does It Activate?
 
-The skill activates when you ask Gemini to review your work patterns or growth:
+The skill activates when you ask Agy to review your work patterns or growth:
 
 ```
 Analyze my developer growth
@@ -48,10 +48,10 @@ Where should I focus my learning?
 
 ## Installation
 
-### Option A: Gemini CLI native
+### Option A: Agy native
 
 ```bash
-gemini skills install https://github.com/duboc/agy-skills.git --path skills/developer-growth-analysis
+agy skills install https://github.com/duboc/agy-skills.git --path skills/developer-growth-analysis
 ```
 
 ### Option B: One-liner
@@ -69,7 +69,7 @@ curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/insta
 ### Option C: Manual
 
 ```bash
-cp -r skills/developer-growth-analysis ~/.gemini/skills/developer-growth-analysis
+cp -r skills/developer-growth-analysis ~/.gemini/config/skills/developer-growth-analysis
 ```
 
 ## Usage Examples
@@ -115,4 +115,4 @@ Review my work on the search2agent project from the past week
 
 | File | Description |
 |------|-------------|
-| `scripts/collect-sessions.sh` | Aggregates Gemini CLI session data across all projects within a time window. Requires `python3`. |
+| `scripts/collect-sessions.sh` | Aggregates Agy session data across all projects within a time window. Requires `python3`. |

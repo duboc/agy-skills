@@ -305,7 +305,7 @@ function formatSummary(services, stack, envVars, architecture) {
   // Recommendations
   lines.push('\n## Recommendations');
   if (stack.clientSideAI) {
-    lines.push('  [!] Client-side Gemini SDK detected. Migrate to server-side Vertex AI behind Cloud Run.');
+    lines.push('  [!] Client-side Agy SDK detected. Migrate to server-side Vertex AI behind Cloud Run.');
   }
   if (stack.geminiService) {
     lines.push('  [!] geminiService.ts detected. This file must be moved to a backend service.');

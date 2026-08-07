@@ -1,6 +1,6 @@
 # UX Copywriter
 
-This skill transforms the Gemini CLI into an expert UX Copywriter and Content Designer. It helps developers and designers craft effective, accessible, and user-centric microcopy for digital products.
+This skill transforms the Agy into an expert UX Copywriter and Content Designer. It helps developers and designers craft effective, accessible, and user-centric microcopy for digital products.
 
 ## Usage
 

@@ -14,7 +14,7 @@ Velocity measures how efficiently a developer moves from intent to result. High 
 | Single-pass solutions | Problems solved within one session without backtracking |
 | Efficient tool use | Shell commands that succeed on first attempt; file operations that target the right paths |
 | Pattern reuse | Similar tasks handled with consistent, repeatable approaches |
-| Low guidance dependency | User drives the direction; Gemini is used for acceleration, not navigation |
+| Low guidance dependency | User drives the direction; Agy is used for acceleration, not navigation |
 
 ### Indicators of Low Velocity
 
@@ -23,7 +23,7 @@ Velocity measures how efficiently a developer moves from intent to result. High 
 | Vague prompts | Messages like "fix this" or "make it work" without context |
 | Session sprawl | Single tasks spanning multiple long sessions |
 | Command retries | Same shell command attempted with variations |
-| Over-reliance | Asking Gemini to explain basic concepts before every task |
+| Over-reliance | Asking Agy to explain basic concepts before every task |
 
 ### How to Rate
 
@@ -68,7 +68,7 @@ The developer struggles to diagnose and fix issues efficiently.
 
 **Session evidence:**
 - Adding print/log statements without a hypothesis
-- Asking Gemini to "find the bug" without narrowing the search space
+- Asking Agy to "find the bug" without narrowing the search space
 - Multiple attempts at fixes that don't address the root cause
 - Difficulty reading stack traces or error output
 

@@ -1,6 +1,6 @@
 # Agent Engine Ops
 
-A Gemini CLI skill for monitoring, tracing, securing, and evaluating agents on Vertex AI Agent Engine.
+A Agy skill for monitoring, tracing, securing, and evaluating agents on Vertex AI Agent Engine.
 
 ## What It Does
 
@@ -36,10 +36,10 @@ The skill activates when you mention:
 
 ## Installation
 
-### Option A: Gemini CLI native
+### Option A: Agy native
 
 ```bash
-gemini skills install https://github.com/duboc/agy-skills.git --path skills/agent-engine-ops
+agy skills install https://github.com/duboc/agy-skills.git --path skills/agent-engine-ops
 ```
 
 ### Option B: One-liner
@@ -57,7 +57,7 @@ curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/insta
 ### Option C: Manual
 
 ```bash
-cp -r skills/agent-engine-ops ~/.gemini/skills/agent-engine-ops
+cp -r skills/agent-engine-ops ~/.gemini/config/skills/agent-engine-ops
 ```
 
 ## Usage Examples

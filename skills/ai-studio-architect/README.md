@@ -1,6 +1,6 @@
 # AI Studio Architect
 
-A Gemini CLI skill for converting Google AI Studio Build mode prototypes into production-grade infrastructure on Google Cloud Platform.
+A Agy skill for converting Google AI Studio Build mode prototypes into production-grade infrastructure on Google Cloud Platform.
 
 ## What It Does
 
@@ -15,7 +15,7 @@ This skill reads your AI Studio project, identifies all infrastructure requireme
 
 ## When Does It Activate?
 
-The skill activates when you ask Gemini to deploy AI Studio projects or set up GCP infrastructure. It scans the project, auto-detects the right deployment tier, and generates everything — no setup questions required.
+The skill activates when you ask Agy to deploy AI Studio projects or set up GCP infrastructure. It scans the project, auto-detects the right deployment tier, and generates everything — no setup questions required.
 
 | Trigger | Example |
 |---------|---------|
@@ -29,7 +29,7 @@ The skill activates when you ask Gemini to deploy AI Studio projects or set up G
 
 | Area | Details |
 |------|---------|
-| **AI Studio Stack** | React/Angular + TypeScript + Vite + Tailwind + Gemini API |
+| **AI Studio Stack** | React/Angular + TypeScript + Vite + Tailwind + Agy API |
 | **Service Detection** | Pattern matching for Firestore, Storage, Vertex AI, Cloud Run, Secret Manager, Auth, Pub/Sub, Cloud Build |
 | **Auto Tier Detection** | Automatically selects Starter, Standard, Production, or Enterprise based on scan results |
 | **SDK Migration** | `@google/generative-ai` to `@google-cloud/vertexai` code transformation |
@@ -41,10 +41,10 @@ The skill activates when you ask Gemini to deploy AI Studio projects or set up G
 
 ## Installation
 
-### Option A: Gemini CLI native
+### Option A: Agy native
 
 ```bash
-gemini skills install https://github.com/duboc/agy-skills.git --path skills/ai-studio-architect
+agy skills install https://github.com/duboc/agy-skills.git --path skills/ai-studio-architect
 ```
 
 ### Option B: One-liner
@@ -62,12 +62,12 @@ curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/insta
 ### Option C: Manual
 
 ```bash
-cp -r skills/ai-studio-architect ~/.gemini/skills/ai-studio-architect
+cp -r skills/ai-studio-architect ~/.gemini/config/skills/ai-studio-architect
 ```
 
 ## Usage Examples
 
-Once installed, the skill activates when you ask Gemini to deploy or migrate AI Studio projects.
+Once installed, the skill activates when you ask Agy to deploy or migrate AI Studio projects.
 
 ### Scan and deploy an AI Studio export
 
@@ -83,7 +83,7 @@ Read the README.md in this project and generate an init-gcp.sh script
 with all the gcloud commands I need.
 ```
 
-### Migrate Gemini API calls to Vertex AI
+### Migrate Agy API calls to Vertex AI
 
 ```
 This app uses @google/generative-ai with an API key. Help me migrate
