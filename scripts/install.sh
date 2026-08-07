@@ -41,6 +41,7 @@ Available skills:
   visual-explainer          Generate visual HTML pages for diagrams and data
   html-to-pptx              Convert MARP HTML slides to editable PowerPoint
   zen-pitch                 Research domain & compile persuasive Presentation Zen pitch deck
+  technical-drawing         Create precise, dimensioned technical drawings in SVG
 EOF
 }
 
