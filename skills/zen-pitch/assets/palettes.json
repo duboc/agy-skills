@@ -1,0 +1,33 @@
+{
+  "note": "Reference copy of the palettes defined in scripts/deck_kit.js. Use these keys when building a custom brand palette. accentsOnLight must darken any hue that is unreadable as text on white.",
+  "palettes": {
+    "googleCloud": {
+      "use_for": "Google Cloud / GCP decks, technical partner presentations",
+      "accents": ["4285F4", "EA4335", "FBBC04", "34A853"],
+      "accentsOnLight": ["4285F4", "EA4335", "F9AB00", "34A853"],
+      "dark": "202124", "ink": "202124", "muted": "5F6368", "faint": "80868B",
+      "surface": "F1F3F4", "rule": "DADCE0", "onDark": "FFFFFF", "onDarkMuted": "9AA0A6", "bg": "FFFFFF"
+    },
+    "midnight": {
+      "use_for": "Executive, finance, enterprise strategy",
+      "accents": ["1E2761", "7A9CC6", "CADCFC", "3E5C99"],
+      "accentsOnLight": ["1E2761", "3E5C99", "5A7BB5", "7A9CC6"],
+      "dark": "10142E", "ink": "1E2761", "muted": "5A6180", "faint": "8A90A8",
+      "surface": "F2F5FC", "rule": "D9E0F0", "onDark": "FFFFFF", "onDarkMuted": "A8B2D1", "bg": "FFFFFF"
+    },
+    "forest": {
+      "use_for": "Sustainability, agriculture, health, long-horizon topics",
+      "accents": ["2C5F2D", "97BC62", "D9B310", "5C8001"],
+      "accentsOnLight": ["2C5F2D", "5C8001", "8A6D00", "6B8E23"],
+      "dark": "13210F", "ink": "1F2D19", "muted": "5B6B55", "faint": "8A9584",
+      "surface": "F1F5EE", "rule": "DCE4D6", "onDark": "FFFFFF", "onDarkMuted": "A9B6A2", "bg": "FFFFFF"
+    },
+    "charcoal": {
+      "use_for": "Neutral default when no brand applies; industrial, infrastructure, security",
+      "accents": ["36454F", "7A93A3", "C89F5D", "5E7A87"],
+      "accentsOnLight": ["36454F", "5E7A87", "A67C34", "7A93A3"],
+      "dark": "1C242A", "ink": "212121", "muted": "5C666D", "faint": "8B959B",
+      "surface": "F2F4F5", "rule": "DCE1E3", "onDark": "FFFFFF", "onDarkMuted": "A9B3B9", "bg": "FFFFFF"
+    }
+  }
+}
