@@ -44,12 +44,6 @@ The skill activates when you ask for visual explanations or when complex tabular
 
 ## Installation
 
-### Option A: Agy native
-
-```bash
-agy skills install https://github.com/duboc/agy-skills.git --path skills/visual-explainer
-```
-
 ### Option B: One-liner
 
 ```bash

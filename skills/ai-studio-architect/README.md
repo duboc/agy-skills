@@ -41,12 +41,6 @@ The skill activates when you ask Agy to deploy AI Studio projects or set up GCP 
 
 ## Installation
 
-### Option A: Agy native
-
-```bash
-agy skills install https://github.com/duboc/agy-skills.git --path skills/ai-studio-architect
-```
-
 ### Option B: One-liner
 
 ```bash

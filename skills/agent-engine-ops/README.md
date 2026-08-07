@@ -36,12 +36,6 @@ The skill activates when you mention:
 
 ## Installation
 
-### Option A: Agy native
-
-```bash
-agy skills install https://github.com/duboc/agy-skills.git --path skills/agent-engine-ops
-```
-
 ### Option B: One-liner
 
 ```bash

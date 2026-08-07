@@ -29,12 +29,6 @@ The skill activates when you:
 
 ## Installation
 
-### Option A: Agy native
-
-```bash
-agy skills install https://github.com/duboc/agy-skills.git --path skills/writing-plans
-```
-
 ### Option B: One-liner
 
 ```bash

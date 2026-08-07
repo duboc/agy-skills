@@ -18,11 +18,10 @@ skills/<skill-name>/
 ```
 
 ## Installation & Usage
-Skills are not "built" or "run" like traditional software; instead, they are installed into the Agy environment.
+Skills are loaded by Agy from the workspace (`.agents/skills/<skill-name>/`) or user config root (`~/.gemini/config/skills/<skill-name>/`).
 
-- **Native Install:** `agy skills install https://github.com/duboc/agy-skills.git --path skills/<skill-name>`
-- **Script Install (Workspace):** `curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh | bash -s -- <skill-name>`
-- **Script Install (User):** `curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh | bash -s -- <skill-name> --scope user`
+- **Script Install (Workspace Scope):** `curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh | bash -s -- <skill-name>`
+- **Script Install (User Scope):** `curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh | bash -s -- <skill-name> --scope user`
 
 ## Development Conventions
 When contributing or modifying skills, strictly adhere to the following rules:

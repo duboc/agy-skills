@@ -57,12 +57,6 @@ The Google identity styling (colors, gradient bars, slide type classes) is prese
 
 ## Installation
 
-### Option A: Agy native
-
-```bash
-agy skills install https://github.com/duboc/agy-skills.git --path skills/html-to-pptx
-```
-
 ### Option B: One-liner
 
 ```bash

@@ -16,12 +16,6 @@ This skill guides Agy through a systematic code inspection workflow that produce
 
 ## Installation
 
-### Option A: Agy native
-
-```bash
-agy skills install https://github.com/duboc/agy-skills.git --path skills/software-troubleshooter
-```
-
 ### Option B: One-liner
 
 ```bash

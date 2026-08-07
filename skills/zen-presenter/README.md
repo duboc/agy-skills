@@ -39,12 +39,6 @@ The skill activates when you ask Agy to create presentations, slides, or decks. 
 
 ## Installation
 
-### Option A: Agy native
-
-```bash
-agy skills install https://github.com/duboc/agy-skills.git --path skills/zen-presenter
-```
-
 ### Option B: One-liner
 
 ```bash

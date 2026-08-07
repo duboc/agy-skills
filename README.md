@@ -37,39 +37,28 @@ Sybase migration skills have moved to their own repository: [sybase-migration-to
 
 ## Installation
 
-### Method 1: Agy native install
-
-```bash
-agy skills install https://github.com/duboc/agy-skills.git --path skills/<skill-name>
-```
-
-Example:
-
-```bash
-agy skills install https://github.com/duboc/agy-skills.git --path skills/software-troubleshooter
-```
-
-### Method 2: One-liner with curl
+### Method 1: One-liner with curl (Recommended)
 
 The install script downloads only the requested skill from GitHub (no git clone needed).
+
+**Workspace scope** (`.agents/skills/<name>/` in your current directory):
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh | bash -s -- <skill-name>
 ```
 
-By default, skills install to the **workspace** scope (`.agents/skills/<name>/` in your current directory). To install for your user profile instead:
+**User scope** (`~/.gemini/config/skills/<name>/` for global availability):
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh | bash -s -- <skill-name> --scope user
 ```
 
-### Method 3: Manual download
+### Method 2: Manual download
 
 1. Download or clone this repository.
-2. Copy the desired skill folder into your Agy skills directory:
-   ```bash
-   cp -r skills/software-troubleshooter ~/.gemini/config/skills/software-troubleshooter
-   ```
+2. Copy the desired skill folder into your skills directory:
+   - **Workspace Scope:** `cp -r skills/software-troubleshooter .agents/skills/software-troubleshooter`
+   - **User Scope:** `cp -r skills/software-troubleshooter ~/.gemini/config/skills/software-troubleshooter`
 
 ## Contributing
 

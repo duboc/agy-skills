@@ -26,12 +26,6 @@ The skill activates when you ask Agy to:
 
 ## Installation
 
-### Option A: Agy native
-
-```bash
-agy skills install https://github.com/duboc/agy-skills.git --path skills/webapp-testing
-```
-
 ### Option B: One-liner
 
 ```bash

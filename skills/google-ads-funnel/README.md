@@ -95,12 +95,6 @@ Workflows can be combined for deeper analysis. See `references/funnel-playbook.m
 
 ## Installation
 
-### Option A: Agy native
-
-```bash
-agy skills install https://github.com/duboc/agy-skills.git --path skills/google-ads-funnel
-```
-
 ### Option B: One-liner
 
 ```bash

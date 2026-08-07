@@ -39,12 +39,6 @@ The skill activates when you ask Agy to upgrade or migrate a Spring Boot applica
 
 ## Installation
 
-### Option A: Agy native
-
-```bash
-agy skills install https://github.com/duboc/agy-skills.git --path skills/spring-boot-upgrader
-```
-
 ### Option B: One-liner
 
 ```bash

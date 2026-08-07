@@ -53,12 +53,6 @@ The skill activates when you ask Agy to create structured, dual-audience present
 
 ## Installation
 
-### Option A: Agy native
-
-```bash
-agy skills install https://github.com/duboc/agy-skills.git --path skills/clarity-presenter
-```
-
 ### Option B: One-liner
 
 ```bash

@@ -37,12 +37,6 @@ The skill activates when you mention:
 
 ## Installation
 
-### Option A: Agy native
-
-```bash
-agy skills install https://github.com/duboc/agy-skills.git --path skills/agent-engine-sessions-memory
-```
-
 ### Option B: One-liner
 
 ```bash
