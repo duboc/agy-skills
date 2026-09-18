@@ -42,6 +42,7 @@ Available skills:
   html-to-pptx              Convert MARP HTML slides to editable PowerPoint
   zen-pitch                 Research domain & compile persuasive Presentation Zen pitch deck
   technical-drawing         Create precise, dimensioned technical drawings in SVG
+  cloud-architecture-diagram  Draw a deployed system as a Google Cloud reference architecture
 EOF
 }
 
