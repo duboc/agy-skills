@@ -4,7 +4,7 @@ An Agy skill for drawing a deployed system the way a cloud vendor's reference
 architecture draws it, and shipping the drawing as one self-contained,
 interactive HTML page.
 
-Official product icons, a cloud boundary with actors outside it, tinted
+Google Cloud product icons, a cloud boundary with actors outside it, tinted
 environment groups, orthogonal connectors, and a numbered path that follows
 one request from end to end. Hover any component to read what it does. Step
 through it slide by slide if it is going on a screen.
@@ -54,7 +54,7 @@ The skill drives this for you, but the pieces work on their own.
 ```bash
 cd ~/.gemini/config/skills/cloud-architecture-diagram
 
-# 1. pull the official product icons you need
+# 1. pull the product icons you need
 ./scripts/fetch-gcp-icons.sh --list | less
 ./scripts/fetch-gcp-icons.sh cloud-run firestore cloud-storage vertexai > icons.js
 
@@ -83,11 +83,28 @@ Build it as-is to see the shape before you change anything.
 | `references/slideshow.md` | The stepped presentation: focus maths, dimming, navigation. |
 | `assets/diagram-template.html` | The renderer. Never carries content. |
 | `assets/example-data.js` | The data shape, as a working example. |
-| `scripts/fetch-gcp-icons.sh` | Official Google Cloud icons from the Iconify `gcp` set. |
+| `scripts/fetch-gcp-icons.sh` | Google Cloud product icons, from the Iconify `gcp` mirror. |
 | `scripts/build-diagram.sh` | Splices icons and data into the template. |
 
 `fetch-gcp-icons.sh` needs `curl` and `python3`. Set `PY` to point at a
 different interpreter.
+
+## Where the icons come from
+
+`fetch-gcp-icons.sh` reads the Iconify `gcp` collection, which mirrors Google
+Cloud's product icons behind a JSON API. That mirror is the only route a script
+can take: Google ships the set as a ZIP for people, and `cloud.google.com/icons`
+answers a program with a page shell rather than the files.
+
+The mirror carries 214 icons; Google's own set carries 226. When the product you
+need is missing, take the file from `cloud.google.com/icons` and normalise it by
+hand.
+
+Iconify labels the collection Apache 2.0, and that is the wrong frame for a
+trademark: section 6 of that licence excludes trademark rights. Google's terms
+are a permission instead. You may use the marks to reference their technology
+accurately, architecture diagrams included, and you follow their brand
+guidelines when you publish one.
 
 ## The rules it will hold you to
 

@@ -11,7 +11,7 @@
 <style>
   /*
    * The page chrome commits to one dark surface; the drawing keeps a white
-   * sheet, because official product icons are drawn for paper and a tinted
+   * sheet, because the product icons are drawn for paper and a tinted
    * group loses its meaning on a dark fill.
    */
   :root {
@@ -238,7 +238,7 @@ const TONES = {
 document.getElementById("doc-title").textContent = DIAGRAM.title;
 document.title = DIAGRAM.title;
 
-/** An official product icon, top-left at (x, y), drawn at `size`. */
+/** A product icon, top-left at (x, y), drawn at `size`. */
 function icon(name, x, y, size) {
   const ic = ICONS[name];
   if (!ic) return null;
