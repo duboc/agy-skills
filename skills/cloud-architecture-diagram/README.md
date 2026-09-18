@@ -1,0 +1,127 @@
+# Cloud Architecture Diagram
+
+An Agy skill for drawing a deployed system the way a cloud vendor's reference
+architecture draws it, and shipping the drawing as one self-contained,
+interactive HTML page.
+
+Official product icons, a cloud boundary with actors outside it, tinted
+environment groups, orthogonal connectors, and a numbered path that follows
+one request from end to end. Hover any component to read what it does. Step
+through it slide by slide if it is going on a screen.
+
+## What it produces
+
+One `.html` file with no build step, no imports, and no runtime dependency
+beyond a font stylesheet. It has to render from a `file://` URL, from an email
+attachment, and on a conference network that blocks every CDN, so everything
+is inline.
+
+## Why not Mermaid
+
+Mermaid, Graphviz and every other layout engine place the nodes for you, and
+automatic placement is what makes a diagram look generated.
+
+The information in this kind of drawing is in the grouping. A reader learns
+"these three run inside the public service" from the tinted box drawn around
+them, and an engine free to move boxes will break that grouping to shorten an
+edge. You are drawing a claim about a system, not rendering a graph.
+
+The price is that you own every collision. The skill pays it with a
+measurement script instead of with your eyes.
+
+## When does it activate?
+
+| Trigger | Example |
+| :--- | :--- |
+| Architecture diagram | "Draw the architecture of this service" |
+| A component map | "Show me how this app is wired on GCP" |
+| In Portuguese | "Faz um desenho de arquitetura disso" |
+| A reference image | Sharing a vendor reference architecture and saying "like this" |
+| Explaining a deployment | "I need a page that explains how the demo works" |
+
+## Install
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh | bash -s -- cloud-architecture-diagram
+```
+
+Or copy `skills/cloud-architecture-diagram/` to `~/.gemini/config/skills/`.
+
+## Use it by hand
+
+The skill drives this for you, but the pieces work on their own.
+
+```bash
+cd ~/.gemini/config/skills/cloud-architecture-diagram
+
+# 1. pull the official product icons you need
+./scripts/fetch-gcp-icons.sh --list | less
+./scripts/fetch-gcp-icons.sh cloud-run firestore cloud-storage vertexai > icons.js
+
+# 2. write the boxes, groups, connectors and steps
+cp assets/example-data.js my-diagram.js
+$EDITOR my-diagram.js
+
+# 3. splice them into the renderer
+./scripts/build-diagram.sh icons.js my-diagram.js > architecture.html
+```
+
+Open `architecture.html`, then paste the audit from
+`references/layout-rules.md` into the console. An empty array is the passing
+result. Rebuild and re-run after every edit to the data.
+
+`assets/example-data.js` is a working diagram, not a stub: a photo-upload API
+on Cloud Run that calls a model, stores the result and reports what it did.
+Build it as-is to see the shape before you change anything.
+
+## What is in here
+
+| File | Holds |
+| :--- | :--- |
+| `SKILL.md` | The instructions Agy follows. |
+| `references/layout-rules.md` | Geometry, corridors, lanes, labels, and the audit script. |
+| `references/slideshow.md` | The stepped presentation: focus maths, dimming, navigation. |
+| `assets/diagram-template.html` | The renderer. Never carries content. |
+| `assets/example-data.js` | The data shape, as a working example. |
+| `scripts/fetch-gcp-icons.sh` | Official Google Cloud icons from the Iconify `gcp` set. |
+| `scripts/build-diagram.sh` | Splices icons and data into the template. |
+
+`fetch-gcp-icons.sh` needs `curl` and `python3`. Set `PY` to point at a
+different interpreter.
+
+## The rules it will hold you to
+
+**Measure, do not look.** A label three pixels past its box is invisible in a
+screenshot and obvious on the printout. Every defect worth finding in a
+diagram this dense was found by a script.
+
+**Cards paint over wires.** The units layer draws last, so a connector label
+running under a card is not dimmed, it is gone. This is the most common
+defect, and the audit's second check exists only for it.
+
+**One numbering system.** If the arrows count 1 to 10 and a step list beside
+them counts 1 to 8, a reader who counts one lands somewhere the other does
+not, and stops trusting both.
+
+**A label must earn its place.** If the card the arrow lands on already says
+`gemini-3-flash · 6 calls`, the arrow does not need the label "6 calls".
+Corridor clutter is what makes these drawings look busy.
+
+**No invented numbers.** Every figure comes from configuration, a measurement
+or a document. If you cannot source it, leave it off and say so.
+
+**Never name the addresses.** A drawing that will be served publicly or
+attached to a deck must not carry project ids, service URLs, bucket paths or
+internal hostnames. Describing the shape of a system is the point; handing
+over its address list is not.
+
+## What it does not do
+
+It does not decide your architecture. Bring the inventory and the request path;
+this skill draws them. For the design conversation, reach for `system-design`.
+
+It does not draw physical objects to scale. For dimensioned orthographic
+drawings of equipment and rooms, reach for `technical-drawing`.
+
+It does not make generic HTML explainers. For diffs, plans, recaps and data
+tables, reach for `visual-explainer`.

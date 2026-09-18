@@ -32,6 +32,7 @@ A collection of reusable skills for Agy (`agy`). Each skill is self-contained an
 | [html-to-pptx](skills/html-to-pptx/) | Convert MARP HTML slides into fully editable PowerPoint files with native text boxes, lists, tables, and embedded images | `curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh \| bash -s -- html-to-pptx` |
 | [zen-pitch](skills/zen-pitch/) | Research a market or domain, build a requirements spine, and compile a persuasive Presentation Zen pitch deck | `curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh \| bash -s -- zen-pitch` |
 | [technical-drawing](skills/technical-drawing/) | Create precise, dimensioned technical drawings in SVG with orthographic views, cotas, and FOV cones | `curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh \| bash -s -- technical-drawing` |
+| [cloud-architecture-diagram](skills/cloud-architecture-diagram/) | Draw a deployed system as a Google Cloud reference architecture: official product icons, a numbered request path, hover explanations, and an optional stepped slideshow | `curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh \| bash -s -- cloud-architecture-diagram` |
 
 ### Database Migration (Sybase to Cloud Spanner)
 
