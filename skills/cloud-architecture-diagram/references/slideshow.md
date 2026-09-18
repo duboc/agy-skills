@@ -25,8 +25,21 @@ the way it fails is a slide quietly growing back into a paragraph. If a
 component needs more than that, the extra belongs in its hover text, not on
 the slide.
 
-Two slides carry no step number and light nothing, so the whole drawing shows
-undimmed: an opening slide and a closing one.
+## Open and close on the whole architecture
+
+Two slides carry no step number and light nothing, so the drawing shows
+complete and undimmed. They are not filler.
+
+The **first** one is the reason the rest works. A reader who sees the whole
+shape before anything moves can place each step inside it; a slideshow that
+opens already zoomed into one arrow shows them parts and never the system. Give
+that slide the thesis in one sentence, not a list of contents.
+
+The **last** one shows the same picture again, now that they know what is in
+it. That is where the measured numbers belong, or the one claim you want them
+to leave with.
+
+Everything between the two lights exactly one step.
 
 ## The frame computes itself
 

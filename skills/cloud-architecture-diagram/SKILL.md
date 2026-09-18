@@ -69,32 +69,80 @@ reader who counts one lands somewhere the other does not, and they stop
 trusting both. Make the step list light the numbered arrows and show which
 ones, or drop the numbers from one of them.
 
-## Workflow
+## The process is a conversation
 
-1. **Get the inventory.** Ask for, or read from the code, every component that
-   will appear: the services, the datastores, the models, the actors. If you
-   are reading a repository, take the configuration from the source — instance
-   limits, timeouts, model ids, bucket lifecycle — because a diagram whose
-   numbers are invented is worse than a diagram with no numbers.
-2. **Find the one request.** Pick the single path a user's request travels,
-   end to end. That path is the spine of the drawing and everything else is a
-   side path. If you cannot name it in one sentence, you do not understand the
-   system well enough to draw it yet.
-3. **Fetch the icons.** Run `scripts/fetch-gcp-icons.sh` with the names you
-   need, and read *Where the icons come from* below before you publish.
-   Never hand-draw a product mark, and never substitute a generic glyph for a
-   product that has an icon of its own.
-4. **Place the boxes.** Columns, top to bottom, actors on the left. Read
-   `references/layout-rules.md` for the lane discipline in the corridors
-   between columns.
-5. **Write the prose.** Every component gets a `title`, a one-line `sub`, and a
-   `what` that says what it does in two sentences. A `why` that names the
-   decision behind it is worth more than either, when you know it.
-6. **Render and measure.** Open the page and run the audit from
-   `references/layout-rules.md`. It reports text that escapes its own box,
-   labels a card paints over, and marks that collide. An empty result is the
-   passing result.
-7. **Fix and re-measure.** Then, and only then, look at a screenshot.
+You draw this **with** the person, not for them. A diagram is a claim about a
+system, and the person you are drawing for is the one who knows whether the
+claim is true. Four checkpoints, and at each one you stop and show your work
+before you spend effort on the next.
+
+### 1. Settle where the drawing will live
+
+Ask, before anything else:
+
+> Where does this end up? A page people scroll, a screen you step through, or
+> an image in a deck?
+
+The answer changes what you build. A screen you step through is a slideshow,
+and that decision is expensive to reverse later. Ask what the reader already
+knows, too: a drawing for the team that built the system carries different
+words than one for a customer who has never seen it.
+
+### 2. Agree on the inventory and the one request
+
+Read the repository, or ask. Take every number from the source — instance
+limits, timeouts, model ids, lifecycle rules — because a diagram whose numbers
+are invented is worse than one with no numbers.
+
+Then write both back as a plain list and stop:
+
+> Here is what I would draw, in three columns. Outside the cloud: the person,
+> the browser, the operator. In it: the public service, the admission gate, the
+> media proxy, the model, the bucket, the database, the logs. The request path
+> I would number: browser to gate to service, then model, bucket, database,
+> logs, then back to the browser.
+>
+> Have I missed anything, and is that the path you want numbered?
+
+**Do not start placing coordinates until they answer.** Getting the inventory
+wrong costs a redraw; getting it right costs one message. If you cannot state
+the request path in one sentence, you do not understand the system well enough
+to draw it, and that is the thing to say.
+
+**Count the cards while you are here.** Past roughly twenty, no layout saves
+the drawing. Say so and offer the split: one diagram of the request path, and
+a second for whatever the first one had to leave out.
+
+### 3. Draw it, then measure it
+
+Fetch the icons, place the boxes, write the prose. Every component gets a
+`title`, a one-line `sub`, and a `what` of two sentences. A `why` that names
+the decision behind it is worth more than either, when you know it.
+
+Then open the page and run the audit from `references/layout-rules.md` before
+you show anybody anything. It reports text that escapes its box, labels a card
+paints over, marks that collide, and ids a slide names that the drawing does
+not have. **An empty result is the passing result.** Fix, rebuild, re-measure.
+
+Only after the audit is clean do you look at a screenshot.
+
+### 4. Hand it over and ask what is wrong
+
+Give them the file and a short list of what to check:
+
+> Two things I could not verify from the code: the retry count on the model
+> call, and whether the operator path still goes through the proxy. Everything
+> else came from configuration.
+
+Name your uncertainty rather than hiding it. The person reading knows which of
+your guesses is wrong, and they will only tell you if you ask.
+
+### Then iterate
+
+Changes arrive as changes to the data, never to the renderer. A new component
+is one entry; a new step is one entry and no coordinates. Re-run the audit
+after every change, because a box that moves two pixels can put a label under
+a card, and that defect is invisible in a screenshot.
 
 ## Step through it, when it is for an audience
 
@@ -103,6 +151,13 @@ past, build it as a slideshow instead of a scrolling document. Each step
 lights its own arrow, dims the rest of the drawing, and zooms the frame onto
 what it lit. That zoom is what makes a dense diagram readable on a phone
 without a second, stacked layout.
+
+**Open on the whole architecture, and close on it.** The first slide lights
+nothing, so the drawing shows complete and undimmed, and the reader sees the
+shape before any of it moves. Then you light one arrow at a time. The closing
+slide does the same in reverse: the whole picture again, now that they know
+what is in it. A slideshow that opens already zoomed into an arrow never shows
+the reader the system, only its parts.
 
 `references/slideshow.md` has the focus maths and the rules that keep it from
 turning back into a document.
@@ -158,6 +213,22 @@ this if the page lives in a repository.
 the page around it is dark. The product icons are drawn for paper, and a
 tinted group loses its meaning on a dark fill. Make the frame follow the
 theme; leave the sheet alone.
+
+## Before you call it done
+
+Run every line. Each one failed on a real drawing at least once.
+
+- [ ] The audit returns an empty array.
+- [ ] Nothing paints outside the viewport at 390, 768 and 1280 px wide.
+- [ ] Every number on the drawing came from configuration, a measurement or a
+      document, and you can say which.
+- [ ] The drawing carries one sequence of numbers, not two.
+- [ ] No project id, service URL, bucket path, account id or internal hostname
+      appears anywhere on the page.
+- [ ] Every connector label says something its target card does not already say.
+- [ ] Every component has a `what`, so nothing shows an empty tooltip.
+- [ ] If it is a slideshow: the first and last slides show the whole drawing.
+- [ ] You told the person which parts you could not verify.
 
 ## Files in this skill
 

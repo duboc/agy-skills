@@ -39,6 +39,24 @@ measurement script instead of with your eyes.
 | A reference image | Sharing a vendor reference architecture and saying "like this" |
 | Explaining a deployment | "I need a page that explains how the demo works" |
 
+## How it works with you
+
+It draws **with** you, in four checkpoints, and stops at each one:
+
+1. **Where does this live?** A page you scroll, a screen you step through, or
+   an image in a deck. The answer decides whether it builds a slideshow, and
+   that is expensive to reverse later.
+2. **Is this the inventory, and is this the request path?** It reads the
+   repository or asks, writes both back as a plain list, and waits. Getting the
+   inventory wrong costs a redraw; getting it right costs one message.
+3. **The audit before the screenshot.** It draws, measures, fixes and measures
+   again, and only shows you the result once the audit is clean.
+4. **What could it not verify?** It names its own uncertainty instead of hiding
+   it, because you are the one who knows which guess is wrong.
+
+After that, changes are changes to the data. A new component is one entry; a
+new step is one entry and no coordinates.
+
 ## Install
 
 ```bash
