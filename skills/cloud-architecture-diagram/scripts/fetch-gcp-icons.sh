@@ -1,9 +1,17 @@
 #!/bin/sh
-# Fetch official Google Cloud product icons and emit the ICONS object.
+# Fetch Google Cloud product icons and emit the ICONS object.
 #
-# The icons come from the Iconify `gcp` collection, which mirrors Google's own
-# product icon set. Its JSON API returns each icon's path data directly, so
-# nothing here has to parse SVG.
+# The icons come from the Iconify `gcp` collection, which mirrors Google Cloud's
+# product icons and returns each icon's path data through a JSON API, so nothing
+# here has to parse SVG. It is the only route a script can take: Google ships the
+# set as a ZIP for people, and cloud.google.com/icons answers a program with a
+# page shell rather than the files.
+#
+# The mirror carries 214 icons and Google's own set carries 226, so a product it
+# does not have comes from cloud.google.com/icons by hand. The marks stay
+# Google's: Iconify's Apache 2.0 label is the wrong frame for a trademark, and
+# Google's terms are a permission to reference their technology accurately,
+# under their brand guidelines.
 #
 # Usage:
 #   ./fetch-gcp-icons.sh cloud-run firestore cloud-storage > icons.js
@@ -74,7 +82,8 @@ if missing:
     print("not in the gcp set: %s" % ", ".join(missing), file=sys.stderr)
     print("run with --list to see every name", file=sys.stderr)
 
-print("/* Official Google Cloud product icons, from the Iconify gcp set. */")
+print("/* Google Cloud product icons, from the Iconify gcp mirror. */")
+print("/* The marks belong to Google. Follow cloud.google.com/icons when publishing. */")
 print("const ICONS = %s;" % json.dumps(icons, separators=(",", ":"), ensure_ascii=False))
 print("%d icons written" % len(icons), file=sys.stderr)
 ' "$WANTED"

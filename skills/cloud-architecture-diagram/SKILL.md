@@ -2,7 +2,7 @@
 name: cloud-architecture-diagram
 description: >-
   Draw a cloud architecture diagram in the Google Cloud reference style as one
-  self-contained, interactive HTML page — official product icons, tinted
+  self-contained, interactive HTML page — Google Cloud product icons, tinted
   environment groups, actors outside the cloud boundary, a numbered request
   path, hover explanations, and an optional step-by-step slideshow. Use
   whenever someone asks for an architecture diagram, a system drawing, a
@@ -33,7 +33,7 @@ Inside that file, three things stay separate:
 
 | Part | Holds |
 | :--- | :--- |
-| `ICONS` | Official product icons, each normalised to `{vb, d}`. |
+| `ICONS` | Product icons, each normalised to `{vb, d}`. |
 | Diagram data | Every box, group, connector and step, with absolute coordinates and the prose. |
 | Renderer | The code that turns the data into SVG. Never carries content. |
 
@@ -51,7 +51,7 @@ Follow the vendor grammar, because readers already know how to read it:
 3. **Tinted groups inside it.** One per environment or concern, each a soft
    fill with a matching border and a title in the top-left. A dashed border
    means "not part of the running system" — build pipelines, CI, registries.
-4. **Product cards.** The official icon, the service name, and one line of
+4. **Product cards.** The product's own icon, the service name, and one line of
    configuration underneath in a monospace face.
 5. **Orthogonal connectors.** Only horizontal and vertical segments, with an
    arrowhead on the target. Never curves, never diagonals.
@@ -81,8 +81,9 @@ ones, or drop the numbers from one of them.
    side path. If you cannot name it in one sentence, you do not understand the
    system well enough to draw it yet.
 3. **Fetch the icons.** Run `scripts/fetch-gcp-icons.sh` with the names you
-   need. Never hand-draw a product mark and never substitute a generic glyph
-   for a product that has an official icon.
+   need, and read *Where the icons come from* below before you publish.
+   Never hand-draw a product mark, and never substitute a generic glyph for a
+   product that has an icon of its own.
 4. **Place the boxes.** Columns, top to bottom, actors on the left. Read
    `references/layout-rules.md` for the lane discipline in the corridors
    between columns.
@@ -106,6 +107,27 @@ without a second, stacked layout.
 `references/slideshow.md` has the focus maths and the rules that keep it from
 turning back into a document.
 
+## Where the icons come from
+
+`scripts/fetch-gcp-icons.sh` reads the Iconify `gcp` collection, which mirrors
+Google Cloud's product icons behind a JSON API. Use it, because it is the only
+route a script can take: Google distributes the set as a ZIP for people, and
+`cloud.google.com/icons` answers a program with a page shell rather than the
+files.
+
+Two things follow from working off a mirror.
+
+**The mirror is not the source.** It carries 214 icons and Google's own set
+carries 226. When the product you need is missing, take the file from
+`cloud.google.com/icons` and normalise it by hand.
+
+**The marks stay Google's.** Iconify labels the collection Apache 2.0, and that
+is the wrong frame for a trademark, because section 6 of that licence excludes
+trademark rights. Google's own terms are a permission: you may use the marks to
+reference their technology accurately, including in architecture diagrams, and
+you follow their brand guidelines when you publish one. Do not redraw a mark, do
+not recolour it, and never use one to suggest that Google endorses your work.
+
 ## Rules that are not negotiable
 
 **Measure, do not look.** A label three pixels past its box is invisible in a
@@ -123,6 +145,9 @@ most common defect. The audit catches it.
 **No invented numbers.** Every figure on the drawing comes from configuration,
 a measurement, or a document. If you cannot source it, leave it off and say so.
 
+**Respect the marks.** They are trademarks, not assets. Read *Where the icons
+come from* before you publish a drawing that carries them.
+
 **Never name the addresses.** A diagram that will be served publicly, shared
 outside the team, or attached to a deck must not carry project ids, service
 URLs, bucket paths, account ids or internal hostnames. Describing the shape of
@@ -130,7 +155,7 @@ a system is the point; handing over its address list is not. Write a test for
 this if the page lives in a repository.
 
 **The drawing stays on paper.** Keep the diagram on a white ground even when
-the page around it is dark. Official product icons are drawn for paper, and a
+the page around it is dark. The product icons are drawn for paper, and a
 tinted group loses its meaning on a dark fill. Make the frame follow the
 theme; leave the sheet alone.
 
@@ -142,5 +167,5 @@ theme; leave the sheet alone.
 | `references/slideshow.md` | Turning the drawing into a stepped presentation. |
 | `assets/diagram-template.html` | The renderer shell. Splice icons and data into it. |
 | `assets/example-data.js` | The data shape, as a small working example. |
-| `scripts/fetch-gcp-icons.sh` | Pull official Google Cloud product icons and emit the `ICONS` object. |
+| `scripts/fetch-gcp-icons.sh` | Pull Google Cloud product icons and emit the `ICONS` object. |
 | `scripts/build-diagram.sh` | Splice icons and data into the template. |
