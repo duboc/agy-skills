@@ -125,7 +125,8 @@ Cards sit at least 14 px inside their group on every side.
 ## The audit
 
 Open the rendered page and run this in the browser console. It reports text
-that escapes its own box, labels a card paints over, and marks that collide.
+that escapes its own box, labels a card paints over, marks that collide, and
+ids a slide names that the drawing does not have.
 
 ```js
 const svg = document.querySelector('svg');
@@ -158,10 +159,24 @@ for (let i = 0; i < marks.length; i++) {
   }
 }
 
+// 4. slides pointing at something the drawing does not have
+if (typeof SLIDES !== 'undefined') {
+  const drawn = new Set([...OUTSIDE, ...CARDS].map((u) => u.id));
+  const wired = new Set(EDGES.map((e) => e.id));
+  for (const s of SLIDES) {
+    for (const id of s.units) if (!drawn.has(id)) out.push(['no such unit', s.title, id]);
+    for (const id of s.edges) if (!wired.has(id)) out.push(['no such edge', s.title, id]);
+  }
+}
+
 out;
 ```
 
 **An empty array is the passing result.** Run it after every edit to the data.
+
+The fourth check earns its place because its failure is silent. A slide that
+names an id nothing draws dims the whole drawing and lights none of it, which
+reads as a broken page rather than as a typo in one string.
 
 A second check, for the page around the drawing, at each width you care about:
 
