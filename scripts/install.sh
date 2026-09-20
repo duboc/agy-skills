@@ -43,6 +43,7 @@ Available skills:
   zen-pitch                 Research domain & compile persuasive Presentation Zen pitch deck
   technical-drawing         Create precise, dimensioned technical drawings in SVG
   cloud-architecture-diagram  Draw a deployed system as a Google Cloud reference architecture
+  app-security-audit        Google Cloud, GenAI/Gemini, BFF proxy, CGNAT & 8h+ kiosk security audit
 EOF
 }
 
