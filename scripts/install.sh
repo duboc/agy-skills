@@ -9,13 +9,15 @@ usage() {
   cat <<EOF
 Usage: $(basename "$0") <skill-name> [--scope user|workspace]
 
-Install an Agy skill from the agy-skills repository.
+Install an Antigravity (Agy) skill from the agy-skills repository.
+Antigravity discovers workspace rules in AGENTS.md / GEMINI.md and loads skills
+on demand from .agents/skills/<name>/SKILL.md or ~/.gemini/config/skills/<name>/SKILL.md.
 
 Arguments:
   skill-name          Name of the skill to install (e.g., software-troubleshooter)
 
 Options:
-  --scope user        Install to ~/.gemini/config/skills/<name>/ (user scope)
+  --scope user        Install to ~/.gemini/config/skills/<name>/ (user global scope)
   --scope workspace   Install to .agents/skills/<name>/ in current directory (default)
   -h, --help          Show this help message
 

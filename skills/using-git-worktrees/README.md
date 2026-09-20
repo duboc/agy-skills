@@ -6,7 +6,7 @@ A Agy skill for creating isolated git worktrees with smart directory selection, 
 
 This skill automates the process of setting up a parallel workspace in the same repository using git worktrees. It handles the full lifecycle:
 
-1. **Directory selection** — Detects existing worktree directories, checks project preferences in `GEMINI.md`, or asks the user. Follows a strict priority order.
+1. **Directory selection** — Detects existing worktree directories, checks project preferences in `AGENTS.md` or `GEMINI.md`, or asks the user. Follows a strict priority order.
 2. **Safety verification** — Ensures project-local worktree directories are git-ignored before creating anything. Fixes `.gitignore` automatically if needed.
 3. **Worktree creation** — Creates the worktree with a new or existing branch, based from the appropriate starting point.
 4. **Dependency setup** — Auto-detects the project type (Node.js, Python, Rust, Go, Ruby, Dart, PHP) and runs the appropriate install command.
@@ -52,7 +52,7 @@ User request → Detect worktree directory → Verify .gitignore safety
 | 1 | `.worktrees/` exists | Use it (verify ignored) |
 | 2 | `worktrees/` exists | Use it (verify ignored) |
 | 3 | Both exist | Use `.worktrees/` |
-| 4 | `GEMINI.md` specifies preference | Use it |
+| 4 | `AGENTS.md` or `GEMINI.md` specifies preference | Use it |
 | 5 | None of the above | Ask the user |
 
 ### Safety Checks

@@ -56,13 +56,13 @@ ls -d worktrees 2>/dev/null
 
 If found, use that directory. If both exist, `.worktrees` takes priority.
 
-#### Priority 2: Check GEMINI.md for project preferences
+#### Priority 2: Check AGENTS.md / GEMINI.md for project preferences
 
 ```bash
-grep -i "worktree.*director" GEMINI.md 2>/dev/null
+grep -i "worktree.*director" AGENTS.md GEMINI.md 2>/dev/null
 ```
 
-If a preference is specified in the project's `GEMINI.md`, use it without asking.
+If a preference is specified in the project's `AGENTS.md` or `GEMINI.md`, use it without asking.
 
 #### Priority 3: Ask the user
 

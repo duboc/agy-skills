@@ -50,7 +50,8 @@ Before submitting a PR, verify:
 - [ ] `README.md` exists with usage examples and reference table
 - [ ] At least 2 decoupled reference files exist in `references/*.md` and are linked from `SKILL.md`
 - [ ] All scripts are executable (`chmod +x`), use `set -euo pipefail` (Bash) or `shell=False` (Python), and run on both macOS and Linux
-- [ ] `python3 scripts/validate_skills.py` passes all 5 Core Pillars (`27/27 PASS`)
+- [ ] `python3 scripts/validate_skills.py` passes all 5 Core Pillars (`28/28 PASS`)
+- [ ] `python3 -m unittest discover -s tests -v` passes all unit tests
 - [ ] The skill works when installed via `scripts/install.sh <skill-name>`
 - [ ] The skill works when copied manually to `~/.gemini/config/skills/<name>/`
 - [ ] No hardcoded absolute paths (`/Users/<name>`), internal shortlinks, or non-RFC2606 emails in any file
@@ -58,6 +59,6 @@ Before submitting a PR, verify:
 ## Pull Request Guidelines
 
 1. One skill per PR (unless the changes are tightly coupled).
-2. Update the root `README.md` skills catalog table with your new skill.
+2. Update the root `README.md`, `AGENTS.md`, `GEMINI.md`, and `scripts/install.sh` skills catalog/routing tables with your new skill.
 3. Include a brief description of the skill's purpose and target audience in the PR body.
 4. Test all three installation methods before submitting.

@@ -85,6 +85,43 @@ class ValidateSkillsTests(unittest.TestCase):
         self.assertTrue(any("leak@corp.internal.io" in e for e in errs), errs)
         self.assertTrue(any("go/internal-doc" in e for e in errs), errs)
 
+    def test_agents_md_and_gemini_md_routing_and_link_integrity(self):
+        import re
+
+        skill_names = sorted(
+            d.name for d in (REPO_ROOT / "skills").iterdir() if d.is_dir() and not d.name.startswith(".")
+        )
+        self.assertEqual(len(skill_names), 28)
+
+        for doc_name in ("AGENTS.md", "GEMINI.md", "README.md"):
+            doc_path = REPO_ROOT / doc_name
+            self.assertTrue(doc_path.exists(), f"Missing {doc_name}")
+            content = doc_path.read_text(encoding="utf-8")
+
+            for sname in skill_names:
+                expected = f"skills/{sname}/SKILL.md" if doc_name != "README.md" else f"skills/{sname}/"
+                self.assertIn(
+                    expected,
+                    content,
+                    f"{doc_name} missing entry for {expected}",
+                )
+
+            for match in re.finditer(r"\]\(([^)#\s]+)\)", content):
+                target = match.group(1)
+                if target.startswith(("http://", "https://", "mailto:", "file://")):
+                    continue
+                resolved = (REPO_ROOT / target).resolve()
+                self.assertTrue(resolved.exists(), f"{doc_name} contains broken relative link: {target}")
+
+            for i, line in enumerate(content.splitlines(), 1):
+                um = re.search(r"(?:file://)?/Users/[a-zA-Z0-9_.-]+", line)
+                if um and "<" not in um.group(0):
+                    self.fail(f"{doc_name}:{i}: hardcoded personal path '{um.group(0)}'")
+                for em in re.finditer(r"\b[a-zA-Z0-9._%+-]+@([a-zA-Z0-9.-]+\.[a-zA-Z]{2,})\b", line):
+                    domain = em.group(1).lower()
+                    self.assertIn(domain, validate_skills.ALLOWED_EMAIL_DOMAINS, f"{doc_name}:{i}: non-RFC2606 email")
+
 
 if __name__ == "__main__":
     unittest.main()
+

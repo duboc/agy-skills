@@ -39,13 +39,15 @@ Agy Skills extend your coding agent with repeatable engineering workflows across
 
 ## Prerequisites
 
-- **Agy CLI** or a compatible AI agent environment that loads `SKILL.md` definitions from `.agents/skills/` or `~/.gemini/config/skills/`.
+- **Antigravity (`agy` / Jetski)**, **Gemini CLI**, or a compatible AI coding agent environment that discovers workspace rules via [`AGENTS.md`](AGENTS.md) / [`GEMINI.md`](GEMINI.md) and loads `SKILL.md` definitions from `.agents/skills/`, `.agent/skills/`, or `~/.gemini/config/skills/`.
 - **`curl`**, **`bash`**, and **`tar`** for one-command installation.
 - **Optional runtime tools** (skill-dependent): `ripgrep` (`rg`), `python3`, `pytest`, `node` / `npx` (for Playwright or Marp slide compilation).
 
 ---
 
-## Quickstart Installation
+## Quickstart Installation & Antigravity `AGENTS.md` Discovery
+
+Antigravity automatically discovers [`AGENTS.md`](AGENTS.md) (and [`GEMINI.md`](GEMINI.md) for Gemini CLI compatibility) when traversing from the working directory to the repository root, and uses progressive disclosure to load installed skills from `.agents/skills/<skill-name>/SKILL.md` (workspace scope) or `~/.gemini/config/skills/<skill-name>/SKILL.md` (user global scope). See [**`AGENTS.md`**](AGENTS.md) for the complete **28-Skill Activation & Routing Table** and **Antigravity Agent Operational Guidelines**.
 
 ### Method 1: Install a single skill via `curl` (recommended)
 
@@ -65,7 +67,7 @@ curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/insta
 
 ### Method 2: Manual installation
 
-Clone this repository and copy the target skill directory into your workspace or user configuration path:
+Clone this repository and copy the target skill directory (and optionally [`AGENTS.md`](AGENTS.md)) into your workspace or user configuration path:
 
 ```bash
 git clone https://github.com/duboc/agy-skills.git
@@ -185,7 +187,7 @@ Each skill below follows a standard directory architecture (`SKILL.md`, [`README
 
 #### [`cloud-architecture-diagram`](skills/cloud-architecture-diagram/) — Google Cloud Reference Architecture Diagrams
 - **Purpose**: Render deployed Google Cloud systems as interactive, self-contained HTML architecture diagrams featuring official GCP product icons, tinted environment boundaries, collision-audited orthogonal connectors, numbered request flows, and stepped slideshow walkthroughs.
-- **Deliverables & References**: Single-file HTML architecture diagram, [`references/gcp-icons.md`](skills/cloud-architecture-diagram/references/gcp-icons.md), [`references/diagram-template.html`](skills/cloud-architecture-diagram/references/diagram-template.html).
+- **Deliverables & References**: Single-file HTML architecture diagram, [`references/google-cloud.md`](skills/cloud-architecture-diagram/references/google-cloud.md), [`references/layout-rules.md`](skills/cloud-architecture-diagram/references/layout-rules.md), [`references/visual-design.md`](skills/cloud-architecture-diagram/references/visual-design.md).
 - **Example Prompt**: `"Draw a Google Cloud reference architecture diagram for this repository showing the Cloud Run BFF, FastAPI backend, Firestore, GCS, and Vertex AI flows."`
 
 #### [`ai-studio-architect`](skills/ai-studio-architect/) — Google AI Studio to Cloud Run Productionizer
@@ -228,7 +230,7 @@ Each skill below follows a standard directory architecture (`SKILL.md`, [`README
 
 #### [`feature-spec`](skills/feature-spec/) — Engineering-Ready Product Requirements Documents (PRDs)
 - **Purpose**: Author 12-section PRDs with INVEST user stories, traceable Given/When/Then acceptance criteria (`AC-US01-1`), API contract tables, state machines, WCAG 2.1 AA accessibility rules, PII-redacted analytics schemas, LLM fallback budgets, and MoSCoW scope management.
-- **Deliverables & References**: Complete 12-section PRD, [`references/prd-template-and-checklist.md`](skills/feature-spec/references/prd-template-and-checklist.md), [`references/user-stories-and-acceptance-criteria.md`](skills/feature-spec/references/user-stories-and-acceptance-criteria.md), [`references/metrics-analytics-and-rollout.md`](skills/feature-spec/references/metrics-analytics-and-rollout.md).
+- **Deliverables & References**: Complete 12-section PRD, [`references/prd-template.md`](skills/feature-spec/references/prd-template.md), [`references/user-stories-and-requirements.md`](skills/feature-spec/references/user-stories-and-requirements.md), [`references/metrics-and-scope.md`](skills/feature-spec/references/metrics-and-scope.md).
 - **Example Prompt**: `"Write an engineering-ready PRD with Given/When/Then acceptance criteria, API contracts, WCAG rules, and MoSCoW scope for a real-time tournament check-in flow."`
 
 #### [`gdoc-engineering-spec`](skills/gdoc-engineering-spec/) — Multi-Tab Google Docs Engineering Specifications
@@ -238,7 +240,7 @@ Each skill below follows a standard directory architecture (`SKILL.md`, [`README
 
 #### [`research-skill-graph-agy`](skills/research-skill-graph-agy/) — 6-Lens Local Markdown Research Graph
 - **Purpose**: Investigate technical, economic, and architectural questions through 6 independent analytical lenses (`technical`, `economic`, `historical`, `geopolitical`, `contrarian`, `first-principles`) stored as an interconnected Markdown knowledge graph inside `.research/`.
-- **Deliverables & References**: `.research/projects/<topic>/executive-summary.md`, `deep-dive.md`, `contradictions.md`, `open-questions.md`, and [`templates/`](skills/research-skill-graph-agy/templates/).
+- **Deliverables & References**: `.research/projects/<topic>/executive-summary.md`, `deep-dive.md`, `contradictions.md`, `open-questions.md`, [`references/evidence-grading-and-synthesis.md`](skills/research-skill-graph-agy/references/evidence-grading-and-synthesis.md), and [`references/knowledge-graph-node-templates.md`](skills/research-skill-graph-agy/references/knowledge-graph-node-templates.md).
 - **Example Prompt**: `"Research the cost, latency, and scalability trade-offs between Gemini Live WebSockets and WebRTC relays using all 6 analytical lenses."`
 
 #### [`google-ads-funnel`](skills/google-ads-funnel/) — Funnel-as-Code Google Ads Diagnostics
@@ -252,12 +254,12 @@ Each skill below follows a standard directory architecture (`SKILL.md`, [`README
 
 #### [`design-critique`](skills/design-critique/) — 7-Pillar UI/UX & WCAG Accessibility Audit
 - **Purpose**: Evaluate UI mockups, wireframes, screenshots, and frontend code (React, Tailwind CSS, HTML/CSS) across a 7-pillar rubric covering visual hierarchy, usability heuristics, CTA clarity, design token alignment, and WCAG 2.1 AA/AAA accessibility.
-- **Deliverables & References**: Prioritized P0–P3 UX critique report with exact CSS/Tailwind/React code fixes, [`references/critique-framework.md`](skills/design-critique/references/critique-framework.md), [`references/accessibility-and-heuristics.md`](skills/design-critique/references/accessibility-and-heuristics.md), [`references/ui-patterns-and-fixes.md`](skills/design-critique/references/ui-patterns-and-fixes.md).
+- **Deliverables & References**: Prioritized P0–P3 UX critique report with exact CSS/Tailwind/React code fixes, [`references/critique-framework.md`](skills/design-critique/references/critique-framework.md), [`references/heuristics-and-laws.md`](skills/design-critique/references/heuristics-and-laws.md), [`references/component-checklists.md`](skills/design-critique/references/component-checklists.md).
 - **Example Prompt**: `"Run a 7-pillar design critique and WCAG 2.1 AA accessibility audit on our registration and kiosk status screens."`
 
 #### [`technical-drawing`](skills/technical-drawing/) — Orthographic SVG Technical Drawings & FOV Layouts
 - **Purpose**: Create scale-accurate orthographic technical drawings in SVG (side, end, and top views) with architectural dimension lines (`cotas`), leader-line callouts, and trig-computed camera or sensor field-of-view (FOV) cones.
-- **Deliverables & References**: Self-contained dimensioned SVG/HTML technical drawing, [`references/svg-drafting-primitives.md`](skills/technical-drawing/references/svg-drafting-primitives.md).
+- **Deliverables & References**: Self-contained dimensioned SVG/HTML technical drawing, [`references/conventions.md`](skills/technical-drawing/references/conventions.md), [`references/geometry.md`](skills/technical-drawing/references/geometry.md).
 - **Example Prompt**: `"Draw a 3-view orthographic SVG technical layout (side, end, top) for an overhead camera rig mounted at 2.10m over a 1.40m x 0.80m table with a 78-degree diagonal FOV."`
 
 #### [`design-system-management`](skills/design-system-management/) — Design Tokens & Component Library Governance
@@ -281,7 +283,7 @@ Each skill below follows a standard directory architecture (`SKILL.md`, [`README
 
 #### [`zen-pitch`](skills/zen-pitch/) — Research-to-Narrative Presentation Zen Pitch Decks
 - **Purpose**: Research a problem domain, synthesize findings into a numbered requirements spine (`R1..Rn`), map every requirement to a concrete resolution, and compile a persuasive Presentation Zen slide deck in Marp HTML/PDF/PPTX.
-- **Deliverables & References**: `01-research-brief.md`, `02-narrative-spine.md`, `03-deck.md`, compiled `03-deck.html`, [`references/narrative-and-zen-craft.md`](skills/zen-pitch/references/narrative-and-zen-craft.md).
+- **Deliverables & References**: `01-research-brief.md`, `02-narrative-spine.md`, `03-deck.md`, compiled `03-deck.html`, [`references/narrative.md`](skills/zen-pitch/references/narrative.md), [`references/layouts.md`](skills/zen-pitch/references/layouts.md).
 - **Example Prompt**: `"Research venue Wi-Fi CGNAT failure modes and build a 12-slide Presentation Zen pitch deck showing how our edge proxy architecture resolves them."`
 
 #### [`zen-presenter`](skills/zen-presenter/) — Presentation Zen Marp Slide Generator
@@ -358,17 +360,18 @@ Every skill in this repository is audited against **5 Core Vendor-Neutral Best-P
 | **4. PII & Confidential Data Hygiene** | Enforces zero employee usernames/LDAPs, zero personal/corporate emails (uses RFC 2606 `@example.com` / `@example.org`), zero local workstation paths (`/Users/<name>`), zero internal shortlinks (`go/...`), and zero live API secrets. |
 | **5. Token & Context Hygiene (`< 500` lines)** | Requires `SKILL.md < 500` lines, a Google Developer Standard `README.md`, and `>= 2` decoupled `references/*.md` files per skill so deep schemas, checklists, and templates are loaded on demand without bloating the agent's context window. |
 
-### Run the Automated Validator
+### Run the Automated Validator & Test Suite
 
 ```bash
 python3 scripts/validate_skills.py
+python3 -m unittest discover -s tests -v
 ```
 
 ---
 
 ## Contributing
 
-To add a new skill or update an existing workflow, see [CONTRIBUTING.md](CONTRIBUTING.md). Always run `python3 scripts/validate_skills.py` before opening a pull request and ensure all 5 Core Pillars pass with zero warnings.
+To add a new skill or update an existing workflow, see [CONTRIBUTING.md](CONTRIBUTING.md) and the Antigravity workspace architecture in [AGENTS.md](AGENTS.md). Always run `python3 scripts/validate_skills.py` and `python3 -m unittest discover -s tests -v` before opening a pull request and ensure all 5 Core Pillars pass with zero warnings.
 
 ---
 
