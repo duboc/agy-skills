@@ -13,7 +13,7 @@ This skill equips the agent to write engineering-ready Product Requirements Docu
 - **Structured Engineering Contracts**: Includes API contract tables (Methods, Paths, Auth Scope, Payload, Error Mapping), DB schema migration strategies, and operational SLAs (p95/p99 latency budgets).
 - **Accessibility (WCAG 2.1 AA) & UI Specs**: Screen state checklists (Loading, Empty, Error, Disabled) and WCAG accessibility standards built into product templates.
 - **PII Telemetry & Data Governance**: Mandatory PII data classification for telemetry events (`object_action`) with strict unhashed PII logging prohibitions.
-- **AI / LLM Capability Standards**: Specialized reference module ([`references/ai-and-llm-specs.md`](file:///Users/duboc/.gemini/config/skills/feature-spec/references/ai-and-llm-specs.md)) covering model fallback architecture, confidence score thresholds, and token cost caps.
+- **AI / LLM Capability Standards**: Specialized reference module ([`references/ai-and-llm-specs.md`](references/ai-and-llm-specs.md)) covering model fallback architecture, confidence score thresholds, and token cost caps.
 - **MoSCoW & Scope Equalizer**: Prevents scope creep by enforcing non-goals and v1 MVP trade-off boundaries.
 
 ---
