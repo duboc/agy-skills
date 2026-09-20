@@ -27,12 +27,18 @@ import urllib.error
 import urllib.request
 from typing import Any, Dict, List, Optional, Tuple
 
-DEFAULT_TOKEN_PATH = os.path.expanduser(
-    os.environ.get(
-        "GCLI_ACCESS_TOKEN_PATH",
-        "~/cowork_workspace/.cowork/access_token",
-    )
-)
+def _resolve_default_token_path() -> str:
+    env_path = os.environ.get("GCLI_ACCESS_TOKEN_PATH")
+    if env_path:
+        return os.path.expanduser(env_path)
+    cache_token = os.path.expanduser("~/.cache/gdoc-spec/access_token")
+    legacy_token = os.path.expanduser("~/cowork_workspace/.cowork/access_token")
+    if os.path.exists(legacy_token) and not os.path.exists(cache_token):
+        return legacy_token
+    return cache_token
+
+
+DEFAULT_TOKEN_PATH = _resolve_default_token_path()
 DEFAULT_GDOCS_BIN = os.environ.get(
     "GDOCS_OAUTH_BIN",
     "/Applications/Cowork Agent.app/Contents/Resources/gdocs_oauth",
@@ -43,8 +49,12 @@ def get_token(token_path: str = DEFAULT_TOKEN_PATH) -> str:
     if not os.path.exists(token_path):
         raise FileNotFoundError(
             f"OAuth access token not found at {token_path}. "
-            "Ensure GCLI_ACCESS_TOKEN_PATH points to a valid token file."
+            "Ensure GCLI_ACCESS_TOKEN_PATH points to a valid token file with 0600 permissions."
         )
+    if os.name != "nt":
+        mode = os.stat(token_path).st_mode & 0o777
+        if mode & 0o077:
+            os.chmod(token_path, 0o600)
     with open(token_path, "r", encoding="utf-8") as f:
         return f.read().strip()
 

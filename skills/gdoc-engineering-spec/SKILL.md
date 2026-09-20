@@ -59,8 +59,8 @@ Consult [`references/spec-schema-and-examples.md`](references/spec-schema-and-ex
 - **Archetype C:** Product & Engineering Feature Spec (PRD + UX Flows + Tech Spec + Launch)
 - **Archetype D:** Operational Runbook & Cutover Playbook (Topology, Cutover Steps, Troubleshooting, Rollback)
 
-### Step 2: Author the Declarative `spec.json`
-Create a JSON file (e.g., `$HOME/.cache/gdoc-spec/spec_doc.json` or `spec_doc.json` in the workspace) defining the `title` and `tabs` array using the building blocks supported by `build_gdoc_spec.py`:
+### Step 2: Author the Declarative `spec.json` in an Isolated Cache Directory
+Create an isolated runtime directory (`$HOME/.cache/gdoc-spec` or `mktemp -d` with `chmod 700` / `0700` permissions) and write `spec_doc.json` with strict `0600` file permissions (`umask 077`), ensuring deterministic cleanup (`trap 'rm -rf "$WORK_DIR"' EXIT` or `tempfile.TemporaryDirectory()`):
 - `title`: `{ "type": "title", "title": "...", "subtitle": "...", "metadata": [{"label": "Status", "value": "HOMOLOGAÇÃO", "style": "badge_amber"}] }`
 - `callout`: `{ "type": "callout", "theme": "amber|blue|green|red", "title": "⚠️ ...", "lines": ["• ..."] }`
 - `heading`: `{ "type": "heading", "level": 1|2|3, "text": "1. ..." }`
@@ -69,11 +69,18 @@ Create a JSON file (e.g., `$HOME/.cache/gdoc-spec/spec_doc.json` or `spec_doc.js
 - `table`: `{ "type": "table", "headers": ["Campo", "Tipo", "Descrição"], "rows": [["user_email", "string", "..."]] }`
 - `code_block`: `{ "type": "code_block", "label": "POST /api/... — Request Body", "code": "{\n  ...\n}" }`
 
-### Step 3: Execute `build_gdoc_spec.py`
-Run the bundled generator script from the skill directory:
+### Step 3: Execute `build_gdoc_spec.py` with Deterministic Cleanup
+Run the bundled generator script from the skill directory inside a `set -euo pipefail` block with `umask 077` and deterministic `trap ... EXIT` cleanup:
 
 ```bash
-python3 ~/.gemini/config/skills/gdoc-engineering-spec/scripts/build_gdoc_spec.py /path/to/spec_doc.json
+set -euo pipefail
+umask 077
+WORK_DIR="$(mktemp -d "${HOME}/.cache/gdoc-spec.XXXXXX")"
+chmod 700 "$WORK_DIR"
+trap 'rm -rf "$WORK_DIR"' EXIT
+
+# Ensure OAuth token file ($GCLI_ACCESS_TOKEN_PATH) has 0600 permissions
+python3 ~/.gemini/config/skills/gdoc-engineering-spec/scripts/build_gdoc_spec.py "$WORK_DIR/spec_doc.json"
 ```
 
 *(To update or populate an existing Google Doc, pass `--doc-id <DOCUMENT_ID>`.)*

@@ -23,7 +23,7 @@ Examples:
   $(basename "$0") software-troubleshooter
   $(basename "$0") software-troubleshooter --scope user
 
-Available skills (27):
+Available skills (28):
   adk-developer                 Build agents with Google's ADK (Python, Java, Go, TS)
   agent-engine-deploy           Deploy ADK agents on Vertex AI Agent Engine
   agent-engine-ops              Monitor, trace, secure, and evaluate Agent Engine agents
@@ -37,6 +37,7 @@ Available skills (27):
   developer-growth-analysis     Analyze Agy session history for engineering growth patterns
   documentation                 Write READMEs, API references, ADRs, and runbooks per Google Developer style
   feature-spec                  Write engineering-ready PRDs, INVEST stories, Given/When/Then criteria & MoSCoW scope
+  gdoc-engineering-spec         Build Pageless, multi-tab Google Docs engineering specs, RFCs & runbooks
   google-ads-funnel             Funnel-as-Code workflows for Google Ads account audits and diagnostics
   html-to-pptx                  Convert Marp HTML slides to editable native PowerPoint (.pptx)
   research-skill-graph-agy      Investigate questions through 6 analytical lenses in a local .research/ graph

@@ -37,7 +37,8 @@ class Handler(http.server.BaseHTTPRequestHandler):
     def do_GET(self):
         self.send_response(200)
         self.end_headers()
-        self.wfile.write(b"owned-fixture")
+        payload = os.environ.get("CUSTOM_RESP", "owned-fixture").encode("utf-8")
+        self.wfile.write(payload)
     def log_message(self, *args):
         pass
 with http.server.HTTPServer(("127.0.0.1", int(port)), Handler) as server:
@@ -162,6 +163,34 @@ class WithServerTests(unittest.TestCase):
                              "first server was launched before second port was checked\n" + log)
             self.assertNotEqual(code, 0, log)
             self.assertFalse(self.marker.exists(), log)
+
+    def test_cd_and_inline_env_server_command(self):
+        port = self.free_port()
+        subdir = self.root / "backend_sub"
+        subdir.mkdir()
+        raw_cmd = f"cd {shlex.quote(str(subdir))} && CUSTOM_RESP=from-inline-env {self.server_command(port)}"
+        dep = [
+            sys.executable,
+            "-c",
+            (
+                "from pathlib import Path; import urllib.request, sys; "
+                f"assert urllib.request.urlopen('http://127.0.0.1:{port}', timeout=2).read() == b'from-inline-env'; "
+                f"Path({str(self.marker)!r}).write_text('ran'); sys.exit(0)"
+            ),
+        ]
+        code, log = self.run_helper([(raw_cmd, port)], dep, timeout=3)
+        self.assertEqual(code, 0, log)
+        self.assertTrue(self.marker.exists(), log)
+
+    def test_parse_server_cmd_edge_cases(self):
+        sys.path.insert(0, str(HELPER.parent))
+        import with_server
+        argv, cwd, env = with_server.parse_server_cmd("cd ~/my_app && export PORT=4000 && HOST=127.0.0.1 npm run dev")
+        self.assertEqual(argv, ["npm", "run", "dev"])
+        self.assertEqual(cwd, os.path.abspath(os.path.expanduser("~/my_app")))
+        self.assertEqual(env, {"PORT": "4000", "HOST": "127.0.0.1"})
+        with self.assertRaises(ValueError):
+            with_server.parse_server_cmd("echo unsafe && npm start")
 
 
 if __name__ == "__main__":

@@ -20,24 +20,48 @@ import time
 import sys
 import argparse
 import os
+import re
 import signal
 import shlex
 
+_ENV_ASSIGN_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*=")
+
 
 def parse_server_cmd(raw_cmd):
-    """Parse server command into (argv, cwd) without invoking a shell."""
+    """Parse server command into (argv, cwd, env_overrides) without invoking a shell."""
     stripped = raw_cmd.strip()
-    cwd = None
-    if stripped.startswith("cd ") and "&&" in stripped:
-        cd_part, rest = stripped.split("&&", 1)
-        tokens = shlex.split(cd_part, posix=(os.name != "nt"))
-        if len(tokens) == 2 and tokens[0] == "cd":
-            cwd = os.path.abspath(tokens[1])
-            stripped = rest.strip()
-    argv = shlex.split(stripped, posix=(os.name != "nt"))
-    if not argv:
+    if not stripped:
         raise ValueError(f"Empty server command: {raw_cmd!r}")
-    return argv, cwd
+    cwd = None
+    env_overrides = {}
+    parts = [p.strip() for p in stripped.split("&&")]
+    for part in parts[:-1]:
+        tokens = shlex.split(part, posix=(os.name != "nt"))
+        if not tokens:
+            continue
+        if tokens[0] == "cd" and len(tokens) == 2:
+            target = os.path.expanduser(tokens[1])
+            cwd = os.path.abspath(os.path.join(cwd, target) if cwd else target)
+        elif tokens[0] == "export" and len(tokens) >= 2 and all(_ENV_ASSIGN_RE.match(t) for t in tokens[1:]):
+            for t in tokens[1:]:
+                k, v = t.split("=", 1)
+                env_overrides[k] = v
+        elif all(_ENV_ASSIGN_RE.match(t) for t in tokens):
+            for t in tokens:
+                k, v = t.split("=", 1)
+                env_overrides[k] = v
+        else:
+            raise ValueError(f"Unsupported chained shell command before '&&': {part!r}")
+
+    tokens = shlex.split(parts[-1], posix=(os.name != "nt"))
+    if tokens and tokens[0] == "env":
+        tokens = tokens[1:]
+    while tokens and _ENV_ASSIGN_RE.match(tokens[0]):
+        k, v = tokens.pop(0).split("=", 1)
+        env_overrides[k] = v
+    if not tokens:
+        raise ValueError(f"Empty server command: {raw_cmd!r}")
+    return tokens, cwd, env_overrides
 
 
 def port_open(port):
@@ -136,10 +160,12 @@ def main():
                 raise RuntimeError(f"Port {server['port']} became occupied before launch")
             print(f"Starting server {i+1}/{len(servers)}: {server['cmd']}")
 
-            argv, cwd = parse_server_cmd(server['cmd'])
+            argv, cwd, env_overrides = parse_server_cmd(server['cmd'])
+            proc_env = {**os.environ, **env_overrides} if env_overrides else None
             process = subprocess.Popen(
                 argv,
                 cwd=cwd,
+                env=proc_env,
                 shell=False,
                 # Inherit streams: unread PIPEs can deadlock verbose dev servers.
                 start_new_session=(os.name != 'nt'),

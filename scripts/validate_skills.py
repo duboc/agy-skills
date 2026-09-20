@@ -111,6 +111,9 @@ def iter_text_files(skill_dir: Path) -> List[Path]:
 
 def check_pillar_1_execution(skill_dir: Path) -> List[str]:
     errors: List[str] = []
+    code_block_re = re.compile(r"```([a-zA-Z0-9_-]*)\n(.*?)```", re.DOTALL)
+    anti_pattern_markers = ("never", "bad", "anti-pattern", "avoid", "forbidden", "❌", "vulnerable", "unsafe")
+
     for p in iter_text_files(skill_dir):
         rel = p.relative_to(skill_dir)
         content = p.read_text(encoding="utf-8", errors="replace")
@@ -122,6 +125,8 @@ def check_pillar_1_execution(skill_dir: Path) -> List[str]:
                 errors.append(f"{rel}: forbidden os.system()")
             if re.search(r"(?<![.\w])eval\s*\(", content):
                 errors.append(f"{rel}: forbidden eval()")
+            if re.search(r"(?<![.\w])exec\s*\(", content):
+                errors.append(f"{rel}: forbidden exec()")
 
         elif p.suffix == ".sh":
             if "set -euo pipefail" not in content and "set -e" not in content:
@@ -137,8 +142,25 @@ def check_pillar_1_execution(skill_dir: Path) -> List[str]:
                     errors.append(f"{rel}:{i}: forbidden 'eval' in shell script")
 
         elif p.suffix in {".js", ".cjs", ".mjs"} and "assets" not in p.parts:
-            if re.search(r"child_process\.exec\s*\(", content):
-                errors.append(f"{rel}: forbidden child_process.exec() (use execFile or spawn with shell: false)")
+            if re.search(r"child_process\.exec(?:Sync)?\s*\(", content):
+                errors.append(f"{rel}: forbidden child_process.exec/execSync() (use execFile or spawn with shell: false)")
+            if re.search(r"(?<![.\w])eval\s*\(", content):
+                errors.append(f"{rel}: forbidden eval() in JS script")
+            if re.search(r"shell\s*:\s*true", content):
+                errors.append(f"{rel}: forbidden shell: true in JS child_process")
+
+        elif p.suffix == ".md":
+            for m in code_block_re.finditer(content):
+                block = m.group(2)
+                for line in block.splitlines():
+                    lower_line = line.lower()
+                    if any(k in lower_line for k in anti_pattern_markers):
+                        continue
+                    if re.search(
+                        r"shell\s*=\s*True|\bos\.system\s*\(|(?<![.\w])eval\s*\(|(?<![.\w])exec\s*\(|child_process\.exec(?:Sync)?\s*\(",
+                        line,
+                    ):
+                        errors.append(f"{rel}: unsafe command execution pattern in markdown code block: {line.strip()[:80]}")
 
     return errors
 
@@ -172,16 +194,27 @@ def check_pillar_2_ipi(skill_dir: Path) -> List[str]:
 def check_pillar_3_credentials_and_temp(skill_dir: Path) -> List[str]:
     errors: List[str] = []
     bad_tmp_re = re.compile(r"(?<![\w$])/tmp/[a-zA-Z0-9_.-]+")
+
+    skill_md = skill_dir / "SKILL.md"
+    if skill_md.exists():
+        skill_text = skill_md.read_text(encoding="utf-8", errors="replace")
+        has_dir_isolation = any(
+            tok in skill_text for tok in ("0700", "chmod 700", ".cache", "mktemp -d", "TemporaryDirectory")
+        )
+        has_file_perms = any(tok in skill_text for tok in ("0600", "chmod 600", "umask 077"))
+        has_cleanup = any(tok in skill_text.lower() for tok in ("trap", "temporarydirectory", "finally", "cleanup"))
+        if not (has_dir_isolation and has_file_perms and has_cleanup):
+            errors.append(
+                "SKILL.md missing Pillar 3 Credential/Temp-File Hygiene guardrails "
+                "(requires 0700/.cache/mktemp -d isolation, 0600/umask 077 permissions, and deterministic trap/TemporaryDirectory cleanup)"
+            )
+
     for p in iter_text_files(skill_dir):
         rel = p.relative_to(skill_dir)
         content = p.read_text(encoding="utf-8", errors="replace")
         for i, line in enumerate(content.splitlines(), 1):
-            if "mktemp" in line or "TemporaryDirectory" in line or "0700" in line or "forbidden" in line.lower() or "never" in line.lower() or "avoid" in line.lower() or "anti-pattern" in line.lower() or "bad:" in line.lower() or "❌" in line:
-                continue
             for m in bad_tmp_re.finditer(line):
                 val = m.group(0)
-                if val in {"/tmp/...", "/tmp/foo"}:
-                    continue
                 errors.append(
                     f"{rel}:{i}: forbidden shared /tmp path '{val}' (use mktemp -d / TemporaryDirectory / $HOME/.cache with 0700)"
                 )
@@ -203,8 +236,6 @@ def check_pillar_4_pii(skill_dir: Path) -> List[str]:
             errors.append(f"{rel}: contains unresolved git merge conflict markers")
 
         for i, line in enumerate(content.splitlines(), 1):
-            if "never" in line.lower() or "forbid" in line.lower() or "zero" in line.lower() or "avoid" in line.lower():
-                continue
             um = user_path_re.search(line)
             if um and "<" not in um.group(0):
                 errors.append(f"{rel}:{i}: hardcoded personal path '{um.group(0)}'")
