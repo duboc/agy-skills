@@ -4,6 +4,19 @@ Discover exposed routes, audit Backend-for-Frontend (BFF) proxies, enforce CGNAT
 
 ---
 
+## Table of Contents
+
+- [Overview](#overview)
+- [Architecture & 7-Phase Workflow](#architecture--7-phase-workflow)
+- [Specialized Audit Modes](#specialized-audit-modes)
+- [Core Security & Resilience Domains](#core-security--resilience-domains)
+- [Quickstart Prompts](#quickstart-prompts)
+- [Reference Guides Inventory](#reference-guides-inventory)
+- [Active Testing & Fault-Injection Recipes](#active-testing--fault-injection-recipes)
+- [Installation](#installation)
+
+---
+
 ## Overview
 
 The `app-security-audit` skill provides a structured, 7-phase security and production-resilience audit workflow for applications built on Google Cloud (Cloud Run, GKE, Firestore, Cloud Storage, IAM), Generative AI pipelines (Vertex AI, Gemini Flash/Pro, Imagen, Gemini Live API, vLLM), BFF reverse proxies, operator consoles, and unattended live-event kiosks or broadcast displays.
@@ -20,12 +33,20 @@ The audit progresses sequentially from automated codebase and cloud surface disc
 
 ```mermaid
 flowchart LR
-    P0["Phase 0<br/>Route & GCP Discovery"] --> P1["Phase 1<br/>Topology Calibration"]
-    P1 --> P2["Phase 2<br/>Proxy & 4D CGNAT Limits"]
-    P2 --> P3["Phase 3<br/>AI FinOps & Log Redaction"]
-    P3 --> P4["Phase 4<br/>Async Loop & 8h+ Kiosk UI"]
-    P4 --> P5["Phase 5<br/>Privacy, IDOR & Moderation"]
-    P5 --> P6["Phase 6<br/>Active Tests & P0-P2 Spec"]
+    subgraph Surface["Discovery & Topology"]
+        P0["Phase 0: Route & GCP Discovery<br/>(FastAPI/Next.js, Cloud Run, GKE Ingress)"] --> P1["Phase 1: Topology Calibration<br/>(Managed Tablets vs. Public CGNAT Wi-Fi)"]
+    end
+    subgraph Edge["BFF Proxy & Edge Controls"]
+        P1 --> P2["Phase 2: BFF Proxy & 4D Rate Limits<br/>(normpath, X-App-Role, GET Session Cookie)"]
+    end
+    subgraph CloudAI["GCP, GenAI & Runtime Resilience"]
+        P2 --> P3["Phase 3: AI FinOps & Log Redaction<br/>(signBlob Cache, setLogRecordFactory)"]
+        P3 --> P4["Phase 4: Async Loop & 8h+ Kiosk UI<br/>(Threadpool def, 30fps Dual-Blob, ?mode=audio)"]
+    end
+    subgraph Governance["Privacy & Verification"]
+        P4 --> P5["Phase 5: LGPD/GDPR & Moderation<br/>(409 UUID Oracle, Snapshot PII, Live TTS)"]
+        P5 --> P6["Phase 6: Active Fault Injection<br/>(pytest caplog, curl, P0-P2 Spec)"]
+    end
 ```
 
 | Phase | Focus Area | Key Verification Actions |
@@ -162,14 +183,65 @@ Use this fault-injection test to verify that simulated upstream Gemini failures 
 
 ```python
 import logging
+import re
 import httpx
 import pytest
-from app.security.log_redaction import install_secret_redaction, sanitize_exception
 
-FAKE_GEMINI_KEY = "AIzaSyD-999999999999999999999999999999999"
+_SECRET_PATTERNS: list[tuple[re.Pattern[str], str]] = [
+    (re.compile(r"((?:[?&]|%(?:3[fF]|26))(?:api_)?key=)[^&\s\"'(),\]}>]+", re.IGNORECASE), r"\1[REDACTED]"),
+    (re.compile(r"(x-goog-api-key['\"]?\s*[:=]\s*['\"]?)[^'\"\s,}]+", re.IGNORECASE), r"\1[REDACTED]"),
+    (re.compile(r"(Bearer\s+)[A-Za-z0-9._\-~+/]+=*", re.IGNORECASE), r"\1[REDACTED]"),
+    (re.compile(r"AIza[0-9A-Za-z_-]{20,60}"), "AIza[REDACTED]"),
+]
 
 
-def test_induced_gemini_error_never_leaks_api_key_in_logs_or_db(caplog):
+def sanitize_secrets(text: str) -> str:
+    cleaned = str(text or "")
+    for pattern, replacement in _SECRET_PATTERNS:
+        cleaned = pattern.sub(replacement, cleaned)
+    return cleaned
+
+
+def sanitize_exception(exc: BaseException) -> str:
+    if getattr(exc, "args", None):
+        exc.args = tuple(sanitize_secrets(a) if isinstance(a, str) else a for a in exc.args)
+    return f"{type(exc).__name__}: {sanitize_secrets(str(exc))}"
+
+
+class SecretRedactingFilter(logging.Filter):
+    def filter(self, record: logging.LogRecord) -> bool:
+        record.msg = sanitize_secrets(record.getMessage())
+        record.args = ()
+        if record.exc_info:
+            formatter = logging.Formatter()
+            record.exc_text = sanitize_secrets(formatter.formatException(record.exc_info))
+            record.exc_info = None
+        elif record.exc_text:
+            record.exc_text = sanitize_secrets(record.exc_text)
+        return True
+
+
+def install_secret_redaction() -> SecretRedactingFilter:
+    redactor = SecretRedactingFilter()
+    root = logging.getLogger()
+    root.addFilter(redactor)
+    for handler in root.handlers:
+        handler.addFilter(redactor)
+    old_factory = logging.getLogRecordFactory()
+    if not getattr(old_factory, "_secret_redacting", False):
+        def _redacting_factory(*args, **kwargs):
+            record = old_factory(*args, **kwargs)
+            redactor.filter(record)
+            return record
+        _redacting_factory._secret_redacting = True
+        logging.setLogRecordFactory(_redacting_factory)
+    return redactor
+
+
+FAKE_GEMINI_KEY = "AIzaSyDummySecretKey1234567890123456789"
+
+
+def test_induced_gemini_error_never_leaks_api_key_in_logs_or_db(caplog: pytest.LogCaptureFixture):
     install_secret_redaction()
     child_logger = logging.getLogger("app.services.gemini_vision")
 
@@ -177,14 +249,11 @@ def test_induced_gemini_error_never_leaks_api_key_in_logs_or_db(caplog):
         f"https://generativelanguage.googleapis.com/v1beta/models/"
         f"gemini-2.5-flash:generateContent?key={FAKE_GEMINI_KEY}"
     )
-    request = httpx.Request(
-        "POST",
-        failing_url,
-        headers={"x-goog-api-key": FAKE_GEMINI_KEY},
-    )
+    req_headers = {"x-goog-api-key": FAKE_GEMINI_KEY, "Authorization": f"Bearer ya29.{FAKE_GEMINI_KEY}"}
+    request = httpx.Request("POST", failing_url, headers=req_headers)
     response = httpx.Response(429, request=request, text='{"error": "RESOURCE_EXHAUSTED"}')
     induced_exc = httpx.HTTPStatusError(
-        f"Client error '429 Too Many Requests' for url '{failing_url}'",
+        f"Client error '429 Too Many Requests' for url '{failing_url}' (raw_key={FAKE_GEMINI_KEY})",
         request=request,
         response=response,
     )
@@ -193,13 +262,16 @@ def test_induced_gemini_error_never_leaks_api_key_in_logs_or_db(caplog):
         try:
             raise induced_exc
         except Exception as exc:
-            safe_msg = sanitize_exception(exc)
-            child_logger.exception("Gemini generation failed: %s", exc)
-            persisted_db_error = safe_msg
+            persisted_db_error = sanitize_exception(exc)
+            child_logger.exception("Gemini generation failed: %s | headers=%s", exc, req_headers)
 
     assert FAKE_GEMINI_KEY not in persisted_db_error
-    assert "[REDACTED_GOOGLE_API_KEY]" in persisted_db_error
+    assert "?key=[REDACTED]" in persisted_db_error
+    assert "AIza[REDACTED]" in persisted_db_error
     assert FAKE_GEMINI_KEY not in caplog.text
+    assert "?key=[REDACTED]" in caplog.text
+    assert "x-goog-api-key': '[REDACTED]'" in caplog.text
+    assert "Bearer [REDACTED]" in caplog.text
     for record in caplog.records:
         assert FAKE_GEMINI_KEY not in record.getMessage()
 ```

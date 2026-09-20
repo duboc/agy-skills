@@ -120,16 +120,24 @@ cp -r skills/app-security-audit ~/.gemini/config/skills/app-security-audit
 
 [**`skills/app-security-audit/`**](skills/app-security-audit/) equips Agy to perform end-to-end attack-surface discovery, BFF proxy and CGNAT rate-limit auditing, Google Cloud and Generative AI FinOps hardening, induced API-key error-log leak testing, async event-loop unfreezing, and LGPD/GDPR privacy assessments.
 
-### 7-Phase Discovery & Audit Workflow
+### Architecture & 7-Phase Discovery/Audit Workflow
 
 ```mermaid
 flowchart LR
-    P0["Phase 0<br/>Route & GCP Discovery"] --> P1["Phase 1<br/>Topology Calibration"]
-    P1 --> P2["Phase 2<br/>Proxy & 4D CGNAT Limits"]
-    P2 --> P3["Phase 3<br/>AI FinOps & Log Redaction"]
-    P3 --> P4["Phase 4<br/>Async Loop & 8h+ Kiosk UI"]
-    P4 --> P5["Phase 5<br/>Privacy, IDOR & Moderation"]
-    P5 --> P6["Phase 6<br/>Active Tests & P0-P2 Spec"]
+    subgraph Surface["Discovery & Topology"]
+        P0["Phase 0: Route & GCP Discovery<br/>(FastAPI/Next.js, Cloud Run, GKE Ingress)"] --> P1["Phase 1: Topology Calibration<br/>(Managed Tablets vs. Public CGNAT Wi-Fi)"]
+    end
+    subgraph Edge["BFF Proxy & Edge Controls"]
+        P1 --> P2["Phase 2: BFF Proxy & 4D Rate Limits<br/>(normpath, X-App-Role, GET Session Cookie)"]
+    end
+    subgraph CloudAI["GCP, GenAI & Runtime Resilience"]
+        P2 --> P3["Phase 3: AI FinOps & Log Redaction<br/>(signBlob Cache, setLogRecordFactory)"]
+        P3 --> P4["Phase 4: Async Loop & 8h+ Kiosk UI<br/>(Threadpool def, 30fps Dual-Blob, ?mode=audio)"]
+    end
+    subgraph Governance["Privacy & Verification"]
+        P4 --> P5["Phase 5: LGPD/GDPR & Moderation<br/>(409 UUID Oracle, Snapshot PII, Live TTS)"]
+        P5 --> P6["Phase 6: Active Fault Injection<br/>(pytest caplog, curl, P0-P2 Spec)"]
+    end
 ```
 
 ### Core Security & Resilience Domains
@@ -165,50 +173,164 @@ flowchart LR
 
 ## Skill Reference by Category
 
+Each skill below follows a standard directory architecture (`SKILL.md`, [`README.md`](skills/app-security-audit/README.md), and domain-specific `references/`, `scripts/`, or `templates/`) and can be installed individually via `scripts/install.sh`.
+
 ### 1. Security, Cloud Architecture & Infrastructure
 
-- **[`app-security-audit`](skills/app-security-audit/)**: Perform 7-phase application, Google Cloud (Cloud Run, GKE, Firestore, GCS, IAM), Generative AI (Vertex AI, Gemini, Imagen, Live API), BFF proxy, CGNAT rate-limit, async event-loop, 8-hour kiosk/TV, and LGPD/GDPR security audits.
-- **[`cloud-architecture-diagram`](skills/cloud-architecture-diagram/)**: Render deployed Google Cloud systems as interactive, self-contained HTML architecture diagrams featuring official GCP icons, environment boundaries, collision-audited orthogonal connectors, and stepped slideshow walkthroughs.
-- **[`ai-studio-architect`](skills/ai-studio-architect/)**: Migrate Google AI Studio Build-mode prototypes to production on Google Cloud Run with automated containerization, Secret Manager bindings, and IAM least-privilege configurations.
-- **[`system-design`](skills/system-design/)**: Architect backend services, APIs, caching tiers, and data storage topologies with explicit capacity estimates and trade-off matrices.
+#### [`app-security-audit`](skills/app-security-audit/) — Google Cloud, Generative AI & Live-Event Security Audit
+- **Purpose**: End-to-end attack-surface discovery, BFF credential-swap auditing, 4D CGNAT rate limiting, Vertex AI / Gemini FinOps hardening, induced API-key error-log redaction, FastAPI `async def` unfreezing, 8h+ kiosk resilience, and LGPD/GDPR privacy compliance.
+- **Deliverables & References**: [`references/proxy-cgnat-and-auth-patterns.md`](skills/app-security-audit/references/proxy-cgnat-and-auth-patterns.md), [`references/ai-finops-async-and-kiosk-resilience.md`](skills/app-security-audit/references/ai-finops-async-and-kiosk-resilience.md), [`references/privacy-idor-moderation-and-report-template.md`](skills/app-security-audit/references/privacy-idor-moderation-and-report-template.md).
+- **Example Prompt**: `"Run a full 7-phase security audit and verify that induced Gemini HTTPStatusError exceptions never leak AIza API keys in logs."`
+
+#### [`cloud-architecture-diagram`](skills/cloud-architecture-diagram/) — Google Cloud Reference Architecture Diagrams
+- **Purpose**: Render deployed Google Cloud systems as interactive, self-contained HTML architecture diagrams featuring official GCP product icons, tinted environment boundaries, collision-audited orthogonal connectors, numbered request flows, and stepped slideshow walkthroughs.
+- **Deliverables & References**: Single-file HTML architecture diagram, [`references/gcp-icons.md`](skills/cloud-architecture-diagram/references/gcp-icons.md), [`references/diagram-template.html`](skills/cloud-architecture-diagram/references/diagram-template.html).
+- **Example Prompt**: `"Draw a Google Cloud reference architecture diagram for this repository showing the Cloud Run BFF, FastAPI backend, Firestore, GCS, and Vertex AI flows."`
+
+#### [`ai-studio-architect`](skills/ai-studio-architect/) — Google AI Studio to Cloud Run Productionizer
+- **Purpose**: Migrate Google AI Studio Build-mode prototypes into production services on Google Cloud Run with automated containerization, Secret Manager API-key bindings, and least-privilege IAM service accounts.
+- **Deliverables & References**: Production `Dockerfile`, Cloud Run deployment scripts, Secret Manager bindings, [`references/`](skills/ai-studio-architect/).
+- **Example Prompt**: `"Convert this AI Studio prototype into a hardened Cloud Run service using Secret Manager for the Gemini API key."`
+
+#### [`system-design`](skills/system-design/) — Distributed System & Service Architecture
+- **Purpose**: Design backend services, API contracts, caching tiers, and data storage topologies with explicit capacity estimation, consistency models, and architectural trade-off matrices.
+- **Deliverables & References**: System architecture specification, SLA/capacity sizing tables, failure-mode analysis, [`references/`](skills/system-design/).
+- **Example Prompt**: `"Design a multi-region event ingestion and real-time leaderboard architecture with explicit latency and consistency trade-offs."`
+
+---
 
 ### 2. Google ADK & Vertex AI Agent Engine
 
-- **[`adk-developer`](skills/adk-developer/)**: Build single-agent and multi-agent architectures using Google's Agent Development Kit (ADK) across Python, Java, Kotlin, Go, and TypeScript (`LlmAgent`, `SequentialAgent`, `ParallelAgent`, `LoopAgent`, `LiveAgent`, MCP tools, and A2A protocol).
-- **[`agent-engine-deploy`](skills/agent-engine-deploy/)**: Package, deploy, version, and query ADK agents on Vertex AI Agent Engine.
-- **[`agent-engine-sessions-memory`](skills/agent-engine-sessions-memory/)**: Configure multi-turn session state persistence and long-term memory banks on Vertex AI Agent Engine.
-- **[`agent-engine-ops`](skills/agent-engine-ops/)**: Set up OpenTelemetry tracing, safety guardrails (`before_model` callbacks, `LlmAsAJudge`), IAM policies, and continuous evaluation pipelines for production agents.
+#### [`adk-developer`](skills/adk-developer/) — Agent Development Kit (ADK) Engineering
+- **Purpose**: Build single-agent and multi-agent architectures using Google's Agent Development Kit across Python, Java, Kotlin, Go, and TypeScript (`LlmAgent`, `SequentialAgent`, `ParallelAgent`, `LoopAgent`, `LiveAgent`, MCP tools, and A2A protocol).
+- **Deliverables & References**: Agent orchestration code, tool definitions, lifecycle callbacks, and `adk eval` test suites ([`references/`](skills/adk-developer/references/)).
+- **Example Prompt**: `"Build a multi-agent ADK workflow with a coordinator agent, parallel research subagents, and structured output validation."`
+
+#### [`agent-engine-deploy`](skills/agent-engine-deploy/) — Vertex AI Agent Engine Deployment
+- **Purpose**: Package, deploy, update, version, and query ADK agents on Vertex AI Agent Engine with reproducible dependency and environment configurations.
+- **Deliverables & References**: Vertex AI Agent Engine deployment scripts, runtime configurations, and client query wrappers ([`references/`](skills/agent-engine-deploy/)).
+- **Example Prompt**: `"Deploy our ADK agent to Vertex AI Agent Engine in us-central1 and generate a streaming query client."`
+
+#### [`agent-engine-sessions-memory`](skills/agent-engine-sessions-memory/) — Agent Session & Memory Bank Management
+- **Purpose**: Configure multi-turn conversation session state persistence and long-term cross-session memory banks on Vertex AI Agent Engine.
+- **Deliverables & References**: Session lifecycle managers, memory bank ingestion hooks, and retrieval configurations ([`references/`](skills/agent-engine-sessions-memory/)).
+- **Example Prompt**: `"Add persistent Vertex AI Agent Engine session tracking and long-term user preference memory to our ADK agent."`
+
+#### [`agent-engine-ops`](skills/agent-engine-ops/) — Agent Observability, Guardrails & Evaluation
+- **Purpose**: Instrument deployed Vertex AI agents with Cloud Trace OpenTelemetry spans, `before_model` safety callbacks, IAM access policies, and automated `LlmAsAJudge` evaluation pipelines.
+- **Deliverables & References**: Telemetry instrumentation, prompt-injection guardrails, and CI evaluation suites ([`references/`](skills/agent-engine-ops/)).
+- **Example Prompt**: `"Configure Cloud Trace instrumentation, before_model safety guardrails, and an evaluation dataset for our deployed Agent Engine service."`
+
+---
 
 ### 3. Product Management, Research & Specifications
 
-- **[`feature-spec`](skills/feature-spec/)**: Author 12-section Product Requirements Documents (PRDs) with INVEST user stories, traceable Given/When/Then acceptance criteria (`AC-US01-1`), API contract tables, WCAG 2.1 AA requirements, PII telemetry schemas, LLM fallback budgets, and MoSCoW scope plans.
-- **[`research-skill-graph-agy`](skills/research-skill-graph-agy/)**: Investigate complex technical, economic, and architectural questions through 6 structured lenses (`technical`, `economic`, `historical`, `geopolitical`, `contrarian`, `first-principles`) inside a local `.research/` Markdown graph.
-- **[`google-ads-funnel`](skills/google-ads-funnel/)**: Run Funnel-as-Code audits for Google Ads accounts, analyzing campaign spend, creative variants, and conversion tracking diagnostics via the Google Ads API.
+#### [`feature-spec`](skills/feature-spec/) — Engineering-Ready Product Requirements Documents (PRDs)
+- **Purpose**: Author 12-section PRDs with INVEST user stories, traceable Given/When/Then acceptance criteria (`AC-US01-1`), API contract tables, state machines, WCAG 2.1 AA accessibility rules, PII-redacted analytics schemas, LLM fallback budgets, and MoSCoW scope management.
+- **Deliverables & References**: Complete 12-section PRD, [`references/prd-template-and-checklist.md`](skills/feature-spec/references/prd-template-and-checklist.md), [`references/user-stories-and-acceptance-criteria.md`](skills/feature-spec/references/user-stories-and-acceptance-criteria.md), [`references/metrics-analytics-and-rollout.md`](skills/feature-spec/references/metrics-analytics-and-rollout.md).
+- **Example Prompt**: `"Write an engineering-ready PRD with Given/When/Then acceptance criteria, API contracts, WCAG rules, and MoSCoW scope for a real-time tournament check-in flow."`
+
+#### [`research-skill-graph-agy`](skills/research-skill-graph-agy/) — 6-Lens Local Markdown Research Graph
+- **Purpose**: Investigate technical, economic, and architectural questions through 6 independent analytical lenses (`technical`, `economic`, `historical`, `geopolitical`, `contrarian`, `first-principles`) stored as an interconnected Markdown knowledge graph inside `.research/`.
+- **Deliverables & References**: `.research/projects/<topic>/executive-summary.md`, `deep-dive.md`, `contradictions.md`, `open-questions.md`, and [`templates/`](skills/research-skill-graph-agy/templates/).
+- **Example Prompt**: `"Research the cost, latency, and scalability trade-offs between Gemini Live WebSockets and WebRTC relays using all 6 analytical lenses."`
+
+#### [`google-ads-funnel`](skills/google-ads-funnel/) — Funnel-as-Code Google Ads Diagnostics
+- **Purpose**: Audit Google Ads accounts, analyze campaign spend efficiency, evaluate creative variants, and diagnose conversion tracking discrepancies via the Google Ads API.
+- **Deliverables & References**: Funnel-as-Code audit scripts, conversion diagnostic reports, and budget optimization matrices ([`references/`](skills/google-ads-funnel/)).
+- **Example Prompt**: `"Audit our Google Ads conversion funnel and identify campaigns with high spend and dropped conversion tag attribution."`
+
+---
 
 ### 4. UI/UX Design, Technical Drawing & Visual Explanations
 
-- **[`design-critique`](skills/design-critique/)**: Audit wireframes, screenshots, and frontend code (React, Tailwind, HTML/CSS) across a 7-pillar framework covering visual hierarchy, usability heuristics, CTA clarity, design token alignment, and WCAG 2.1 AA/AAA accessibility.
-- **[`technical-drawing`](skills/technical-drawing/)**: Generate scale-accurate orthographic technical drawings in SVG (side, end, and top views) with architectural dimension lines (cotas), leader-line callouts, and camera/sensor field-of-view (FOV) cones.
-- **[`design-system-management`](skills/design-system-management/)**: Define multi-tier design token taxonomies (primitive, semantic, component), accessible component prop APIs, and versioning governance.
-- **[`ux-copywriter`](skills/ux-copywriter/)**: Craft clear, accessible interface microcopy for buttons, onboarding steps, empty states, confirmation dialogs, and recovery-oriented error messages.
-- **[`visual-explainer`](skills/visual-explainer/)**: Generate self-contained interactive HTML explainers for system architectures, complex pull requests, implementation plans, and benchmark comparisons.
+#### [`design-critique`](skills/design-critique/) — 7-Pillar UI/UX & WCAG Accessibility Audit
+- **Purpose**: Evaluate UI mockups, wireframes, screenshots, and frontend code (React, Tailwind CSS, HTML/CSS) across a 7-pillar rubric covering visual hierarchy, usability heuristics, CTA clarity, design token alignment, and WCAG 2.1 AA/AAA accessibility.
+- **Deliverables & References**: Prioritized P0–P3 UX critique report with exact CSS/Tailwind/React code fixes, [`references/critique-framework.md`](skills/design-critique/references/critique-framework.md), [`references/accessibility-and-heuristics.md`](skills/design-critique/references/accessibility-and-heuristics.md), [`references/ui-patterns-and-fixes.md`](skills/design-critique/references/ui-patterns-and-fixes.md).
+- **Example Prompt**: `"Run a 7-pillar design critique and WCAG 2.1 AA accessibility audit on our registration and kiosk status screens."`
+
+#### [`technical-drawing`](skills/technical-drawing/) — Orthographic SVG Technical Drawings & FOV Layouts
+- **Purpose**: Create scale-accurate orthographic technical drawings in SVG (side, end, and top views) with architectural dimension lines (`cotas`), leader-line callouts, and trig-computed camera or sensor field-of-view (FOV) cones.
+- **Deliverables & References**: Self-contained dimensioned SVG/HTML technical drawing, [`references/svg-drafting-primitives.md`](skills/technical-drawing/references/svg-drafting-primitives.md).
+- **Example Prompt**: `"Draw a 3-view orthographic SVG technical layout (side, end, top) for an overhead camera rig mounted at 2.10m over a 1.40m x 0.80m table with a 78-degree diagonal FOV."`
+
+#### [`design-system-management`](skills/design-system-management/) — Design Tokens & Component Library Governance
+- **Purpose**: Architect multi-tier design token taxonomies (primitive, semantic, component), accessible component prop APIs, and versioning/deprecation governance.
+- **Deliverables & References**: W3C Design Token JSON/CSS files, component API specifications, and migration guides ([`references/`](skills/design-system-management/)).
+- **Example Prompt**: `"Define a semantic dark/light design token taxonomy and accessible Button/Dialog component API for our web console."`
+
+#### [`ux-copywriter`](skills/ux-copywriter/) — Accessible UI Microcopy & Error Recovery Copy
+- **Purpose**: Write clear, scannable, and accessible interface microcopy for primary CTAs, onboarding flows, empty states, confirmation dialogs, and actionable error messages.
+- **Deliverables & References**: UI copy specification tables, tone-and-voice matrices, and localized state strings ([`references/`](skills/ux-copywriter/)).
+- **Example Prompt**: `"Rewrite all form validation, rate-limit cooldown, and network reconnection messages to be clear, non-blaming, and actionable."`
+
+#### [`visual-explainer`](skills/visual-explainer/) — Interactive HTML System & Diff Explainers
+- **Purpose**: Build self-contained interactive HTML pages that visually explain complex system workflows, code diffs, execution plans, and performance benchmarks.
+- **Deliverables & References**: Single-file interactive HTML visual explainer ([`references/`](skills/visual-explainer/)).
+- **Example Prompt**: `"Generate an interactive HTML visual explainer showing how our 4-dimensional CGNAT rate limiter evaluates incoming requests."`
+
+---
 
 ### 5. Presentations & Executive Communication
 
-- **[`zen-pitch`](skills/zen-pitch/)**: Research a problem domain, synthesize a numbered requirements spine, and build a persuasive Presentation Zen slide deck in Marp HTML/PDF/PPTX formats.
-- **[`zen-presenter`](skills/zen-presenter/)**: Create high-contrast, minimal Marp slide decks with Google identity styling, custom SVG visuals, and self-contained HTML output.
-- **[`clarity-presenter`](skills/clarity-presenter/)**: Build technical and executive presentations using Situation-Complication-Question-Answer (SCQA) narrative flows and assertion-evidence slide layouts.
-- **[`html-to-pptx`](skills/html-to-pptx/)**: Convert Marp HTML slide decks into native, editable PowerPoint (`.pptx`) files preserving text boxes, lists, tables, and embedded graphics.
+#### [`zen-pitch`](skills/zen-pitch/) — Research-to-Narrative Presentation Zen Pitch Decks
+- **Purpose**: Research a problem domain, synthesize findings into a numbered requirements spine (`R1..Rn`), map every requirement to a concrete resolution, and compile a persuasive Presentation Zen slide deck in Marp HTML/PDF/PPTX.
+- **Deliverables & References**: `01-research-brief.md`, `02-narrative-spine.md`, `03-deck.md`, compiled `03-deck.html`, [`references/narrative-and-zen-craft.md`](skills/zen-pitch/references/narrative-and-zen-craft.md).
+- **Example Prompt**: `"Research venue Wi-Fi CGNAT failure modes and build a 12-slide Presentation Zen pitch deck showing how our edge proxy architecture resolves them."`
+
+#### [`zen-presenter`](skills/zen-presenter/) — Presentation Zen Marp Slide Generator
+- **Purpose**: Generate high-contrast, minimal Marp presentation decks with Google identity styling, custom inline SVG visuals, and self-contained HTML/PPTX output.
+- **Deliverables & References**: Marp Markdown source, self-contained HTML slide deck, and PPTX export ([`references/`](skills/zen-presenter/)).
+- **Example Prompt**: `"Create a 10-slide Presentation Zen deck summarizing our Q3 architecture reliability milestones."`
+
+#### [`clarity-presenter`](skills/clarity-presenter/) — SCQA & Assertion-Evidence Technical Decks
+- **Purpose**: Build executive and engineering slide decks combining Situation-Complication-Question-Answer (SCQA) narrative structure with assertion-evidence visual layouts.
+- **Deliverables & References**: Dual-perspective assertion-evidence Marp HTML/PPTX presentation ([`references/`](skills/clarity-presenter/)).
+- **Example Prompt**: `"Build an SCQA assertion-evidence deck presenting our Cloud Run latency root-cause analysis and threadpool remediation."`
+
+#### [`html-to-pptx`](skills/html-to-pptx/) — Marp HTML to Native Editable PowerPoint Converter
+- **Purpose**: Convert Marp HTML slide decks into native, editable PowerPoint (`.pptx`) files preserving editable text boxes, lists, tables, and embedded vector/raster graphics.
+- **Deliverables & References**: Native editable `.pptx` file and conversion scripts ([`scripts/`](skills/html-to-pptx/)).
+- **Example Prompt**: `"Convert our compiled Marp HTML presentation into a native editable PowerPoint (.pptx) file."`
+
+---
 
 ### 6. Software Engineering, Testing & Developer Operations
 
-- **[`software-troubleshooter`](skills/software-troubleshooter/)**: Diagnose production bugs, race conditions, and test failures using structured hypothesis testing and code inspection.
-- **[`writing-plans`](skills/writing-plans/)**: Break down feature specifications into atomic, test-driven implementation plans with exact file paths, test cases, and verification commands.
-- **[`using-git-worktrees`](skills/using-git-worktrees/)**: Provision isolated Git worktrees with automated directory selection, `.gitignore` safety checks, dependency installation, and baseline test verification.
-- **[`webapp-testing`](skills/webapp-testing/)**: Automate end-to-end verification of local web applications using Playwright, including dev-server lifecycle management, screenshot capture, and browser console inspection.
-- **[`spring-boot-upgrader`](skills/spring-boot-upgrader/)**: Upgrade Spring Boot applications to version 4.0 with automated dependency analysis, Jakarta EE adjustments, and Jackson 3 migration steps.
-- **[`documentation`](skills/documentation/)**: Author and maintain READMEs, API reference guides, architecture decision records (ADRs), and operational runbooks following Google Developer Documentation style guidelines.
-- **[`developer-growth-analysis`](skills/developer-growth-analysis/)**: Inspect coding agent session logs to surface workflow bottlenecks, recurring debugging patterns, and targeted engineering study materials.
+#### [`software-troubleshooter`](skills/software-troubleshooter/) — Structured Root-Cause Analysis & Debugging
+- **Purpose**: Perform systematic root-cause analysis, call-graph inspection, and hypothesis verification for production bugs, race conditions, and test failures.
+- **Deliverables & References**: Root-cause diagnostic report (`input -> expected -> actual -> root cause`), regression test, and verified patch ([`references/`](skills/software-troubleshooter/)).
+- **Example Prompt**: `"Investigate why WebSocket broadcasts stall during concurrent badge generation and verify the root cause."`
+
+#### [`writing-plans`](skills/writing-plans/) — Atomic Test-Driven Implementation Plans
+- **Purpose**: Decompose feature specifications or security remediation specs into atomic, test-driven implementation tasks with exact file paths, test code, and verification commands.
+- **Deliverables & References**: Step-by-step TDD execution plan (`docs/plans/YYYY-MM-DD-<feature>.md`).
+- **Example Prompt**: `"Write a phased TDD implementation plan to deploy the P0 and P1 findings from our security audit."`
+
+#### [`using-git-worktrees`](skills/using-git-worktrees/) — Isolated Git Worktree Provisioning
+- **Purpose**: Create isolated Git worktrees for parallel feature branches with automated directory selection, `.gitignore` safety verification, dependency installation, and baseline test runs.
+- **Deliverables & References**: Verified isolated Git worktree environment with clean baseline test execution.
+- **Example Prompt**: `"Set up an isolated Git worktree for the security-hardening branch and verify the pytest baseline passes."`
+
+#### [`webapp-testing`](skills/webapp-testing/) — Automated Playwright Web Application Verification
+- **Purpose**: Test local and staging web applications with Playwright, managing dev-server lifecycles, DOM assertions, network interception, console error capture, and screenshots.
+- **Deliverables & References**: Automated Playwright verification scripts, browser console/network logs, and visual evidence ([`scripts/`](skills/webapp-testing/)).
+- **Example Prompt**: `"Run a Playwright verification suite against our local web server and assert zero console errors across all routes."`
+
+#### [`spring-boot-upgrader`](skills/spring-boot-upgrader/) — Phased Spring Boot 4.0 & Jackson 3 Migration
+- **Purpose**: Upgrade Spring Boot applications to version 4.0 with automated dependency graph analysis, Jakarta EE namespace checks, and Jackson 3 migration rules.
+- **Deliverables & References**: Phased upgrade execution plan, updated Maven/Gradle build manifests, and compatibility patches ([`references/`](skills/spring-boot-upgrader/)).
+- **Example Prompt**: `"Analyze this Spring Boot repository and generate a phased migration plan to upgrade to Spring Boot 4.0 and Jackson 3."`
+
+#### [`documentation`](skills/documentation/) — Google Developer Standard Technical Documentation
+- **Purpose**: Write and maintain READMEs, API reference documentation, Architecture Decision Records (ADRs), and operational runbooks adhering to the Google Developer Documentation Style Guide.
+- **Deliverables & References**: Second-person, task-oriented READMEs, API references, ADRs, and runbooks ([`references/`](skills/documentation/)).
+- **Example Prompt**: `"Rewrite our service README and operational runbook following the Google Developer Documentation Style Guide."`
+
+#### [`developer-growth-analysis`](skills/developer-growth-analysis/) — Engineering Session & Workflow Retrospective
+- **Purpose**: Analyze coding agent session histories to identify recurring debugging friction points, architectural patterns, and targeted engineering learning resources.
+- **Deliverables & References**: Structured developer growth report with actionable workflow improvements and curated technical reading ([`references/`](skills/developer-growth-analysis/)).
+- **Example Prompt**: `"Analyze my recent coding sessions and generate a retrospective on recurring async concurrency and testing patterns."`
 
 ---
 

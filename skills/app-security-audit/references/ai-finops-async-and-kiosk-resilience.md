@@ -156,8 +156,8 @@ _SECRET_PATTERNS: list[tuple[re.Pattern[str], str]] = [
     (re.compile(r"(x-goog-api-key['\"]?\s*[:=]\s*['\"]?)[^'\"\s,}]+", re.IGNORECASE), r"\1[REDACTED]"),
     # 3. OAuth2 / Bearer tokens (ya29., JWTs, master tokens)
     (re.compile(r"(Bearer\s+)[A-Za-z0-9._\-~+/]+=*", re.IGNORECASE), r"\1[REDACTED]"),
-    # 4. Standalone Google / Gemini API keys (AIza + 35 base64url chars) anywhere else
-    (re.compile(r"AIza[0-9A-Za-z_-]{35}"), "AIza[REDACTED]"),
+    # 4. Standalone Google / Gemini API keys (AIza + 20-60 base64url chars) anywhere else
+    (re.compile(r"AIza[0-9A-Za-z_-]{20,60}"), "AIza[REDACTED]"),
 ]
 
 def sanitize_secrets(text: str) -> str:

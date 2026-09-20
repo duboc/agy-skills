@@ -23,27 +23,34 @@ Examples:
   $(basename "$0") software-troubleshooter
   $(basename "$0") software-troubleshooter --scope user
 
-Available skills:
-  software-troubleshooter   Structured code inspection and troubleshooting
-  adk-developer             Build agents with Google's ADK (Python, Java, Go, TS)
-  agent-engine-deploy       Deploy ADK agents on Vertex AI Agent Engine
+Available skills (27):
+  adk-developer                 Build agents with Google's ADK (Python, Java, Go, TS)
+  agent-engine-deploy           Deploy ADK agents on Vertex AI Agent Engine
+  agent-engine-ops              Monitor, trace, secure, and evaluate Agent Engine agents
   agent-engine-sessions-memory  Manage sessions and memory for Agent Engine agents
-  agent-engine-ops          Monitor, trace, secure, and evaluate Agent Engine agents
-  ai-studio-architect       Convert AI Studio prototypes to production on GCP
-  clarity-presenter         MARP decks with SCQA narrative + assertion-evidence design
-  developer-growth-analysis Analyze Agy session history for growth patterns
-  google-ads-funnel         Funnel-as-Code workflows for Google Ads
-  spring-boot-upgrader      Migrate Spring Boot apps to 4.0 with phased upgrade plans
-  using-git-worktrees       Create isolated git worktrees with safety checks
-  webapp-testing            Test local web apps with Playwright
-  writing-plans             Generate TDD implementation plans
-  zen-presenter             MARP decks following Presentation Zen principles
-  visual-explainer          Generate visual HTML pages for diagrams and data
-  html-to-pptx              Convert MARP HTML slides to editable PowerPoint
-  zen-pitch                 Research domain & compile persuasive Presentation Zen pitch deck
-  technical-drawing         Create precise, dimensioned technical drawings in SVG
-  cloud-architecture-diagram  Draw a deployed system as a Google Cloud reference architecture
-  app-security-audit        Google Cloud, GenAI/Gemini, BFF proxy, CGNAT & 8h+ kiosk security audit
+  ai-studio-architect           Convert AI Studio prototypes to production on GCP
+  app-security-audit            Google Cloud, GenAI/Gemini, BFF proxy, CGNAT & 8h+ kiosk security audit
+  clarity-presenter             Marp decks with SCQA narrative + assertion-evidence design
+  cloud-architecture-diagram    Draw a deployed system as a Google Cloud reference architecture
+  design-critique               Evaluate UI/UX designs and frontend code for usability & WCAG accessibility
+  design-system-management      Architect design tokens, component APIs, and design system governance
+  developer-growth-analysis     Analyze Agy session history for engineering growth patterns
+  documentation                 Write READMEs, API references, ADRs, and runbooks per Google Developer style
+  feature-spec                  Write engineering-ready PRDs, INVEST stories, Given/When/Then criteria & MoSCoW scope
+  google-ads-funnel             Funnel-as-Code workflows for Google Ads account audits and diagnostics
+  html-to-pptx                  Convert Marp HTML slides to editable native PowerPoint (.pptx)
+  research-skill-graph-agy      Investigate questions through 6 analytical lenses in a local .research/ graph
+  software-troubleshooter       Structured code inspection and root-cause troubleshooting
+  spring-boot-upgrader          Migrate Spring Boot apps to 4.0 with phased upgrade plans
+  system-design                 Design distributed systems and APIs with explicit trade-off analysis
+  technical-drawing             Create precise, dimensioned orthographic technical drawings in SVG
+  using-git-worktrees           Create isolated Git worktrees with safety checks and baseline tests
+  ux-copywriter                 Write clear, accessible UI microcopy and recovery-oriented error messages
+  visual-explainer              Generate self-contained interactive HTML explainers for systems and diffs
+  webapp-testing                Test local web apps with Playwright, console capture, and DOM snapshots
+  writing-plans                 Generate atomic, test-driven implementation plans
+  zen-pitch                     Research a domain, build a requirements spine, and compile a Presentation Zen deck
+  zen-presenter                 Marp slide decks following Presentation Zen principles
 EOF
 }
 
