@@ -320,15 +320,15 @@ gcloud kms keys add-iam-policy-binding agent-key \
 
 **Step 3: Deploy with CMEK**
 
-The CMEK configuration is applied at the Vertex AI platform level, covering all Agent Engine resources in the project.
+CMEK is resource-specific. Verify support for the exact resource, region and API version; configuring a project key does not automatically cover every Agent Engine resource.
 
 ### What CMEK Protects
 
 | Data | Encrypted With |
 |------|---------------|
-| Agent code and config | CMEK |
-| Session data | CMEK |
-| Memory Bank data | CMEK |
+| Agent code and config | Verify resource encryption configuration and coverage |
+| Session data | Verify backend-specific support and configuration |
+| Memory Bank data | Verify backend-specific support and configuration |
 | Staging bucket objects | CMEK (if bucket configured with CMEK) |
 | Logs | Default Google encryption (configure separately) |
 

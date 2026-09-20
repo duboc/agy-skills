@@ -164,7 +164,8 @@ from opentelemetry import trace, metrics
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.metrics import MeterProvider
 
-# Agent Engine auto-configures exporters when ENABLE_TRACING=true
+# ENABLE_TRACING alone is not proof of telemetry delivery.
+# Configure supported exporters for the installed SDK and verify a real trace.
 # You can add custom instrumentation:
 
 tracer = trace.get_tracer(__name__)
@@ -207,9 +208,10 @@ client.agent_engines.delete(name=v1_engine.api_resource.name)
 
 **Update** (in-place):
 ```python
+# Version-dependent sketch: inspect the installed update signature first.
 client.agent_engines.update(
+    name=existing_engine_resource_name,
     agent_engine=updated_app,
-    update_mask=["agent_engine"],
 )
 ```
 

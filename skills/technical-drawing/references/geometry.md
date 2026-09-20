@@ -41,7 +41,7 @@ Fits iff span ≤ lens FOV on the aligned axis. Orient the sensor's long axis al
 
 ## Minimum height to cover a length (overhead camera)
 
-`h_min = (L/2) / tan(FOV_h/2)`, plus ~10% margin. Example: L=1,40 m, FOV 78° → h = 0,70/tan(39°) ≈ 0,86 m → spec 1,1–1,3 m with margin.
+`h_min = (L/2) / tan(FOV_h/2)`, then state the chosen margin separately. Example: L=1,40 m, FOV 78° gives h≈0,864 m; 10% height margin gives ≈0,951 m. A 1,1–1,3 m mounting range is a larger design allowance and must be justified independently.
 
 ## Pixel density falloff (oblique views)
 
@@ -49,13 +49,13 @@ Ground sampling distance grows ~linearly with distance from the lens. Rule of th
 
 ## Occlusion shadow (oblique views)
 
-Obstacle of height t at distance d from the camera (height h above the plane) casts a hidden strip of length `t × d / (h)` behind it (small-angle approx: `t / tan(elevation)`). Raising the camera or steepening the tilt shrinks it — quantify when the user cares about blind spots.
+For a point camera at (0,h), a vertical obstacle top at (d,t), and a level plane y=0, the ray through the top intersects the plane at x=h*d/(h-t). The hidden strip behind the obstacle is `t*d/(h-t)`, valid for h>t and d>=0. When t is much smaller than h, `t*d/h` is a first-order approximation; disclose that assumption. If h<=t, this forward ray does not yield a finite ground intersection behind the obstacle. Lens FOV, obstacle width and sensor orientation can further limit visibility.
 
 ## Clearances and reach
 
 - Support must reach: mount height + hardware offset ≤ max extension. State both numbers.
 - Circulation (floor plans): people need ≥0,60 m to pass, ≥0,80 m to stand and work, ≥1,20 m for two-sided access. Draw clearance zones as dashed rectangles with their own cota.
-- Cantilever sanity: arms >0,8 m or masses >0,5 kg at the end of a boom need counterweight — flag in prose.
+- Cantilever check: compare load moments, base geometry, hardware ratings and applicable safety factors. Length or mass alone does not establish stability or a required counterweight. Mark missing ratings and treat the drawing as a schematic, not load certification.
 
 ## Orthographic projection set
 

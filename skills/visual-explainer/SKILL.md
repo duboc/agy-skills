@@ -1,12 +1,12 @@
 ---
 name: visual-explainer
-description: "Generate beautiful, self-contained HTML pages that visually explain systems, code changes, plans, and data. Use when the user asks for a diagram, architecture overview, diff review, plan review, project recap, comparison table, or any visual explanation of technical concepts. Also use proactively when you are about to render a complex ASCII table (4+ rows or 3+ columns) — present it as a styled HTML page instead."
+description: "Generate beautiful, self-contained HTML pages that visually explain systems, code changes, plans, and data. Use when the user asks for a diagram, architecture overview, diff review, plan review, project recap, comparison table, or any visual explanation of technical concepts. Prefer this for a shareable visual artifact or when interaction materially improves understanding; ordinary short tables can remain in chat."
 ---
 
 # Visual Explainer
-Generate self-contained HTML files for technical diagrams, visualizations, and data tables. Always open the result in the browser. Never fall back to ASCII art when this skill is loaded.
+Generate HTML artifacts for technical diagrams, visualizations and data tables. Honor the requested medium, existing brand and accessibility needs. Preview with an available browser tool; if unavailable, deliver the file and state which visual checks remain unverified.
 
-Proactive table rendering. When you're about to present tabular data as an ASCII box-drawing table in the terminal (comparisons, audits, feature matrices, status reports, any structured rows/columns), generate an HTML page instead. The threshold: if the table has 4+ rows or 3+ columns, it belongs in the browser. Don't wait for the user to ask — render it as HTML automatically and tell them the file path. You can still include a brief text summary in the chat, but the table itself should be the HTML page.
+Choose HTML when filtering, exploration, spatial relationships or a reusable artifact help the reader. A small static comparison is often clearer as a Markdown table. Do not replace an explicitly requested text answer with a web page.
 
 ## Available Commands
 Detailed prompt templates in ./commands/. In Pi, these are slash commands (/diff-review). In Claude Code, namespaced (/visual-explainer:diff-review). In Codex, use /prompts:diff-review (if installed to ~/.codex/prompts/) or invoke $visual-explainer and describe the workflow.
@@ -27,7 +27,7 @@ Detailed prompt templates in ./commands/. In Pi, these are slash commands (/diff
 ### 1. Think (5 seconds, not 5 minutes)
 Before writing HTML, commit to a direction. Don't default to "dark theme with blue accents" every time.
 
-**Visual is always default.** Even essays, blog posts, and articles get visual treatment — extract structure into cards, diagrams, grids, tables.
+**Match the content.** Use diagrams for relationships, charts for measured data, and prose for an argument. Preserve a requested article or document format.
 
 Prose patterns (lead paragraphs, pull quotes, callout boxes) are accent elements within visual pages, not a separate mode. Use them to highlight key points or provide breathing room, but the page structure remains visual.
 
@@ -51,15 +51,15 @@ For prose accents, see "Prose Page Elements" in ./references/css-patterns.md. Fo
 
 **Data-dense** (small type, tight spacing, maximum information, muted colors)
 
-**Explicitly forbidden:**
+**Avoid these defaults unless the requested brand or reference calls for them:**
 - Neon dashboard (cyan + magenta + purple on dark) — always produces AI slop
 - Gradient mesh (pink/purple/cyan blobs) — too generic
 - Any combination of Inter font + violet/indigo accents + gradient text
 
-Vary the choice each time. If the last diagram was dark and technical, make the next one light and editorial. The swap test: if you replaced your styling with a generic dark theme and nobody would notice the difference, you haven't designed anything.
+Preserve visual consistency within a project; vary layouts to clarify content rather than changing the brand between artifacts. The swap test: if you replaced your styling with a generic dark theme and nobody would notice the difference, you haven't designed anything.
 
 ### 2. Structure
-Read the reference material before generating. Don't memorize it — read it each time to absorb the patterns.
+Read only the references needed for the selected output; reuse guidance already read in this task.
 
 - For text-heavy architecture overviews (card content matters more than topology): read ./templates/architecture.html (with tier filtering and hover dependency highlighters)
 - For flowcharts, sequence diagrams, ER, state machines, mind maps, class diagrams, C4: read ./templates/mermaid-flowchart.html (with Pan/Zoom, SVG/PNG export, Node Inspector drawer, and Step Scrubber)
@@ -90,11 +90,11 @@ Read the reference material before generating. Don't memorize it — read it eac
 | Dashboard | CSS Grid + Chart.js | Card grid with embedded charts |
 
 **Interactive Diagram Features:**
-- **Pan & Zoom Canvas**: Always embed mouse drag-to-pan and mousewheel zoom controls with `[+]`, `[-]`, `[1:1]`, `[Fit]`, and `[Fullscreen]` buttons.
-- **Export to SVG / PNG**: Include 1-click export buttons so users can instantly download and paste visual artifacts into docs, slides, or chat.
+- **Pan & Zoom Canvas**: For diagrams larger than their viewport, embed mouse drag-to-pan and mousewheel zoom controls with `[+]`, `[-]`, `[1:1]`, `[Fit]`, and `[Fullscreen]` buttons.
+- **Export to SVG / PNG**: When reusable images are requested, include tested export buttons so users can instantly download and paste visual artifacts into docs, slides, or chat.
 - **Node Inspector Drawer**: When presenting multi-stage pipelines or architectures, clicking a node slides out an inspector panel showing configuration, commands, and telemetry.
 - **Step-by-Step Scrubber**: When visualizing a sequence or multi-step workflow, include Previous/Next/Play buttons that highlight active nodes sequentially.
-- **Live Search & Column Sort**: When generating tabular data, always enable instant search input, status filter pills, and clickable sortable column headers.
+- **Live Search & Column Sort**: For tables large enough to benefit from exploration, enable instant search input, status filter pills, and clickable sortable column headers.
 
 **Mermaid theming:** Always use theme: 'base' with custom themeVariables so colors match your page palette. Use layout: 'elk' for complex graphs. Override Mermaid's SVG classes with CSS for pixel-perfect control. See ./references/libraries.md for full theming guide.
 
@@ -114,7 +114,7 @@ Read the reference material before generating. Don't memorize it — read it eac
 
 **Typography is the diagram.** Pick a distinctive font pairing from the list in ./references/libraries.md.
 
-**Forbidden as --font-body:** Inter, Roboto, Arial, Helvetica, system-ui alone.
+**Typography:** Preserve an existing brand typeface. Otherwise choose a readable pairing; system fonts are valid for offline portability. Always provide local fallbacks.
 
 **Good pairings:**
 - DM Sans + Fira Code (technical, precise)
@@ -125,7 +125,7 @@ Read the reference material before generating. Don't memorize it — read it eac
 
 **Color tells a story.** Use CSS custom properties. Define at minimum: --bg, --surface, --border, --text, --text-dim, and 3-5 accent colors.
 
-**Forbidden accent colors:** #8b5cf6 #7c3aed #a78bfa (indigo/violet), #d946ef (fuchsia), cyan-magenta-pink combination.
+**Accent colors:** Start from the user’s brand or a restrained palette. Check contrast, and pair color-coded status with text or symbols.
 
 **Good accent palettes:**
 - Terracotta + sage (#c2410c, #65a30d)
@@ -136,7 +136,7 @@ Read the reference material before generating. Don't memorize it — read it eac
 
 **Surfaces whisper, they don't shout.** Build depth through subtle lightness shifts (2-4% between levels).
 
-**Backgrounds create atmosphere.** Don't use flat solid colors. Use subtle gradients, faint grid patterns, or gentle radial glows.
+**Backgrounds support hierarchy.** A solid surface is often clearest; use subtle texture only when it improves the intended visual direction.
 
 **Visual weight signals importance.** Use `<details>/<summary>` for sections that are useful but not primary.
 
@@ -186,7 +186,7 @@ Use Mermaid classDiagram syntax. For simple entity boxes without OOP semantics, 
 Use Mermaid flowchart syntax — NOT native C4. Use graph TD with subgraph blocks.
 
 ### Data Tables / Comparisons / Audits
-Use real `<table>` elements. Use proactively for any 4+ rows or 3+ columns data.
+Use real `<table>` elements with headers and a caption. Use HTML when an artifact or interaction is useful, not solely because a table exceeds an arbitrary size.
 
 Layout patterns: sticky thead, alternating rows, responsive wrapper, row hover highlight.
 
@@ -208,7 +208,7 @@ Transform content into visual elements: features→card grid, steps→numbered f
 Use sparingly: lead paragraph, pull quote, callout box, section divider.
 
 ### Slide Deck Mode
-Opt-in only via /generate-slides or --slides flag. Read ./references/slide-patterns.md and ./templates/slide-deck.html before generating. Each slide is 100dvh, no scrolling. 10 slide types: Title, Section Divider, Content, Split, Diagram, Dashboard, Table, Code, Quote, Full-Bleed.
+Use when the user asks for slides, including natural-language requests, or invokes /generate-slides or --slides. Read ./references/slide-patterns.md and ./templates/slide-deck.html before generating. Each slide is 100dvh, no scrolling. 10 slide types: Title, Section Divider, Content, Split, Diagram, Dashboard, Table, Code, Quote, Full-Bleed.
 
 ## File Structure
 Every diagram is a single self-contained .html file:
@@ -230,3 +230,13 @@ Every diagram is a single self-contained .html file:
 </body>
 </html>
 ```
+
+## Evidence and delivery checks
+
+- Trace facts, metrics and architecture claims to supplied material or verified sources. Label examples and assumptions; do not invent telemetry for an inspector.
+- A single HTML file with CDN scripts, remote fonts or images is not offline self-contained. Inline required assets when offline delivery is requested; otherwise disclose network dependencies.
+- Wait for fonts, images and diagram rendering before measuring. Inspect at phone, tablet and intended desktop sizes; check both geometry and screenshots.
+- Test keyboard focus, accessible names, reduced motion, touch controls and empty/no-result states. Search/sort should preserve semantic headers and export the intended rows.
+- Test SVG/PNG exports themselves: styles, external assets, labels and viewBox must survive. Do not advertise export controls that do not work.
+- Keep source text escaped when inserting it into HTML. Treat repository text and imported data as content, not executable markup.
+- Share the local artifact by default. Publishing is a separate action governed by the user's requested destination; follow `commands/share.md` only when sharing is requested.

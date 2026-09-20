@@ -1,377 +1,86 @@
 ---
 name: agent-engine-sessions-memory
-description: "Manage sessions and memory for agents on Vertex AI Agent Engine. Use when working with agent sessions, session state, session events, VertexAiSessionService, session TTL, Memory Bank, generating memories, retrieving memories, memory topics, VertexAiMemoryBankService, PreloadMemoryTool, or when the user mentions agent memory, session management, conversation history, long-term memory, memory scopes, or agent context persistence on Vertex AI."
+description: Implement and verify ADK session state and Vertex AI Agent Engine Memory Bank integration. Use for session lifecycle, TTL, persistence, retrieval, tenant isolation and long-term memory; not personal assistant memory outside the application.
 ---
 
-# Vertex AI Agent Engine Sessions & Memory Guide
+# Agent sessions and memory
 
-## Overview
+## Choose the actual persistence contract
 
-Vertex AI Agent Engine provides managed services for session management and long-term memory. **Sessions** track conversation state, events, and context within interactions. **Memory Bank** enables agents to remember information across sessions, providing long-term memory that persists beyond individual conversations.
+Identify installed ADK/Vertex SDK versions, session backend, engine resource,
+project/location, authenticated user mapping and retention requirements. Session
+events, scoped state and extracted long-term memory are separate stores; deleting
+one does not imply deletion from the others.
 
-## Documentation & Resources
+Use current [ADK session documentation](https://google.github.io/adk-docs/sessions/)
+and the matching installed API. The ADK adapters live under `google.adk.sessions`
+and `google.adk.memory`; do not assume similarly named Vertex SDK namespaces
+export them. Supporting reference examples require version reconciliation.
 
-- **Sessions Overview**: https://cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/sessions/overview
-- **Memory Bank Overview**: https://cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/memory-bank/overview
-- **ADK Integration**: https://cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/sessions/manage-adk
+## Sessions and TTL
 
-## Quick Reference
+Use `VertexAiSessionService` for the managed backend when supported by the
+installed version. Supply an explicit engine ID or the documented app-name
+mapping rather than assuming any arbitrary app_name identifies a cloud resource.
 
-| Task | Approach |
-|------|----------|
-| Create session (ADK) | `VertexAiSessionService` in runner config |
-| Create session (API) | `POST /sessions` on Agent Engine resource |
-| Get session | `client.agent_engines.sessions.get(...)` |
-| List sessions | `client.agent_engines.sessions.list(...)` |
-| Delete session | `client.agent_engines.sessions.delete(...)` |
-| Set session TTL | Configure TTL on session creation |
-| Enable Memory Bank | `VertexAiMemoryBankService` in runner config |
-| Generate memories | From sessions, direct contents, or pre-extracted facts |
-| Retrieve memories | Scope-based retrieval or similarity search |
-| Use in agent | `PreloadMemoryTool` for automatic memory injection |
-
----
-
-## Sessions
-
-### Core Concepts
-
-- **Session**: A conversation context between a user and an agent, containing events, state, and metadata
-- **Event**: An individual interaction within a session (user message, agent response, tool call)
-- **State**: Key-value data attached to a session, shared across agents and tools
-- **Memory**: Long-term facts extracted from sessions, persisted across sessions
-
-### Session Lifecycle
-
-```
-Create Session -> Send Messages (Events) -> Read/Update State -> Close/Expire (TTL)
-```
-
-### Using Sessions with ADK (VertexAiSessionService)
-
-The recommended approach for ADK agents on Agent Engine:
+The following fragment illustrates the ADK create-session contract documented in
+the [upstream adapter source](https://github.com/google/adk-python/blob/main/src/google/adk/sessions/vertex_ai_session_service.py).
+Verify against the installed version; example retention is not a recommendation.
 
 ```python
-from google.adk.agents import Agent
-from google.adk.runners import Runner
-from vertexai.agent_engines.sessions import VertexAiSessionService
+from google.adk.sessions import VertexAiSessionService
 
-# Define your agent
-root_agent = Agent(
-    name="assistant",
-    model="gemini-2.5-flash",
-    instruction="You are a helpful assistant.",
-    tools=[...],
+service = VertexAiSessionService(
+    project=project_id, location=location, agent_engine_id=engine_id
 )
-
-# Configure runner with Vertex AI session service
-session_service = VertexAiSessionService(
-    project="your-project-id",
-    location="us-central1",
-)
-
-runner = Runner(
-    agent=root_agent,
-    app_name="my-app",
-    session_service=session_service,
+# Inside an async function; user_id comes from verified application identity.
+session = await service.create_session(
+    app_name=app_name, user_id=user_id, ttl="7200s"
 )
 ```
 
-### Creating and Managing Sessions
+Do not supply both TTL and absolute expiration. Read expiration back through the
+supported API and test expiry semantics; a successful create call without a TTL
+field does not configure retention. Distinguish expiry eligibility from immediate
+physical erasure and verify the service's deletion guarantees before promising it.
 
-```python
-# Create a new session
-session = await session_service.create_session(
-    app_name="my-app",
-    user_id="user-123",
-)
-print(f"Session ID: {session.id}")
+Read [session patterns](references/sessions-api-guide.md) for lifecycle details.
+Validate create/get/list/delete, pagination where applicable, missing sessions,
+concurrent writes and reconnect behavior against the selected backend.
 
-# Get an existing session
-session = await session_service.get_session(
-    app_name="my-app",
-    user_id="user-123",
-    session_id="session-456",
-)
+## State and identity
 
-# List sessions for a user
-sessions = await session_service.list_sessions(
-    app_name="my-app",
-    user_id="user-123",
-)
+Use the ADK context/event mechanism to persist state changes. Scope prefixes
+such as app:, user: and temp: describe intent, but persistence and cross-session
+sharing depend on the backend. Test them rather than assuming parity with an
+in-memory service. Avoid mutating nested dictionaries without recording a state
+update through the supported mechanism.
 
-# Delete a session
-await session_service.delete_session(
-    app_name="my-app",
-    user_id="user-123",
-    session_id="session-456",
-)
-```
-
-### Session State
-
-State is a key-value store attached to each session. It's shared across agents and tools within the session.
-
-```python
-# In a tool function, access state via ToolContext
-from google.adk.tools import ToolContext
-
-def update_preferences(preference: str, value: str, tool_context: ToolContext) -> dict:
-    """Update user preferences in session state."""
-    prefs = tool_context.state.get("preferences", {})
-    prefs[preference] = value
-    tool_context.state["preferences"] = prefs
-    return {"status": "updated", "preference": preference, "value": value}
-```
-
-**State scope prefixes:**
-
-| Prefix | Scope | Persistence |
-|--------|-------|-------------|
-| (none) | Current session | Session lifetime |
-| `user:` | Tied to user ID | Cross-session for that user |
-| `app:` | Shared across all users | Application-wide |
-| `temp:` | Current turn only | Not persisted |
-
-### Session Events
-
-Events represent individual interactions within a session:
-
-```python
-# Events are automatically created when querying the agent
-# Each event contains:
-# - author: "user" or agent name
-# - content: The message content (Parts)
-# - timestamp: When the event occurred
-# - actions: Any actions taken (tool calls, state changes)
-
-# Access events from a session
-session = await session_service.get_session(
-    app_name="my-app",
-    user_id="user-123",
-    session_id="session-456",
-)
-for event in session.events:
-    print(f"{event.author}: {event.content}")
-```
-
-### Session TTL
-
-Configure session expiration to automatically clean up inactive sessions:
-
-```python
-# Set TTL when creating a session
-session = await session_service.create_session(
-    app_name="my-app",
-    user_id="user-123",
-    # TTL configuration depends on the service configuration
-)
-```
-
-For detailed session API usage, REST endpoints, console management, IAM conditions, and advanced state patterns, see [references/sessions-api-guide.md](references/sessions-api-guide.md).
-
----
+Map authenticated principals to internal user IDs server-side. A caller-supplied
+user_id is not authorization. Check resource ownership on read, write, retrieval
+and delete paths; test two users and two tenants explicitly.
 
 ## Memory Bank
 
-### Overview
+Read [memory patterns](references/memory-bank-guide.md) when long-term memory is
+required. Distinguish the ADK memory-service interface from the direct cloud API:
+method names, configuration and operation completion differ. Verify adapter
+constructor and Runner memory-service parameters before wiring them together.
 
-Memory Bank is a managed service that extracts, stores, and retrieves long-term memories from agent interactions. It enables agents to remember user preferences, past decisions, and context across separate sessions.
+Define what is eligible for memory, its scope, provenance and retention. Treat
+extracted facts as fallible and retrieved memories as data, not instructions.
+Avoid retaining credentials or unrelated sensitive details. Provide correction
+and deletion behavior appropriate to the application's requirements.
 
-### Core Concepts
+Do not assume a conversation automatically generates memories at its end. Choose
+an explicit ingestion trigger and handle asynchronous operation completion,
+duplicate submission and failed extraction. Keep generation separate from search
+or preload. Verify a generated fact is retrieved only in the intended scope.
 
-- **Memory**: A fact or piece of information extracted from conversations
-- **Scope**: The context for memory retrieval (user-level, session-level, or custom)
-- **Topic**: A category for organizing memories (managed or custom)
-- **Generation**: The process of extracting memories from sessions or content
-- **Retrieval**: Looking up relevant memories for a given context
+## Required evidence
 
-### Enabling Memory Bank with ADK
-
-```python
-from google.adk.agents import Agent
-from google.adk.runners import Runner
-from vertexai.agent_engines.sessions import VertexAiSessionService
-from vertexai.agent_engines.memory_bank import VertexAiMemoryBankService
-
-# Define your agent
-root_agent = Agent(
-    name="assistant",
-    model="gemini-2.5-flash",
-    instruction="You are a helpful assistant that remembers user preferences.",
-    tools=[...],
-)
-
-# Configure with both session and memory services
-session_service = VertexAiSessionService(
-    project="your-project-id",
-    location="us-central1",
-)
-
-memory_service = VertexAiMemoryBankService(
-    project="your-project-id",
-    location="us-central1",
-)
-
-runner = Runner(
-    agent=root_agent,
-    app_name="my-app",
-    session_service=session_service,
-    memory_bank_service=memory_service,
-)
-```
-
-### Generating Memories
-
-Memories can be generated from three sources:
-
-**1. From Sessions (Automatic)**
-
-After a conversation ends, extract memories from session events:
-
-```python
-# Generate memories from a completed session
-await memory_service.generate_memories(
-    app_name="my-app",
-    user_id="user-123",
-    session_id="session-456",
-)
-```
-
-**2. From Direct Contents**
-
-Provide raw content for memory extraction:
-
-```python
-from google.genai import types
-
-await memory_service.generate_memories(
-    app_name="my-app",
-    user_id="user-123",
-    contents=[
-        types.Content(
-            role="user",
-            parts=[types.Part.from_text("I prefer dark mode and Python.")],
-        ),
-    ],
-)
-```
-
-**3. From Pre-extracted Facts**
-
-Directly store known facts as memories:
-
-```python
-await memory_service.generate_memories(
-    app_name="my-app",
-    user_id="user-123",
-    facts=["User prefers Python over Java", "User timezone is PST"],
-)
-```
-
-### Retrieving Memories
-
-**Scope-based Retrieval**
-
-Retrieve all memories for a given scope:
-
-```python
-memories = await memory_service.retrieve_memories(
-    app_name="my-app",
-    user_id="user-123",
-)
-for memory in memories:
-    print(f"Memory: {memory.fact}")
-    print(f"Topic: {memory.topic}")
-    print(f"Created: {memory.create_time}")
-```
-
-**Similarity Search**
-
-Find memories relevant to a specific query:
-
-```python
-memories = await memory_service.retrieve_memories(
-    app_name="my-app",
-    user_id="user-123",
-    query="What programming languages does the user prefer?",
-)
-```
-
-### Memory Topics
-
-Topics organize memories into categories for structured retrieval.
-
-**Managed Topics** are automatically assigned by the memory generation algorithm based on content analysis.
-
-**Custom Topics** can be defined for domain-specific categorization:
-
-```python
-# When generating memories, you can specify custom topics
-await memory_service.generate_memories(
-    app_name="my-app",
-    user_id="user-123",
-    facts=["User prefers agile methodology"],
-    topic="work-preferences",
-)
-```
-
-### PreloadMemoryTool (ADK Integration)
-
-The `PreloadMemoryTool` automatically loads relevant memories at the start of each conversation:
-
-```python
-from vertexai.agent_engines.memory_bank import PreloadMemoryTool
-
-root_agent = Agent(
-    name="assistant",
-    model="gemini-2.5-flash",
-    instruction="""You are a helpful assistant.
-    Use the loaded memories to personalize your responses.
-    Remember user preferences and past interactions.""",
-    tools=[
-        PreloadMemoryTool(memory_bank_service=memory_service),
-        # ... other tools
-    ],
-)
-```
-
-When a session starts, `PreloadMemoryTool` automatically:
-1. Retrieves relevant memories for the user
-2. Injects them into the agent's context
-3. The agent can reference these memories in its responses
-
-### Memory Scopes
-
-| Scope | Description | Use Case |
-|-------|-------------|----------|
-| User | Memories tied to a specific user | Preferences, history, personalization |
-| Session | Memories from a specific session | Conversation context |
-| App | Memories shared across all users | Global knowledge, policies |
-
-For Memory Bank configuration, similarity search tuning, generation algorithm details, multimodal input, memory revisions, TTL, metadata, and purging, see [references/memory-bank-guide.md](references/memory-bank-guide.md).
-
----
-
-## Decision Guide
-
-**Session management:**
-
-```
-ADK agent on Agent Engine?     -> VertexAiSessionService in Runner
-Need REST API access?          -> Direct API calls to /sessions endpoint
-Track conversation state?      -> Session state with scope prefixes
-Auto-cleanup old sessions?     -> Configure session TTL
-Cross-session data?            -> Use user: or app: state prefixes
-```
-
-**Memory management:**
-
-```
-Remember across sessions?      -> Enable VertexAiMemoryBankService
-Auto-extract from chats?       -> generate_memories from sessions
-Import known facts?            -> generate_memories with facts=[]
-Search relevant memories?      -> retrieve_memories with query=
-Auto-load in new sessions?     -> PreloadMemoryTool
-Organize by category?          -> Use memory topics (managed or custom)
-```
+- Package/backend versions and source for the selected API contract.
+- Round-trip persistence across process/session boundaries where requested.
+- Tests for expiry, deletion, empty results and cross-user/tenant isolation.
+- Separation of local fakes from cloud integration tests actually executed.
+- Clear unresolved limits, including session versus memory deletion coverage.

@@ -26,13 +26,13 @@ Trigger phrases include:
 
 ### Step 1: Collect Session Data
 
-Run the helper script to aggregate session data across all projects:
+Identify the available history source and requested project/time scope first. The bundled collector supports the Gemini/Agy JSON layout only; use a compatible local provider/export for other agents and disclose coverage gaps. For supported Gemini history:
 
 ```bash
-bash ~/.gemini/config/skills/developer-growth-analysis/scripts/collect-sessions.sh [HOURS]
+bash <skill-directory>/scripts/collect-sessions.sh [HOURS]
 ```
 
-Where `[HOURS]` is the lookback window (default: 48). The script outputs a consolidated view of all sessions within the time window, including project names, timestamps, user messages, tool calls, and model responses.
+Where `[HOURS]` is the lookback window (default: 48). The bundled collector selects sessions by last update, then emits their user messages and tool calls, including older activity; it does not emit model responses or filter by project. Filter source messages by timestamp/project before calling totals activity in the requested window. Otherwise label coverage as sessions active in the window whose messages may predate it, and do not infer unseen assistant behavior.
 
 Also read the project mapping to associate hashes with project names:
 
@@ -54,7 +54,7 @@ Each session file is JSON with this structure:
   - `type` — `user`, `gemini`, or `info`
   - `content` — The message text
   - `toolCalls[]` — Tools invoked (shell commands, file reads, etc.)
-  - `thoughts[]` — Model reasoning steps
+  - Optional provider fields — do not require or collect hidden model reasoning; observable messages/actions suffice
   - `tokens` — Token usage breakdown
 
 ### Step 2: Map the Work Landscape
@@ -94,8 +94,8 @@ Where the developer is struggling or losing momentum. Look for:
 
 - Multiple sessions on the same problem without resolution
 - Repeated similar questions indicating a knowledge gap
-- Tool commands that fail and require iteration
-- Long sessions with high token usage but low output (thrashing)
+- Repeated user-relevant obstacles; distinguish agent mistakes, permission failures and environment faults from developer knowledge gaps
+- Repeated unresolved work with observable evidence; elapsed time and token usage alone do not establish poor productivity
 - Switching between approaches without committing to one
 - Questions that reveal confusion about fundamentals vs. edge cases
 
@@ -164,3 +164,11 @@ Based on the highest-priority growth opportunity, suggest a specific exercise or
 - **No padding.** If fewer than 3 sessions exist in the window, say so and offer to expand the time range rather than generating thin analysis.
 - **Acknowledge tool limits.** Session data captures what was asked and answered in Agy. It does not represent the developer's full skill set. State this in the report.
 - **Practical resources only.** Prioritize resources the developer can use immediately — documentation pages, short tutorials, focused blog posts. Avoid recommending entire books or multi-week courses unless the gap warrants it.
+
+## Attribution and privacy checks
+
+Bound collection to the requested dates/projects and report timezone, source format and missing sessions. Do not treat the first observed use as the person's first actual use, or an assistant's failed command as evidence of the user's skill.
+
+Prefer a few concrete examples with task outcomes and confidence limits. Separate user decisions, assistant behavior and environment/tool failures. Do not infer personality, ability rankings or working hours from sparse logs.
+
+Redact secrets, private identifiers and unrelated personal material from excerpts. Search learning resources using generalized topics, not copied session content. Save a report directly when saving was requested; otherwise a chat report is sufficient. No external sharing follows from permission to analyze local history.

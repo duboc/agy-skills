@@ -37,7 +37,7 @@ This guide shows Python examples. For Java, Go, and TypeScript patterns, see [re
 | Sequential pipeline | `SequentialAgent` with ordered sub_agents |
 | Parallel execution | `ParallelAgent` with independent sub_agents |
 | Iterative refinement | `LoopAgent` with max_iterations or checker agent |
-| Live streaming agent | `LiveAgent` for bidirectional audio/video/text streaming |
+| Live streaming | Use the installed ADK live runner/request-queue APIs; verify model modality support |
 | Context caching | `context_cache_config` for long system prompts & documents |
 | Grounding | `google_search` or Vertex AI Search grounding tools |
 | Agent-as-tool | Wrap agent with `AgentTool` for on-demand delegation |
@@ -205,6 +205,7 @@ checker = Agent(
 loop = LoopAgent(
     name="quality_loop",
     sub_agents=[generator_agent, checker],
+    max_iterations=3,  # Bound cost even if the checker never escalates.
 )
 ```
 
@@ -357,7 +358,7 @@ State is a shared dictionary across agents, tools, and callbacks. Scopes: `state
 
 ```python
 researcher = Agent(name="researcher", output_key="findings", output_schema=ResearchOutput, ...)
-writer = Agent(name="writer", instruction="Write report based on state['findings'].", ...)
+writer = Agent(name="writer", instruction="Write a report based on these findings: {findings}.", ...)
 pipeline = SequentialAgent(name="pipeline", sub_agents=[researcher, writer])
 ```
 
@@ -516,3 +517,13 @@ External MCP server? → MCPToolset
 Database access? → ToolboxToolset
 Web search? → google_search (built-in)
 ```
+
+## Version contract and behavioral verification
+
+Inspect the installed language/package version, lockfile and model configuration before applying examples. Read the matching official API docs; Python concepts do not imply identical Java/Go/TypeScript APIs. The code fragments with ellipses or undefined application tools are illustrative, not standalone programs. Do not install or upgrade an SDK just to match a snippet.
+
+For a sequential pipeline, verify the first agent writes the expected output_key and the next instruction receives its value, including missing-state behavior. Parallel agents need independent state keys or an explicit merge step. Bound loops, retries, token use and tool timeouts; a model-generated quality score alone is not a reliable stop guarantee.
+
+Test deterministic tool validation and state flow with fakes, then distinguish those tests from a live model evaluation. Verify final responses, tool arguments, error/cancel behavior and session isolation rather than only checking that an event exists. Treat retrieved content and tool results as untrusted data; enforce external action permissions in tools, not merely in prompts.
+
+Honor the requested deployment target. Local ADK success does not prove Agent Engine packaging, IAM or network behavior; use the relevant deployment skill only when that work is requested.

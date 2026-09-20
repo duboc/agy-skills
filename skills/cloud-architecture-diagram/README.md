@@ -1,5 +1,20 @@
 # Cloud Architecture Diagram
 
+## Updated visual workflow
+
+The renderer defaults to a clean light theme. Set `DIAGRAM.theme: "dark"` for
+booth chrome or `DIAGRAM.mode: "diagram"` for a standalone overview. Optional
+`notice`, `legend`, slide `notes` and component `why` keep evidence and explanations
+available without crowding the drawing. Print produces an undimmed overview.
+
+For Google Slides/PPTX, follow `references/slides-and-export.md` with a presentation
+tool; HTML is not an editable deck. New references cover visual hierarchy and
+Google Cloud boundary, identity and asynchronous-flow semantics.
+
+Validate trusted data with `node scripts/validate-data.cjs assets/example-data.js`,
+then run the geometry audit and visually inspect every slide at delivery sizes.
+The bundled example is illustrative, not evidence of a production deployment.
+
 An Agy skill for drawing a deployed system the way a cloud vendor's reference
 architecture draws it, and shipping the drawing as one self-contained,
 interactive HTML page.
@@ -41,7 +56,7 @@ measurement script instead of with your eyes.
 
 ## How it works with you
 
-It draws **with** you, in four checkpoints, and stops at each one:
+It draws **with** you, using these checkpoints and preserving existing approvals:
 
 1. **Where does this live?** A page you scroll, a screen you step through, or
    an image in a deck. The answer decides whether it builds a slideshow, and
@@ -110,13 +125,12 @@ different interpreter.
 ## Where the icons come from
 
 `fetch-gcp-icons.sh` reads the Iconify `gcp` collection, which mirrors Google
-Cloud's product icons behind a JSON API. That mirror is the only route a script
-can take: Google ships the set as a ZIP for people, and `cloud.google.com/icons`
-answers a program with a page shell rather than the files.
+Cloud's product icons behind a JSON API. It is a convenience mirror; the official
+library at `cloud.google.com/icons` offers current product/category icon ZIPs
+and a separate legacy console collection. Use one family consistently.
 
-The mirror carries 214 icons; Google's own set carries 226. When the product you
-need is missing, take the file from `cloud.google.com/icons` and normalise it by
-hand.
+Counts and coverage change. Verify required marks against the official library;
+use an official asset or a clearly labeled category/neutral symbol when missing.
 
 Iconify labels the collection Apache 2.0, and that is the wrong frame for a
 trademark: section 6 of that licence excludes trademark rights. Google's terms
@@ -126,9 +140,8 @@ guidelines when you publish one.
 
 ## The rules it will hold you to
 
-**Measure, do not look.** A label three pixels past its box is invisible in a
-screenshot and obvious on the printout. Every defect worth finding in a
-diagram this dense was found by a script.
+**Measure and inspect.** Geometry catches collisions and escaping labels;
+screenshots reveal weak hierarchy, poor balance and unreadable scaled text.
 
 **Cards paint over wires.** The units layer draws last, so a connector label
 running under a card is not dimmed, it is gone. This is the most common

@@ -8,7 +8,7 @@ Quick evaluation checklists for common UI components.
 - [ ] **Visual Hierarchy**: One clear Primary button per view; secondary and tertiary actions use outline or ghost styles.
 - [ ] **Label Clarity**: Action-oriented verb labels (e.g., "Save Changes", "Create Account") instead of generic "OK" or "Submit".
 - [ ] **State Coverage**: Hover, Active/Pressed, Focus-Visible, Disabled, and Loading states visually defined.
-- [ ] **Target Size**: Minimum 44x44px touch area on mobile; adequate padding (minimum 8-12px horizontal).
+- [ ] **Target Size**: Check WCAG 2.2 AA 24×24 CSS px or qualifying spacing/exceptions; use larger targets for touch comfort. 44×44 is enhanced AAA, not the AA minimum; native platform guidelines use their own units.
 - [ ] **Placement**: Primary actions placed predictably (e.g., bottom-right of modals, top-right or sticky bottom on forms).
 
 ---

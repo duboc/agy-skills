@@ -61,25 +61,25 @@ Slides are separated by `---` on its own line:
 ### Full-bleed Background
 
 ```markdown
-![bg](https://source.unsplash.com/featured/?mountain)
+![bg](images/replace-with-verified-photo.jpg)
 ```
 
 ### With Brightness Filter
 
 ```markdown
-![bg brightness:0.3](https://source.unsplash.com/featured/?ocean)
+![bg brightness:0.3](images/replace-with-verified-photo.jpg)
 ```
 
 ### With Blur
 
 ```markdown
-![bg blur:3px](https://source.unsplash.com/featured/?forest)
+![bg blur:3px](images/replace-with-verified-photo.jpg)
 ```
 
 ### Combined Filters
 
 ```markdown
-![bg brightness:0.3 blur:2px](https://source.unsplash.com/featured/?city)
+![bg brightness:0.3 blur:2px](images/replace-with-verified-photo.jpg)
 ```
 
 ### Background Sizing
@@ -169,26 +169,9 @@ Override global settings for individual slides using HTML comments:
 # This slide has custom colors
 ```
 
-## Unsplash Source URL Patterns
+## Image Assets
 
-### Featured Photos by Keyword
-
-```
-https://source.unsplash.com/featured/?KEYWORD
-https://source.unsplash.com/featured/?KEYWORD1,KEYWORD2
-```
-
-### Specific Dimensions
-
-```
-https://source.unsplash.com/1920x1080/?KEYWORD
-```
-
-### Random Photo by Keyword
-
-```
-https://source.unsplash.com/random/?KEYWORD
-```
+Use supplied or licensed assets with verified stable URLs. Local paths below are placeholders: replace and verify each before export. Record attribution where required. Do not rely on random image endpoints.
 
 ## Export Commands
 
@@ -197,7 +180,7 @@ https://source.unsplash.com/random/?KEYWORD
 | `marp deck.md` | HTML file |
 | `marp deck.md --pdf` | PDF file |
 | `marp deck.md --pptx` | PowerPoint file |
-| `marp deck.md --html` | HTML with inline assets |
+| `marp deck.md --html` | Allow HTML tags in Markdown; does not bundle remote assets |
 | `marp deck.md --preview` | Open in browser |
 
 ## Custom Themes

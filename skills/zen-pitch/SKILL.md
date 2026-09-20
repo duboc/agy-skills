@@ -1,6 +1,6 @@
 ---
 name: zen-pitch
-description: "Research a market or problem domain, turn the findings into a requirements spine, and build a Presentation Zen–style slide deck that tells the story of the challenge and how a proposed solution resolves it. Use this whenever the user wants a pitch deck, narrative deck, client presentation, executive readout, workshop deck, conference talk, or any presentation that has to persuade rather than merely inform — and also when they ask to 'turn this into a deck', 'build slides about X', 'make a presentation showing how we solve Y', or mention Zen / minimal / storytelling presentations. Trigger it even when the user only says 'make me some slides', since the research-to-narrative pipeline improves almost any persuasive deck. Also trigger when a prior conversation produced research or a spec and the user now wants it presented."
+description: "Research a market or problem domain, turn the findings into a requirements spine, and build a Presentation Zen–style slide deck that tells the story of the challenge and how a proposed solution resolves it. Use this whenever the user wants a pitch deck, narrative deck, client presentation, executive readout, workshop deck, conference talk, or any presentation that has to persuade rather than merely inform — and also when they ask to 'turn this into a deck', 'build slides about X', 'make a presentation showing how we solve Y', or mention Zen / minimal / storytelling presentations. For a generic slide request, establish whether persuasion is the goal before selecting this research-heavy workflow. Also trigger when a prior conversation produced research or a spec and the user now wants it presented."
 ---
 
 # Zen Pitch
@@ -29,7 +29,7 @@ Work through these in order. Steps 1 and 4 stop and wait for the user. Everythin
 
 ## Step 1 — Scope (interactive gate)
 
-Before researching, settle the four things that change everything downstream. Use `ask_user_input_v0` so the user taps instead of typing — but only ask what you genuinely cannot infer from the conversation. If they already said "for a client exec audience, 15 minutes, Google Cloud colors," skip straight to research and state the assumptions inline.
+Before researching, settle the four things that change everything downstream. Use an available question tool or a concise chat question — but only ask what you genuinely cannot infer from the conversation. If they already said "for a client exec audience, 15 minutes, Google Cloud colors," skip straight to research and state the assumptions inline.
 
 The four dimensions, in priority order:
 
@@ -48,7 +48,7 @@ A good scoping call asks two or three questions, never more. Length and slide co
 
 ## Step 2 — Research
 
-Research until you can state the challenge as a specific number, then keep going one more round.
+Research until the central claim has credible support. Use a qualitative finding when no reliable quantitative measure exists; do not force a hero statistic.
 
 A Zen deck lives or dies on whether slide 3 or 4 lands a number the audience recognizes as their own reality. "Teams waste time on adaptation" is a shrug. "80% of creative-team effort goes to adaptation, not ideas" is a deck. You cannot invent that number, and you usually cannot find it in one search.
 
@@ -56,7 +56,7 @@ Practical guidance:
 
 - Search in layers: the domain, then the specific pain, then quantification of that pain, then what changed recently that makes it solvable now.
 - Recency matters more than usual. A deck that cites a limit the platform changed last quarter is a deck that gets corrected in the room. Verify anything that looks like a spec, price, limit, or capability.
-- Collect more than you will use. A 14-slide Zen deck needs perhaps 8 facts; gather 30 so the 8 are the strongest.
+- Stop when the important claims have sufficient evidence and the remaining uncertainty is explicit. Avoid arbitrary source quotas.
 - Note what is contested. Slides that state a disputed number as settled fact are the ones that get challenged.
 
 See `references/research.md` for the layered search pattern and what makes a fact deck-worthy.
@@ -115,7 +115,7 @@ Read `references/layouts.md` before writing code. It is the layout cookbook: ele
 Copy `scripts/deck_kit.js` next to your build script and require it. It provides the palette handling, the light/dark slide constructors, the repeated visual motif, and the layout functions.
 
 ```bash
-mkdir -p /home/claude/deck && cd /home/claude/deck
+mkdir -p ./deck && cd ./deck
 cp /path/to/zen-pitch/scripts/deck_kit.js .
 # write build.js, then:
 node build.js
@@ -133,7 +133,7 @@ Zen typography and density rules, which the kit defaults to but you can override
 
 **Speaker notes carry the argument.** Because the slides are nearly empty, `addNotes()` is not optional — it is where the deck actually lives. Write notes that tell the presenter what to say and, where useful, how to say it: where to pause, which number will draw a challenge, what to concede. A Zen deck without notes is unusable by anyone but its author.
 
-Also read `/mnt/skills/public/pptx/SKILL.md` for the `pptxgenjs` footguns — hex colors without `#`, `line: { type: "none" }` rather than `width: 0`, never reusing an options object. The kit already respects these, but your own additions must too.
+Use an available presentation skill or the installed PptxGenJS documentation for version-specific details — hex colors without `#`, `line: { type: "none" }` rather than `width: 0`, never reusing an options object. The kit already respects these, but your own additions must too.
 
 ---
 
@@ -142,9 +142,9 @@ Also read `/mnt/skills/public/pptx/SKILL.md` for the `pptxgenjs` footguns — he
 Non-negotiable, and fast:
 
 ```bash
-python /mnt/skills/public/pptx/scripts/office/validate.py deck.pptx
-python /mnt/skills/public/pptx/scripts/office/soffice.py --headless --convert-to pdf deck.pptx
-rm -f slide-*.jpg && pdftoppm -jpeg -r 110 deck.pdf slide
+# Use a fresh output directory and installed rendering tools.
+soffice --headless --convert-to pdf --outdir ./rendered deck.pptx
+pdftoppm -jpeg -r 110 ./rendered/deck.pdf ./rendered/slide
 ```
 
 Then look at every rendered slide with the view tool. Do not skip this because the code looked right — you are checking what LibreOffice actually drew, and the recurring defects are visual, not structural:
@@ -164,7 +164,7 @@ Finish with a content check: `markitdown deck.pptx` to confirm nothing is missin
 
 ## Step 7 — Deliver
 
-Copy the file to the output directory and call `present_files`. Then, in prose:
+Save to the requested output directory and return a clickable file link or the host’s available artifact-display tool. Then, in prose:
 
 - Walk the three acts in two or three sentences each — the user needs to know the shape without opening the file.
 - Surface the two or three build decisions that carry risk. Which numbers are order-of-magnitude rather than sourced. Which slide will draw the hardest question. Where the argument is thinnest.
@@ -189,3 +189,11 @@ Do not summarize slide by slide. The user can open the deck.
 - `references/research.md` — layered search pattern, what makes a fact deck-worthy
 - `scripts/deck_kit.js` — shared pptxgenjs helpers and layout functions
 - `assets/palettes.json` — preset palettes including Google Cloud, with usage notes
+
+## Evidence and portable execution
+
+Use the installed dependency/runtime paths; do not assume another agent host's directories or tools exist. If rendering is unavailable, distinguish a generated PPTX from a visually verified deck.
+
+Keep a claim ledger with source URL/document, date, denominator and caveat. Speaker notes carry that evidence. Estimates must include assumptions; examples and forecasts must not masquerade as observed results. Reuse the user's approved story and branding. A supplied slide limit takes precedence over layout preferences.
+
+Verify the bundled helper with the installed PptxGenJS version before relying on it. Inspect every rendered slide and confirm notes survive in the PPTX. For Google Slides requests, create the actual document when tooling permits or identify the delivered importable PPTX honestly.

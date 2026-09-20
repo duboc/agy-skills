@@ -1,6 +1,6 @@
 ---
 name: spring-boot-upgrader
-description: "Migrate Spring Boot applications to version 4.0. Use when the user mentions upgrading Spring Boot, migrating from Spring Boot 2.x or 3.x to 4.x, updating Spring dependencies, Jackson 3 migration, Spring Framework 7, or modernizing a Java/Kotlin Spring project."
+description: "Plan and perform Spring Boot upgrades, including migration to 4.x, while honoring the requested target version. Use when the user mentions upgrading Spring Boot, migrating from Spring Boot 2.x or 3.x to 4.x, updating Spring dependencies, Jackson 3 migration, Spring Framework 7, or modernizing a Java/Kotlin Spring project."
 ---
 
 # Spring Boot Upgrader
@@ -43,7 +43,7 @@ node scripts/parse-spring-project.js
 
 ### Step 2: Migration Path Detection
 
-Do NOT ask the user questions. Determine the migration path automatically from the scan results using the rules below.
+Determine the current version from source and effective build configuration. Honor the requested target; for an unspecified target, verify support and ecosystem compatibility before recommending a release. Ask only when a missing compatibility requirement changes the path.
 
 #### Source Version Detection
 
@@ -64,7 +64,7 @@ Do NOT ask the user questions. Determine the migration path automatically from t
 | Java 8–10 | Must upgrade to Java 17+ (required by Spring Boot 3.x) |
 | Java 11–16 | Must upgrade to Java 17+ (required by Spring Boot 3.x) |
 | Java 17–20 | Compatible. Java 21 recommended. |
-| Java 21+ | Fully compatible with Spring Boot 4.0 |
+| Java 21+ | Check the exact Boot release’s supported Java range and dependency/toolchain compatibility |
 
 #### Scope Classification
 
@@ -226,10 +226,10 @@ After all phases, verify:
 
 - [ ] Application starts cleanly with no deprecation warnings
 - [ ] All tests pass (`mvn verify` / `gradle build`)
-- [ ] No `javax.*` imports remain (should be `jakarta.*` — relevant if source was pre-3.0)
-- [ ] No `com.fasterxml.jackson` imports remain (should be `tools.jackson`)
+- [ ] Migrated Java EE APIs use the appropriate `jakarta.*` packages; valid Java SE packages such as `javax.crypto`, `javax.net` and `javax.sql` remain unchanged
+- [ ] Jackson 3 core/databind uses the appropriate `tools.jackson` packages; `com.fasterxml.jackson.annotation` and explicitly retained Jackson 2 compatibility code are not blindly rewritten
 - [ ] `spring.factories` migrated to `META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports` (if applicable)
-- [ ] Docker base image updated to Java 21
+- [ ] Docker/CI Java versions match the selected supported toolchain; Java 21 is a choice, not a universal requirement
 - [ ] CI/CD pipeline updated for new Java/Spring versions
 
 ### Step 5: OpenRewrite Automation (Optional)
@@ -238,18 +238,18 @@ If the project uses Maven or Gradle, suggest running OpenRewrite recipes for aut
 
 **Maven:**
 ```bash
-mvn -U org.openrewrite.maven:rewrite-maven-plugin:run \
-  -Drewrite.recipeArtifactCoordinates=org.openrewrite.recipe:rewrite-spring:RELEASE \
+./mvnw org.openrewrite.maven:rewrite-maven-plugin:VERIFIED_PLUGIN_VERSION:run \
+  -Drewrite.recipeArtifactCoordinates=org.openrewrite.recipe:rewrite-spring:VERIFIED_RECIPE_VERSION \
   -Drewrite.activeRecipes=org.openrewrite.java.spring.boot4.UpgradeSpringBoot_4_0
 ```
 
 **Gradle:**
 ```groovy
 plugins {
-    id("org.openrewrite.rewrite") version "latest.release"
+    id("org.openrewrite.rewrite") version "VERIFIED_PLUGIN_VERSION"
 }
 dependencies {
-    rewrite("org.openrewrite.recipe:rewrite-spring:latest.release")
+    rewrite("org.openrewrite.recipe:rewrite-spring:VERIFIED_RECIPE_VERSION")
 }
 rewrite {
     activeRecipe("org.openrewrite.java.spring.boot4.UpgradeSpringBoot_4_0")
@@ -260,7 +260,7 @@ The OpenRewrite composite recipe chains together migrations for Spring Framework
 
 ## Guidelines
 
-- **Auto-detect, don't ask.** Determine the migration path from the scan results. Do not ask the user to choose a version or scope.
+- **Respect the target.** Detect source versions automatically and preserve the requested destination and scope. Do not turn every maintenance upgrade into a major-version migration.
 - **Always go through 3.5.x first.** Never jump directly from 2.x or early 3.x to 4.0. The bridge release is mandatory.
 - **Keep the build green.** Each phase must leave the project in a compilable, testable state.
 - **Be precise about renames.** Use the exact old → new mappings. Do not guess at renamed classes or properties.
@@ -268,3 +268,11 @@ The OpenRewrite composite recipe chains together migrations for Spring Framework
 - **Suggest OpenRewrite.** Always mention it as an option for automating mechanical changes.
 - **Don't over-migrate.** Only change what the project actually uses. If there's no Kafka, skip the Kafka section.
 - **Preserve behavior.** The goal is version upgrade, not refactoring. Keep business logic unchanged.
+
+## Version-specific migration evidence
+
+Verify the selected release’s [system requirements](https://docs.spring.io/spring-boot/system-requirements.html) and [4.0 migration guide](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-4.0-Migration-Guide) when targeting 4.0. This skill's tables are a starting point, not a substitute for the exact release notes. The 3.5 bridge guidance applies to a 4.0 migration, not every requested upgrade.
+
+Replace VERIFIED_* recipe/plugin placeholders with resolved compatible versions before running; record them for reproducibility. Use the project wrapper (`mvnw.cmd`/`gradlew.bat` on Windows) and inspect effective dependency resolution, not only a parent declaration.
+
+Capture the baseline, then validate each supported upgrade hop. Test application startup, serialization round trips, persistence migrations and authentication flows relevant to this project. Compare wire formats and defaults, not just compilation. Separate an unsupported dependency blocker from a code regression, and keep a rollback point before irreversible data changes.

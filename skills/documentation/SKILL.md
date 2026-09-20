@@ -34,3 +34,11 @@ When asked to document operations or system design:
 
 ## Available Resources
 - Read `references/document-types.md` for the structural templates of READMEs, APIs, Runbooks, Architecture, and Onboarding docs.
+
+## Repository-grounded verification
+
+Read the actual entry points, package scripts, configuration and existing docs before writing commands or defaults. Separate current behavior from proposed architecture. Do not invent contacts, rate limits, SLAs, configuration keys or response fields to fill a template.
+
+For a quickstart, state prerequisites, working directory, exact command, expected observable result and common recovery. Run safe examples when possible; label commands not executed and explain missing dependencies. Never execute a destructive runbook merely to validate its documentation.
+
+For APIs, cross-check auth, status codes and examples against handlers/schema. For runbooks, include trigger, diagnosis, scoped action, success check, rollback limitations and escalation ownership when known. Check relative links and maintain one authoritative location for volatile instructions. Deliver only the document types requested.

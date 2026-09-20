@@ -72,6 +72,7 @@ Expected output: `PASSED`
 
 ```bash
 git add tests/path/test_file.py src/path/new_file.py
+# Only when commits are authorized:
 git commit -m "feat(component): add specific behavior"
 ```
 
@@ -94,8 +95,8 @@ _(Repeat step structure)_
 
 - [ ] All tests pass: `pytest` (or project-specific test command)
 - [ ] Linter passes: `<linting command>`
-- [ ] No untracked files left behind
-- [ ] Each task has its own commit
+- [ ] Intended files reviewed; unrelated tracked and untracked work preserved
+- [ ] If commits are authorized, each commit contains a coherent reviewed change
 - [ ] Feature works end-to-end: [describe manual verification steps]
 
 ## Rollback

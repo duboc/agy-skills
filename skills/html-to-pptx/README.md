@@ -1,6 +1,6 @@
 # HTML to PPTX
 
-A Agy skill that converts MARP HTML slide presentations into fully editable PowerPoint (`.pptx`) files. Every text element, list, table, and image becomes a native PowerPoint object — not a screenshot.
+An Agy skill that converts supported MARP HTML content into PowerPoint (`.pptx`). Supported text, lists and tables become native objects; embedded images and rasterized complex visuals retain their image content. Verify fidelity and disclose editability limits.
 
 ## What It Does
 

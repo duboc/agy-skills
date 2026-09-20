@@ -28,7 +28,9 @@ The memory generation algorithm analyzes conversation content to extract:
 
 ### Generation from Sessions
 
-```python
+> Historical pseudocode, not a supported API recipe. Resolve imports, methods and payloads from the installed SDK before use. ADK adapters belong to `google.adk`; see SKILL.md.
+
+```text
 from vertexai.agent_engines.memory_bank import VertexAiMemoryBankService
 
 memory_service = VertexAiMemoryBankService(
@@ -46,7 +48,9 @@ await memory_service.generate_memories(
 
 ### Generation from Direct Contents
 
-```python
+> Historical pseudocode, not a supported API recipe. Resolve imports, methods and payloads from the installed SDK before use. ADK adapters belong to `google.adk`; see SKILL.md.
+
+```text
 from google.genai import types
 
 # Provide conversation-like content for extraction
@@ -68,7 +72,9 @@ await memory_service.generate_memories(
 
 ### Generation from Pre-extracted Facts
 
-```python
+> Historical pseudocode, not a supported API recipe. Resolve imports, methods and payloads from the installed SDK before use. ADK adapters belong to `google.adk`; see SKILL.md.
+
+```text
 # Directly store known facts as memories
 await memory_service.generate_memories(
     app_name="my-app",
@@ -87,7 +93,9 @@ await memory_service.generate_memories(
 
 Memory Bank supports generating memories from multimodal content:
 
-```python
+> Historical pseudocode, not a supported API recipe. Resolve imports, methods and payloads from the installed SDK before use. ADK adapters belong to `google.adk`; see SKILL.md.
+
+```text
 from google.genai import types
 
 # Generate memories from text and image content
@@ -112,7 +120,9 @@ await memory_service.generate_memories(
 
 Retrieve all memories for a given scope:
 
-```python
+> Historical pseudocode, not a supported API recipe. Resolve imports, methods and payloads from the installed SDK before use. ADK adapters belong to `google.adk`; see SKILL.md.
+
+```text
 # Get all memories for a user
 memories = await memory_service.retrieve_memories(
     app_name="my-app",
@@ -132,7 +142,9 @@ for memory in memories:
 
 Find memories relevant to a specific query using semantic similarity:
 
-```python
+> Historical pseudocode, not a supported API recipe. Resolve imports, methods and payloads from the installed SDK before use. ADK adapters belong to `google.adk`; see SKILL.md.
+
+```text
 # Find memories related to a specific topic
 memories = await memory_service.retrieve_memories(
     app_name="my-app",
@@ -170,7 +182,9 @@ The system automatically categorizes memories into managed topics:
 
 Define domain-specific topics for structured memory organization:
 
-```python
+> Historical pseudocode, not a supported API recipe. Resolve imports, methods and payloads from the installed SDK before use. ADK adapters belong to `google.adk`; see SKILL.md.
+
+```text
 # Store memories with custom topics
 await memory_service.generate_memories(
     app_name="my-app",
@@ -196,7 +210,9 @@ memories = await memory_service.retrieve_memories(
 
 ### Topic Management
 
-```python
+> Historical pseudocode, not a supported API recipe. Resolve imports, methods and payloads from the installed SDK before use. ADK adapters belong to `google.adk`; see SKILL.md.
+
+```text
 # List all topics for a user
 memories = await memory_service.retrieve_memories(
     app_name="my-app",
@@ -221,7 +237,9 @@ Result:    Memory updated to "User prefers TypeScript", old version preserved as
 
 ### Viewing Revisions
 
-```python
+> Historical pseudocode, not a supported API recipe. Resolve imports, methods and payloads from the installed SDK before use. ADK adapters belong to `google.adk`; see SKILL.md.
+
+```text
 # Memory objects include revision history
 memory = memories[0]
 if hasattr(memory, "revisions"):
@@ -236,7 +254,9 @@ if hasattr(memory, "revisions"):
 
 Set TTL to automatically expire memories after a specified duration:
 
-```python
+> Historical pseudocode, not a supported API recipe. Resolve imports, methods and payloads from the installed SDK before use. ADK adapters belong to `google.adk`; see SKILL.md.
+
+```text
 # Configure memory TTL at the service level
 memory_service = VertexAiMemoryBankService(
     project="your-project-id",
@@ -260,7 +280,9 @@ memory_service = VertexAiMemoryBankService(
 
 Memories can include metadata for filtering and organization:
 
-```python
+> Historical pseudocode, not a supported API recipe. Resolve imports, methods and payloads from the installed SDK before use. ADK adapters belong to `google.adk`; see SKILL.md.
+
+```text
 # Metadata is attached during generation
 await memory_service.generate_memories(
     app_name="my-app",
@@ -285,7 +307,9 @@ await memory_service.generate_memories(
 
 ### Deleting Specific Memories
 
-```python
+> Historical pseudocode, not a supported API recipe. Resolve imports, methods and payloads from the installed SDK before use. ADK adapters belong to `google.adk`; see SKILL.md.
+
+```text
 # Delete individual memories
 await memory_service.delete_memory(
     app_name="my-app",
@@ -296,7 +320,9 @@ await memory_service.delete_memory(
 
 ### Purging All Memories for a User
 
-```python
+> Historical pseudocode, not a supported API recipe. Resolve imports, methods and payloads from the installed SDK before use. ADK adapters belong to `google.adk`; see SKILL.md.
+
+```text
 # Remove all memories for a specific user (GDPR compliance)
 await memory_service.purge_memories(
     app_name="my-app",
@@ -319,7 +345,9 @@ await memory_service.purge_memories(
 
 Automatically load relevant memories at conversation start:
 
-```python
+> Historical pseudocode, not a supported API recipe. Resolve imports, methods and payloads from the installed SDK before use. ADK adapters belong to `google.adk`; see SKILL.md.
+
+```text
 from vertexai.agent_engines.memory_bank import PreloadMemoryTool
 
 root_agent = Agent(
@@ -338,7 +366,9 @@ root_agent = Agent(
 
 ### Memory-Aware Agent Pattern
 
-```python
+> Historical pseudocode, not a supported API recipe. Resolve imports, methods and payloads from the installed SDK before use. ADK adapters belong to `google.adk`; see SKILL.md.
+
+```text
 from google.adk.tools import ToolContext
 
 def save_preference(category: str, preference: str, tool_context: ToolContext) -> dict:
@@ -368,7 +398,9 @@ root_agent = Agent(
 
 ### Post-Session Memory Generation
 
-```python
+> Historical pseudocode, not a supported API recipe. Resolve imports, methods and payloads from the installed SDK before use. ADK adapters belong to `google.adk`; see SKILL.md.
+
+```text
 from google.adk.agents import Agent
 from google.adk.tools import ToolContext
 

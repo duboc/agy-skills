@@ -78,7 +78,7 @@ Removes the worktree directory and its administrative files. Fails if the worktr
 ### Force removal
 
 ```bash
-git worktree remove --force <path>
+# Inspect and preserve changes; forced removal requires explicit discard authorization.
 ```
 
 Removes the worktree even if it has uncommitted changes. Use when you want to discard all work in the worktree.
@@ -86,11 +86,12 @@ Removes the worktree even if it has uncommitted changes. Use when you want to di
 ### Manual removal + prune
 
 ```bash
-rm -rf <worktree-path>
+# Only after confirming the directory is already missing:
+git worktree prune --dry-run
 git worktree prune
 ```
 
-Alternative: delete the directory manually and then clean up the administrative files. Useful if the worktree directory was already deleted.
+For an existing directory, inspect changes and use `git worktree remove <path>`. Prune only stale metadata; never delete an uninspected directory to bypass Git protections.
 
 ---
 
@@ -200,6 +201,6 @@ If the branch appears in the list, it is already checked out in another worktree
 | "fatal: '<branch>' is already checked out" | Branch is in use in another worktree. Use `git worktree list` to find where. |
 | Worktree has stale lock | Run `git worktree unlock <path>` then `git worktree prune` |
 | Worktree directory was deleted manually | Run `git worktree prune` to clean up administrative files |
-| Can't remove worktree — dirty state | Use `git worktree remove --force <path>` or commit/stash changes first |
+| Can't remove worktree — dirty state | Inspect and preserve changes; do not force removal or stash another agent's work |
 | New worktree missing node_modules | Run `npm install` in the worktree — dependencies are not shared |
 | Git hooks not running in worktree | Hooks are shared from the main `.git` directory. Check `.git/hooks/` in the main repo. |

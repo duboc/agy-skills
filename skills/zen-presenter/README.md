@@ -9,7 +9,7 @@ This skill transforms any topic into a visually striking slide deck by applying 
 1. **Topic discovery** — Captures the subject, audience, and core takeaway.
 2. **Design consultation** — Asks about background images (optional), mood, and typography preferences before generating anything.
 3. **Story arc planning** — Structures the deck as a narrative: hook, tension, exploration, climax, resolution.
-4. **Zen slide generation** — Produces MARP Markdown with maximum 10 words per slide, zero bullet points, and either full-bleed Unsplash backgrounds or clean theme-based design.
+4. **Zen slide generation** — Produces MARP Markdown with a target of 10 words per slide, retaining essential context and sources, zero bullet points, and either full-bleed Unsplash backgrounds or clean theme-based design.
 5. **HTML rendering** — Converts the MARP deck to a self-contained HTML file via Marp CLI that can be presented directly in any browser.
 6. **PowerPoint offer** — Asks the user if they want to export to `.pptx` via Marp CLI.
 

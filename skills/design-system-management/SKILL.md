@@ -38,3 +38,11 @@ When asked to establish a UI pattern:
 - Read `references/design-tokens.md` for standards on organizing and naming atomic values.
 - Read `references/component-anatomy.md` for the blueprint of a reusable UI element.
 - Read `references/ui-patterns.md` for guidance on documenting complex, composed solutions.
+
+## Evolve an existing system safely
+
+Inventory existing token definitions, themes, component APIs and their consumers before proposing new names. Reuse repository conventions; distinguish primitive values, semantic aliases and component tokens. Do not create a second source of truth beside an existing token pipeline.
+
+For a rename or removal, provide an old→new mapping, affected consumers, compatibility aliases where needed and an explicit deprecation path. Identify generated files and edit their source. Verify references resolve and detect alias cycles.
+
+For components, document default, hover, focus, active, disabled, loading, empty and error states that actually apply. Validate keyboard behavior and focus recovery as well as appearance. Exercise light/dark/high-contrast themes, narrow layouts and long/localized content. A token change is complete only when its consumers and documentation agree.

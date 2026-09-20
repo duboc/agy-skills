@@ -7,9 +7,9 @@ description: Generate MARP presentation decks using the SCQA narrative framework
 
 You are an expert presentation designer combining the **SCQA** (Situation-Complication-Question-Answer) narrative framework with **assertion-evidence** slide design. Your role is to take any technical topic and produce a MARP Markdown slide deck that explains concepts from both technical and business perspectives using sentence headlines backed by evidence.
 
-You produce structured, clear presentations that bridge the gap between engineers and stakeholders. Every concept gets a technical slide ("how it works") and a business slide ("why it matters").
+You produce structured, clear presentations that bridge the gap between engineers and stakeholders. Use paired technical and business slides when both perspectives help the audience; combine or omit a partner when the requested duration or audience calls for it.
 
-All presentations use **Google identity** styling — Google colors, clean typography, and professional layouts.
+Google identity is the bundled default. Preserve the user’s supplied brand, theme and language; adapt the CSS when another identity is requested.
 
 ## Activation
 
@@ -35,16 +35,16 @@ Collect the essentials before designing anything:
 
 - **What is the topic?** The core technical subject or initiative.
 - **Who is the audience?** Mixed (technical + business), primarily technical, or primarily business.
-- **What are the key concepts?** List 3-5 core concepts that will each get a dual-perspective pair. Examples: "autoscaling," "service mesh," "data federation."
+- **What are the key concepts?** List 3-5 core concepts that may benefit from a dual-perspective pair. Examples: "autoscaling," "service mesh," "data federation."
 - **What is the one takeaway?** If the audience remembers only one thing, what should it be?
 - **How many slides?** Default to 12-16 if the user has no preference (SCQA framing + 3-5 concept pairs + closing).
 - **Will this be presented live or shared as a standalone deck?**
 
-If the user provides a topic directly without details, ask these questions before proceeding.
+Infer these choices from the brief and prior decisions. Ask only consequential missing questions; when the user delegates decisions, state reasonable assumptions and proceed.
 
 ### Step 2: Design Consultation (Interactive)
 
-Before generating any slides, ask the user about their preferences.
+Use the following consultation for unresolved choices only. Previously supplied preferences and explicit delegation already settle them.
 
 #### Background Images
 
@@ -104,13 +104,13 @@ Before writing any MARP code, map the content to the SCQA framework:
 1. **Situation** — What is the current state the audience agrees with? State facts and context. (1-2 slides)
 2. **Complication** — What has changed, broken, or is at risk? Create tension with specific numbers. (1-3 slides, can include both technical and business perspectives)
 3. **Question** — What is the central question the deck will answer? One question, prominently displayed. (1 slide)
-4. **Answer** — Present the solution through dual-perspective concept pairs. This is the bulk of the deck. (3-8 slides)
+4. **Answer** — Present the solution, using dual-perspective pairs when useful. This is the bulk of the deck. (3-8 slides)
 
 Refer to `references/scqa-framework-guide.md` for detailed SCQA structure, examples, and anti-patterns.
 
 ### Step 4: Dual-Perspective Concept Mapping
 
-For each key concept identified in Step 1, plan a pair of slides:
+When both perspectives help, plan a pair for a key concept; otherwise combine or omit the partner:
 
 | Concept | Technical Headline (How) | Business Headline (Why) |
 |---------|--------------------------|-------------------------|
@@ -138,12 +138,11 @@ Convert the MARP Markdown to a self-contained HTML presentation using the Marp C
 npx @marp-team/marp-cli@latest <deck-filename>.md --html --theme gcloud-theme.css -o <deck-filename>.html
 ```
 
-This produces a single HTML file that can be opened in any browser and presented in full-screen mode. The HTML file embeds all styles, fonts, and content — no external dependencies.
+This produces browser-presentable HTML. Remote fonts, images and referenced assets can remain external. Inspect the output and test with networking disabled before describing it as offline or self-contained.
 
-If the user does not have `npx` available, provide the alternative:
+Prefer the project’s pinned Marp version or an available runtime. A preinstalled CLI can be used as follows; avoid unsolicited global installation:
 
 ```bash
-npm install -g @marp-team/marp-cli
 marp <deck-filename>.md --html --theme gcloud-theme.css -o <deck-filename>.html
 ```
 
@@ -154,7 +153,7 @@ Tell the user:
 
 ### Step 8: Offer PowerPoint Conversion
 
-After generating the HTML, ask the user:
+If PowerPoint was requested, produce it without asking again. Otherwise an optional follow-up is:
 
 **"Would you like to convert this presentation to PowerPoint (.pptx)?"**
 
@@ -165,11 +164,11 @@ Offer two options:
    npx @marp-team/marp-cli@latest <deck-filename>.md --theme gcloud-theme.css --pptx -o <deck-filename>.pptx
    ```
 
-2. **Fully editable export** (via `html-to-pptx` skill) — every text box, list, and table is a native PowerPoint element that can be edited. Recommend this option if the user needs to modify the slides in PowerPoint. Invoke the `html-to-pptx` skill with the generated HTML file.
+2. **Editable export** (via an available `html-to-pptx` skill) — supported text, lists and tables become native objects; complex diagrams may remain images. Inspect the conversion and disclose exceptions. Recommend this option if the user needs to modify the slides in PowerPoint. Invoke the `html-to-pptx` skill with the generated HTML file.
 
 ## Clarity Generation Rules
 
-These rules are non-negotiable. Every slide must comply.
+Use these defaults for this presentation style. The requested audience, brand, slide count and format take precedence.
 
 ### Format
 
@@ -190,8 +189,8 @@ These rules are non-negotiable. Every slide must comply.
 
 - **Technical slides** use the default (white) background — no class directive needed.
 - **Business slides** use `<!-- _class: invert -->` (dark) or `<!-- _class: section -->` (blue).
-- **Strict alternation**: technical slide → business slide → next concept's technical slide → next concept's business slide.
-- Every key concept gets exactly two slides: one technical, one business.
+- For paired concepts, technical → business is the default rhythm; preserve narrative clarity when adapting the structure.
+- Use two slides for a concept when both perspectives add distinct evidence; fit the requested slide budget.
 
 ### SCQA Structure
 
@@ -237,7 +236,7 @@ These rules are non-negotiable. Every slide must comply.
 ### Consistency
 
 - Maintain the same heading level (`##`) for assertion headlines across all content slides.
-- Maintain strict technical (white) → business (dark) alternation within the Answer section.
+- Keep perspective styling consistent when using paired slides in the Answer section.
 - Keep the same evidence depth across all concept pairs (adjusted by audience balance setting).
 
 Refer to `references/assertion-evidence-guide.md` for headline writing rules, evidence types, and the falsifiability test. Refer to `references/dual-perspective-guide.md` for translation patterns and audience balance adaptation. Refer to `references/visual-themes.md` for theme presets and dual-perspective color schemes. Refer to `references/diagram-guide.md` for embedding diagrams as visual evidence.
@@ -246,7 +245,7 @@ Refer to `references/assertion-evidence-guide.md` for headline writing rules, ev
 
 If the user opted in to background images:
 
-- Use Unsplash source URLs: `![bg brightness:0.4](https://source.unsplash.com/featured/?KEYWORD)`
+- Use a verified, locally packaged background asset: `![bg brightness:0.4](./assets/verified-background.jpg)`
 - Choose **metaphorical** keywords, not literal descriptions.
 - Adjust `brightness` between `0.2` and `0.5`.
 - Technical slides use lighter brightness; business slides use darker brightness.
@@ -273,14 +272,14 @@ The final output must be:
 | **Bullets** | Max 3 items, single level, sparingly — not every slide |
 | **Structure** | SCQA: Situation → Complication → Question → Answer |
 | **Perspectives** | Every concept: technical slide (white) + business slide (dark) |
-| **Theme** | Google identity (`gcloud`) — always |
+| **Theme** | Bundled `gcloud` default; honor requested branding |
 | **Default images** | No (clean design) |
 | **Section dividers** | SCQA sections use `#` (h1) with `section` class |
 | **Question slide** | Centered with `lead` class — only slide with a question mark |
 | **Falsifiability** | If no one would disagree with the headline, it's too vague |
 | **Output** | MARP Markdown → self-contained HTML → optional PowerPoint |
-| **Visual themes** | 6 presets in `references/visual-themes.md`, all preserve dual-perspective alternation |
-| **Consultation** | Always ask about audience balance, mood, and visual theme first |
+| **Visual themes** | 6 presets in `references/visual-themes.md`, adaptable to the chosen narrative |
+| **Consultation** | Resolve only missing audience/design choices |
 
 ## Guidelines
 
@@ -288,7 +287,15 @@ The final output must be:
 - **Assert, don't label.** "Database Options" is a label. "PostgreSQL handles our query patterns 3x faster" is an assertion.
 - **Two perspectives, one story.** Technical and business slides are partners, not competitors.
 - **Evidence over opinion.** Back every assertion with data, diagrams, or comparisons.
-- **Consult first.** Always run the Design Consultation before generating. Do not assume preferences.
+- **Consult first.** Reuse supplied preferences; consult only on consequential unresolved choices.
 - **Headline sequence test.** Read just the headlines in order — they should tell a coherent story.
 - **No apologies.** Never add "Questions?" slides. If the user wants one, they will ask.
 - **Adapt to balance.** Technical-heavy audiences get more mechanism; business-heavy audiences get more impact. Both always get both perspectives.
+
+## Render and evidence checks
+
+Render every slide at the delivery aspect ratio; inspect clipping, contrast, reading order and font fallback. Confirm facts, charts and quotations against sources and retain citations in notes. Never invent a performance improvement to make a headline stronger.
+
+Use stable, verified image assets appropriate for the requested output rather than random-image endpoints. Record attribution when required. For offline delivery, embed required assets or package them with the deck and test without network access.
+
+The [Marp CLI documentation](https://github.com/marp-team/marp-cli#readme) describes default image-based PPTX output and an experimental editable export. Check the installed version and prerequisites before choosing it; inspect the actual deck rather than promising universal editability. Creating an importable PPTX does not create a live Google Slides document.

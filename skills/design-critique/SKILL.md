@@ -52,7 +52,7 @@ Evaluate the design across the 5 core pillars detailed in `references/critique-f
 1. **Usability & UX Architecture**: Cognitive load, friction points, affordances, navigation, and UX heuristics (see `references/heuristics-and-laws.md`).
 2. **Visual Hierarchy & Layout**: Reading pattern (F-shape / Z-shape), spatial grid system (4pt/8pt), typography scale, whitespace balance, contrast depth.
 3. **Consistency & Pattern Language**: Design system alignment, token consistency (colors, radii, shadows), interactive state feedback (hover, focus, disabled, loading).
-4. **Accessibility (WCAG 2.2 Standards)**: Color contrast (min 4.5:1 text, 3:1 graphical objects), touch targets (min 44x44px / 48x48px), screen reader flow, semantic structure.
+4. **Accessibility (WCAG 2.2 Standards)**: Check the applicable success criterion and level: normal text typically needs 4.5:1 contrast; large text and relevant non-text UI need 3:1. WCAG 2.2 AA target sizing is 24×24 CSS px or qualifying spacing/exceptions; 44×44 is the enhanced AAA criterion, while 48 is a platform design recommendation. Also inspect screen reader flow and semantics when runtime access exists.
 5. **Microcopy & Interaction Feedback**: CTA clarity, form field labels/placeholders, error prevention, success states, and empty states.
 
 *Refer to `references/component-checklists.md` when reviewing specific components like forms, buttons, navbars, modals, or tables.*
@@ -75,7 +75,7 @@ Structure your review cleanly using this output format:
 ## 🔍 Key Findings by Severity
 
 ### 🚨 P0 — Critical Issues (Usability or Accessibility Blockers)
-*Issues that prevent completion of primary goals, fail WCAG compliance, or cause major confusion.*
+*Issues that block the primary task or exclude users without a workable alternative. Assign severity from demonstrated impact; not every WCAG finding is P0.*
 - **[Issue Name]**:
   - **Observation**: What is currently happening.
   - **Impact**: Why it hurts the user experience or business goal.
@@ -117,3 +117,11 @@ Follow the principles detailed in `references/feedback-guidelines.md`:
 2. **Observation → Impact → Recommendation**: Always explain *why* something is an issue before offering a fix.
 3. **Acknowledge Wins**: Highlight effective design choices to maintain a balanced, constructive dialogue.
 4. **Actionable Code / Visual Solutions**: Provide code snippets or ASCII visual diagrams whenever possible.
+
+## Evidence and review boundaries
+
+For each finding, identify the screen/state, observed behavior, user impact, recommendation and how to verify the fix. Separate measured failures, visual observations and hypotheses.
+
+A screenshot cannot establish DOM semantics, keyboard operation, screen-reader announcements or complete accessibility conformance. Mark those checks untested and request runtime evidence only when needed. Measure contrast from actual colors where available; antialiasing in a screenshot is not the source color.
+
+Use the [W3C target-size minimum guidance](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html) for AA exceptions and [enhanced target sizing](https://www.w3.org/WAI/WCAG22/Understanding/target-size-enhanced.html) for AAA. Cite the exact criterion rather than equating personal taste with compliance. Keep the review proportional to the user's question and preserve the product's established design language.

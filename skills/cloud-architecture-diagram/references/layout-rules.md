@@ -124,6 +124,10 @@ Cards sit at least 14 px inside their group on every side.
 
 ## The audit
 
+First run `node scripts/validate-data.cjs data.js` on trusted diagram data.
+It checks IDs, references, orthogonal routes and whether every connector endpoint
+touches the component it names. Visual proximity is not enough.
+
 Open the rendered page and run this in the browser console. It reports text
 that escapes its own box, labels a card paints over, marks that collide, and
 ids a slide names that the drawing does not have.

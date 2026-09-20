@@ -34,8 +34,8 @@ Trigger phrases include:
 
 Before creating anything, collect:
 
-- **Branch name**: What should the new branch be called? Default to `feature/<topic>` if the user describes a feature. If the user wants to check out an existing branch, use that instead.
-- **Base branch**: Which branch should the worktree branch from? Default to the current branch or `main`/`master`.
+- **Branch name**: What should the new branch be called? Honor repository/user branch-prefix instructions; otherwise derive a descriptive branch name. If the user wants to check out an existing branch, use that instead.
+- **Base branch**: Which branch should the worktree branch from? Resolve and record the intended base ref and commit; do not silently choose a dirty current checkout or assume a default branch name.
 - **Purpose**: Brief description of what the worktree is for (used in status reporting).
 
 If the user provides a feature description without a branch name, derive one:
@@ -86,9 +86,9 @@ git check-ignore -q .worktrees 2>/dev/null
 
 If the directory is NOT ignored:
 
-1. Add the directory name to `.gitignore`.
-2. Stage and commit the `.gitignore` change with message: `chore: add worktree directory to .gitignore`
-3. Then proceed with worktree creation.
+1. Prefer an external worktree directory or a local `.git/info/exclude` rule.
+2. Change tracked `.gitignore` only if it belongs to the requested repository change; do not create an unrelated commit in the primary checkout.
+3. Verify the exclusion, then create the worktree.
 
 **For global directories** (`~/worktrees/` or similar):
 
@@ -107,7 +107,7 @@ path=".worktrees/$BRANCH_NAME"
 path="$HOME/worktrees/$project/$BRANCH_NAME"
 
 # Create worktree with a new branch
-git worktree add "$path" -b "$BRANCH_NAME"
+git worktree add "$path" -b "$BRANCH_NAME" "$BASE_REF"
 
 # Or check out an existing branch
 git worktree add "$path" "$EXISTING_BRANCH"
@@ -197,8 +197,8 @@ git worktree list
 # Remove the worktree directory and its administrative files
 git worktree remove <path>
 
-# If the worktree has uncommitted changes, force removal
-git worktree remove --force <path>
+# If removal refuses because of changes, inspect and preserve them.
+# Do not force-delete a dirty worktree without explicit discard authorization.
 ```
 
 ### Clean up stale worktrees
@@ -220,8 +220,14 @@ Refer to `references/worktree-commands.md` for the complete command reference.
 
 - **Never skip ignore verification** for project-local worktree directories. Worktree contents appearing in `git status` or getting committed is a serious problem.
 - **Never assume the directory location.** Follow the priority order: existing directory > GEMINI.md preference > ask the user.
-- **Never proceed silently with failing tests.** Always report baseline failures and get explicit permission to continue.
+- **Report baseline failures.** Investigate whether they block the requested work; continue independent work within existing authorization rather than treating every pre-existing failure as a new approval gate.
 - **Auto-detect, don't guess.** Only run setup commands that match detected project files. Do not assume a project uses npm just because it has JavaScript files.
 - **Report the full path.** The user needs to know exactly where the worktree was created so they can navigate to it.
 - **One branch per worktree.** Git does not allow the same branch to be checked out in multiple worktrees. If the user requests a branch already checked out elsewhere, report the conflict.
 - **Clean up after yourself.** When work is done, remind the user to run `git worktree remove <path>` and optionally delete the branch if it has been merged.
+
+## Shared-repository checks
+
+Before creating or removing a worktree, inspect `git worktree list --porcelain`, current branch/HEAD, status and applicable repository instructions (including AGENTS.md). Never switch another agent's checkout or reuse a branch already checked out elsewhere.
+
+Resolve target paths inside the intended worktree root. Remove only the specifically requested worktree after inspecting its status; preserve untracked work. Before any commit, re-check branch/HEAD and stage explicit paths. Do not amend an unknown current HEAD. A worktree isolates files but still shares branches, refs and repository configuration.

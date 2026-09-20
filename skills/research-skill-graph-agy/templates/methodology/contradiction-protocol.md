@@ -4,7 +4,7 @@ Contradiction between lenses is the primary source of research insight. The goal
 
 ## 1. Step-by-Step Contradiction Analysis
 
-1. **Extraction**: Compare findings across all 6 lens notes (`lens-technical.md` through `lens-first-principles.md`).
+1. **Extraction**: Compare findings across the selected relevant lens notes; do not manufacture disagreement when evidence converges.
 2. **Identification**: Pinpoint direct disagreements on:
    - Numerical data points or performance benchmarks
    - Feasibility timelines or scalability limits

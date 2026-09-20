@@ -122,7 +122,7 @@ Load [`references/ai-finops-async-and-kiosk-resilience.md`](references/ai-finops
    - Check uniqueness helpers (`name_key_exists`) for full-collection scans (`list_teams()` downloading every document on each request) and replace with indexed `.where(filter=FieldFilter("name_key", "==", key)).limit(1)` queries.
 2. **IAM `signBlob` & Metadata Server Quota DoS**: Inspect every helper that generates GCS Signed URLs or refreshes OAuth tokens (`generate_signed_url`, `google.auth.default()`, `credentials.refresh()`). If called synchronously per `GET` with `Cache-Control: no-store` — or triggered by UI hover prefetches (`onPointerEnter` / `onFocus` in table rows) — it will exhaust IAM `signBlob` quotas (600–1,000 req/min) and freeze the server. Require **in-memory TTL caching (15–50 min cache for 60-min URLs)**, OAuth credential reuse (`if not credentials.valid`), and removal of hover prefetches.
 3. **Multi-Modal Prompt Injection (Visual & Live Audio/TTS)**: Trace every user string (`team_name`, `participant.name`, `mascot`) interpolated into Image Generation prompts or Live Audio/TTS system prompts (`Gemini Live API`).
-   - Reject prompt delimiters (`<`, `>`, `{`, `}`, `[`, `]`, `` ` ``, `"`, `\n`, `\r`) and wrap user fields in non-executable tags (`<team_name>...</team_name>`).
+   - Validate user fields for their actual data format and length, and delimit untrusted content clearly. Removing punctuation or wrapping text in XML is not a prompt-injection security boundary; enforce tool permissions and authoritative data access outside the model.
    - **Eliminate Client-Payload Early-Return Bypasses**: Remove shortcuts like `if "teams" in arguments or "prompt_override" in arguments: return body` (`prompt_context.py`) so prompts always load authoritative DB state.
 4. **Gemini / Google API Key Leakage via Induced Error Logs & Stack Traces (`?key=AIza...` / `x-goog-api-key`)**:
    - **The Attack Vector**: When applications call Gemini REST (`https://generativelanguage.googleapis.com/...?key=AIza...`), Live WebSockets (`wss://generativelanguage.googleapis.com/...?key=AIza...`), or HTTP SDKs (`httpx`, `requests`, `urllib`), inducing an upstream error (malformed payload, invalid model parameter, `400 Bad Request`, `429 Too Many Requests`, `500`, or corrupted frame) causes `httpx.HTTPStatusError` / `requests.exceptions.RequestException` to embed the **entire failing request URL (including `?key=AIzaSy...`)** inside `str(exc)`. If `logger.exception(...)`, `logger.error(f"Failed: {exc}")`, or `photo_error = str(exc)` runs unredacted, the raw `GEMINI_API_KEY` is leaked into **Cloud Logging / `stdout`**, **database status documents (`photo_error`, `logo_error`)**, or **public HTTP `500` responses**.
@@ -162,7 +162,7 @@ Load [`references/privacy-idor-moderation-and-report-template.md`](references/pr
 ### Phase 6: Skeptical Verification, Active Testing & Output Format
 
 1. **Skeptical Claim Verification**: Never trust prior docs or assumptions blindly. If checking an existing audit or codebase claim, verify exact file/line behavior and include a **Verification & Corrections Table** (`Original Claim → Evidence Cited → What the Code Actually Shows → Corrected Finding & Severity`).
-2. **Active Security & Resilience Verification**: Execute or prescribe concrete verification probes (`curl`, `pytest`, WebSocket & concurrency probes) to prove each finding and verify fixes.
+2. **Active Security & Resilience Verification**: Prepare concrete verification probes (`curl`, `pytest`, WebSocket & concurrency probes); execute only within the authorized target, volume and side-effect scope. Label unexecuted tests and prefer local fault injection for costly/destructive behavior.
 3. **Structured Deliverable**: Format the audit using the complete specification template in [`references/privacy-idor-moderation-and-report-template.md`](references/privacy-idor-moderation-and-report-template.md), containing:
    - Executive Summary & Topology Calibration
    - Route, Proxy & Google Cloud Attack-Surface Map
@@ -183,3 +183,19 @@ Load [`references/privacy-idor-moderation-and-report-template.md`](references/pr
 | *"The Gemini API key is only used server-side; it's never returned by our endpoints."* | When Gemini returns `400`/`429`/`500`, `httpx.HTTPStatusError` and `requests` embed the full failing URL (`?key=AIzaSy...`) inside `str(exc)`, dumping the raw API key into Cloud Logging, tracebacks, or DB error fields (`photo_error`). Worse, `logging.getLogger().addFilter(...)` is bypassed by Python's `callHandlers()` for all child loggers (`logging.getLogger(__name__)`). | Never pass `?key=` in URLs (use `x-goog-api-key` header or Vertex AI ADC), call `install_secret_redaction()` (`setLogRecordFactory` + `SecretRedactingFilter`) + `sanitize_exception(exc)`, and run the `caplog` fault-injection test. |
 | *"The route is `async def`, so FastAPI handles concurrency automatically."* | `async def` runs on the main event loop thread! Calling synchronous Firestore/GCS/`signBlob` inside `async def` freezes the entire server. | Change handler to `def` (runs in threadpool) or offload blocking work to an isolated `ThreadPoolExecutor` + TTL cache. |
 | *"We revoke the Blob URL inside `img.onload`."* | At 30 fps, `ws.onmessage` overwrites `img.src` before `onload` fires for the previous frame, leaking ~100 MB/min on TVs. | Track `loadingBlobUrl` + `activeBlobUrl` and call `URL.revokeObjectURL()` both before overwriting `img.src` and inside `onload`/`onerror`. |
+
+## Scope and evidence before active probes
+
+Treat the named routes, role headers, venue sizes, rate limits, cache durations and performance figures in this skill as case-study examples, not universal requirements or measurements of the target application. Inspect which conditions actually exist before recommending a control.
+
+Start with source/configuration and read-only evidence. Active probes require an authorized target and bounded request volume/duration. Use local/staging fault injection where possible; do not trigger real model spend, destructive actions, hardware changes or production load merely to substantiate a report. Record preconditions, reproduction, impact and verification separately; an untested plausible path is a hypothesis.
+
+An audit request is not permission to deploy hardening. When implementation is requested, complete scoped fixes and verify legitimate flows as well as denial cases. Match severity to actual exposure and exploitability rather than the fact that an example used P0.
+
+## Avoid control-shaped bypasses
+
+A signed device cookie proves issuance, not unique physical presence: automated callers may acquire many cookies through GET. Test cookie renewal, identity rotation and distributed bypass, and calibrate controls to measured legitimate traffic. Do not claim a GET-only minting rule solves abuse by itself.
+
+For credential-swapping proxies, establish one canonical URL parsing/decoding contract shared by routing and forwarding. `posixpath.normpath` alone is not a URL security boundary. Test encoded separators, dot segments, duplicate query keys, method changes and forwarded role headers. Enforce authorization again on the backend; hiding a UI action is not access control.
+
+For quotas and long-running behavior, verify current provider limits and actual counters. A unit test of cleanup does not prove a real WebSocket disconnect is reaped; exercise a real server and observe subscriptions, tasks and memory after disconnect.

@@ -4,10 +4,9 @@ Use this when the drawing will be presented, projected, or left on a screen
 people walk past. One drawing, many screens: each step lights its own arrow,
 dims everything else, and zooms the frame onto what it lit.
 
-The zoom is the reason to build it this way. A dense architecture diagram is
-unreadable at 390 px wide, and the same diagram framed on a single arrow is
-perfectly legible. You get the phone layout for free instead of maintaining a
-second, stacked version of the same content.
+Zoom improves focus, but does not guarantee phone readability. Measure the
+rendered font size, and use smaller detail views or the component picker to
+provide readable explanations when a long edge still spans most of the drawing.
 
 ## A slide is a number, a title and one line
 
@@ -39,7 +38,10 @@ The **last** one shows the same picture again, now that they know what is in
 it. That is where the measured numbers belong, or the one claim you want them
 to leave with.
 
-Everything between the two lights exactly one step.
+Journey slides light one numbered step. Security, failure or operations slides
+may light several related edges. Use optional `notes` for rationale and evidence.
+Zoom does not guarantee phone readability: measure actual rendered font size and
+provide smaller detail views or accessible explanations when necessary.
 
 ## The frame computes itself
 

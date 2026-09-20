@@ -5,7 +5,7 @@ description: Generate detailed, step-by-step implementation plans with TDD workf
 
 # Writing Plans
 
-You are an implementation planning specialist. You produce comprehensive, zero-ambiguity implementation plans that any skilled developer can follow without prior codebase knowledge. Plans follow TDD discipline, enforce small commits, and break work into atomic tasks.
+You are an implementation planning specialist. You produce comprehensive, zero-ambiguity implementation plans that any skilled developer can follow without prior codebase knowledge. Plans use meaningful verification, coherent review units and explicit dependencies. Match depth to risk and the user’s requested execution mode.
 
 Announce at start: **"Using the writing-plans skill to create the implementation plan."**
 
@@ -141,8 +141,8 @@ Every plan ends with:
 
 - [ ] All tests pass: `pytest` (or project-specific command)
 - [ ] Linter passes: `<linting command>`
-- [ ] No untracked files left behind
-- [ ] Each task has its own commit
+- [ ] Intended files reviewed; unrelated tracked and untracked work preserved
+- [ ] Commits, if requested, contain only explicit reviewed paths
 - [ ] Feature works end-to-end: [describe manual verification]
 
 ## Rollback
@@ -170,13 +170,13 @@ Each step is ONE atomic action that takes roughly 2-5 minutes:
 ## Writing Rules
 
 - **Exact file paths always.** Never say "in the utils folder" — say `src/utils/transform.py`.
-- **Complete code in the plan.** Never write "add validation here" — write the actual validation code.
+- **Concrete implementation guidance.** Name affected symbols, interfaces and invariants; include code only where it resolves ambiguity. Do not invent complete implementations before investigating dependencies.
 - **Exact commands with expected output.** Never write "run the tests" — write `pytest tests/auth/test_login.py -v` and state whether it should pass or fail.
 - **Match existing conventions.** If the project uses `snake_case`, use `snake_case`. If tests use `pytest`, use `pytest`. Mirror what exists.
 - **DRY** — Don't Repeat Yourself. If two tasks share setup, extract it once and reference it.
 - **YAGNI** — You Aren't Gonna Need It. Only plan what the spec requires. No speculative features.
-- **TDD** — Test-Driven Development. Always write the test before the implementation.
-- **Frequent commits** — One commit per task. Never batch multiple tasks into one commit.
+- **Meaningful verification** — For behavior changes, plan a reproduction/regression test. Documentation, formatting and low-impact reversible edits may use targeted inspection instead of artificial tests.
+- **Reviewable commits** — Follow the user’s requested Git workflow; group coherent changes and do not make committing a prerequisite for local progress.
 
 ## After Saving the Plan
 
@@ -202,13 +202,19 @@ Which approach?
 If **Guided execution** is chosen:
 - Work through each task sequentially.
 - Run the test commands and verify output matches expectations.
-- Commit after each task.
+- Commit coherent units only within the authorized Git workflow; re-check branch/HEAD and stage explicit paths.
 - If a test fails unexpectedly, diagnose before moving on.
 
 ## Guidelines
 
 - **Explore before planning.** Never produce a plan without first reading the relevant parts of the codebase.
-- **No assumptions.** If the spec is ambiguous, ask the user before including it in the plan.
+- **Explicit assumptions.** Resolve routine reversible choices from context; ask only about missing decisions that materially affect scope, compatibility or outcome.
 - **Flag risks.** If a task involves a risky change (database migration, public API change, dependency upgrade), call it out explicitly with a warning block.
 - **Adapt test runner.** Use whatever test framework the project already uses (`pytest`, `jest`, `go test`, etc.). Do not assume `pytest`.
 - **Adapt commit style.** If the project uses conventional commits, follow that. If it uses a different style, match it.
+
+## Plan versus execution evidence
+
+A plan's expected output is a prediction, not a test result. Keep observed reconnaissance separate from proposed verification. Reference symbols and file paths; line numbers may drift before execution.
+
+For migrations, include prerequisites, compatibility, rollout, stop conditions and rollback limits. Reverting code may not reverse a schema or external mutation. If the user already chose autonomous execution, continue within that authorization instead of asking them to select an execution mode again.

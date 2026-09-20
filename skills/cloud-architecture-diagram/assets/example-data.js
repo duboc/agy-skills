@@ -11,7 +11,10 @@
  */
 
 const DIAGRAM = {
-  title: "Photo API",
+  title: "Photo API · reference architecture",
+  theme: "light",
+  notice: "Illustrative architecture — configuration values are examples, not production measurements.",
+  legend: ["Solid: main request", "Dashed: secondary operations", "Tinted groups: functional concerns"],
   viewBox: [1025, 640],
   outsideLabel: "OUTSIDE",
   cloud: { x: 312, y: 24, w: 690, h: 596, icon: "google-cloud", label: "Google Cloud · us-central1" }
@@ -108,7 +111,7 @@ const EDGES = [
     label: "uploads", lx: 133, ly: 166, anchor: "start" },
 
   { id: "e2", n: "2", from: "browser", to: "gate",
-    pts: [[226, 122], [346, 122]], disc: [244, 122],
+    pts: [[226, 202], [244, 202], [244, 122], [346, 122]], disc: [244, 150],
     label: "POST /photo", lx: 304, ly: 115, anchor: "middle" },
 
   { id: "e3", n: "3", from: "gate", to: "api",
@@ -130,8 +133,8 @@ const EDGES = [
     pts: [[568, 214], [582, 214], [582, 522], [664, 522]], disc: [582, 368] },
 
   { id: "e8", n: "8", from: "api", to: "browser",
-    pts: [[346, 262], [226, 262]], disc: [302, 262],
-    label: "result", lx: 262, ly: 252, anchor: "middle" },
+    pts: [[346, 198], [302, 198], [302, 280], [226, 280]], disc: [302, 240],
+    label: "result", lx: 262, ly: 271, anchor: "middle" },
 
   { id: "s1", from: "media", to: "bucket", dash: true,
     pts: [[568, 268], [618, 268], [618, 306], [664, 306]] },
@@ -156,6 +159,7 @@ const EDGES = [
 const SLIDES = [
   {
     title: "One photograph in, one picture out",
+    notes: "Illustrative reference only. Verify authentication, deployment locations, model configuration and retention against the target application's sources before adapting this drawing.",
     line: "Eight steps, from the upload leaving the browser to the result coming back.",
     edges: [], units: []
   },
@@ -217,9 +221,9 @@ const SLIDES = [
    * slide shows the same picture the opening one did, now that the reader
    * knows what is in it, and carries the numbers worth leaving them with. */
   {
-    title: "What it costs to run",
-    line: "Measured in production, from the report each job writes as it goes.",
-    facts: [["Model call", "2.4 s"], ["Whole request", "3.1 s"], ["Cold start", "900 ms"]],
+    title: "The whole application",
+    line: "One public request path, private data, and a separate operator surface. Validate the example configuration before using it.",
+    notes: "No production cost or latency measurements are supplied. Replace illustrative configuration with sourced evidence for your application.",
     edges: [], units: []
   }
 ];

@@ -43,7 +43,7 @@ Verify:
 - Who holds a role, who owns a company
 - Regulatory deadlines and effective dates
 
-Do not verify: durable concepts, historical facts, mechanisms, math.
+Verify historical claims and uncertain mechanisms against primary sources; recompute mathematical claims. Stable, well-established concepts do not need redundant searching.
 
 When a source is more than about a year old on a fast-moving topic, either find a newer one or say on the slide when the figure is from. Dated-but-labeled beats current-sounding-but-wrong.
 
@@ -51,7 +51,7 @@ When a source is more than about a year old on a fast-moving topic, either find 
 
 ## Deck-worthiness filter
 
-Gather far more than you will use — perhaps 30 facts for a deck that will show 8. Then filter. A fact earns a slide if it does one of these:
+Gather sufficient evidence for the narrative without an arbitrary fact quota. Then filter. A fact earns a slide if it does one of these:
 
 - **Establishes the problem is real** (tension act)
 - **Sizes the problem** (the number)

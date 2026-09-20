@@ -1,11 +1,11 @@
 ---
 name: html-to-pptx
-description: Convert MARP HTML slide presentations into fully editable PowerPoint (.pptx) files with native text boxes, lists, tables, and images — not screenshots. Use when the user asks to convert HTML slides, MARP output, or web-based presentations into PowerPoint.
+description: Convert MARP HTML slide presentations into PowerPoint (.pptx) files with editable supported text, lists and tables plus embedded images; complex visuals may require image fallback. Use when the user asks to convert HTML slides, MARP output, or web-based presentations into PowerPoint.
 ---
 
 # HTML to PPTX Conversion Skill
 
-You convert MARP-rendered HTML slide presentations into fully editable PowerPoint (`.pptx`) files. The output contains native PowerPoint text boxes, lists, tables, and embedded images — every element is editable, not a flat screenshot.
+Convert MARP HTML to PowerPoint with native objects where supported. Report unsupported elements and image fallbacks explicitly; embedded images are resizable, not semantically editable diagrams.
 
 You use a two-step pipeline:
 1. **Extract** — Open the HTML in a browser via `agent-browser`, inject a DOM extraction script that reads every element's position, size, style, and content, and outputs structured JSON.
@@ -27,7 +27,7 @@ Follow these steps strictly in order.
 
 ### Step 1: Identify the HTML Files
 
-Ask the user which HTML file(s) to convert. Accept:
+Use the supplied or just-generated input paths; ask only when the intended files are ambiguous. Accept:
 - A single HTML file path
 - A directory containing multiple `.html` files (one per slide, or a single MARP deck)
 - A glob pattern (e.g., `slides/*.html`)
@@ -36,10 +36,10 @@ If the user just generated an HTML presentation with `zen-presenter` or `clarity
 
 ### Step 2: Prepare the Environment
 
-Check if `node_modules` exists in this skill's directory. If not, install dependencies:
+Locate Node.js and check whether PptxGenJS resolves from the available runtime. The package.json is at the skill root; if installation is needed, install there or in a task-local copy:
 
 ```bash
-cd <skill-directory>/scripts && npm install --prefix . --production
+npm install --prefix <skill-directory> --omit=dev
 ```
 
 If `npm` is not available, tell the user to install Node.js first.
@@ -53,17 +53,14 @@ For each HTML file to convert:
    agent-browser open file://<absolute_path_to_html_file>
    ```
 
-2. **Wait for rendering** — MARP slides may have CSS transitions or font loading. Wait 2 seconds after page load.
+2. **Wait for rendering** — await document.fonts.ready, image decoding and diagram completion. Stop animation at a stable slide state; an arbitrary sleep is not evidence of readiness.
 
 3. **Inject the extraction script** to read all slide elements, positions, styles, and content:
    ```
    agent-browser eval "$(cat <skill-directory>/scripts/extract.js)"
    ```
 
-4. **Save the JSON output** to a temporary file:
-   ```bash
-   echo '<json_output>' > /tmp/slides_data.json
-   ```
+4. **Save JSON through a structured file write** to a task-local temporary path. Do not interpolate extracted content into shell commands; quotes, newlines and command substitutions can corrupt data or execute code.
 
 5. **Handle complex elements** — If the extracted JSON contains elements with `"isComplex": true` (SVG charts, diagrams), use `agent-browser` to take a screenshot of that specific element:
    ```
@@ -92,10 +89,10 @@ The build script:
 
 ### Step 5: Verify and Deliver
 
-1. Confirm the `.pptx` file was created and report its location and size.
+1. Render the `.pptx` and inspect each slide against the input. Check missing elements, overlap, font substitution, slide dimensions, tables and image fallbacks. Creation and file size alone do not prove conversion quality.
 2. Tell the user:
    - The file can be opened in **PowerPoint**, **Google Slides**, or **Keynote**
-   - All text is **fully editable** — not screenshots
+   - Which text/tables became native objects and which elements required fallback
    - Images are **embedded** in the file — no external dependencies
    - Fonts default to **Arial** for maximum compatibility across platforms
 
@@ -158,3 +155,11 @@ The build script preserves Google identity styling from the `gcloud` MARP theme:
 - **Embed all assets.** Images must be embedded as base64, not linked. The `.pptx` must work offline.
 - **Handle errors gracefully.** If an image can't be downloaded or an element can't be parsed, skip it with a placeholder and warn the user — don't crash.
 - **Keep fonts safe.** Always use Arial as the primary font. PowerPoint on different platforms may not have Inter or Google Sans installed.
+
+## Compatibility contract
+
+Use an available browser automation tool when `agent-browser` is absent; do not require installing a second browser controller. The bundled extractor targets section-based slides; inspect other HTML layouts before claiming support.
+
+The current builder targets 16:9 and applies Google-oriented style defaults. Identify aspect ratio and brand mismatches before conversion and adapt the builder or disclose them. Test local, data-URI and remote assets separately; do not silently drop a required figure. Keep a conversion manifest listing fallback/omitted elements per slide. An unresolved required element makes the output a draft.
+
+Do not claim Google Slides/Keynote fidelity without opening the imported result there. A successful local PowerPoint render verifies only that path.

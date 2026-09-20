@@ -1,10 +1,9 @@
 ---
 name: cloud-architecture-diagram
 description: >-
-  Draw a cloud architecture diagram in the Google Cloud reference style as one
-  self-contained, interactive HTML page — Google Cloud product icons, tinted
-  environment groups, actors outside the cloud boundary, a numbered request
-  path, hover explanations, and an optional step-by-step slideshow. Use
+  Create polished Google Cloud architecture diagrams and slide walkthroughs,
+  with interactive HTML and guidance for editable Google Slides or PowerPoint
+  decks, product icons, clear boundaries and traceable request/event flows. Use
   whenever someone asks for an architecture diagram, a system drawing, a
   "desenho de arquitetura", a component map, or a page that explains how a
   deployed system works. Trigger even without those words, for example "show
@@ -13,6 +12,28 @@ description: >-
 ---
 
 # Cloud architecture diagram
+
+## Visual and architectural quality
+
+Read [visual design](references/visual-design.md) before composing a diagram,
+and [Google Cloud semantics](references/google-cloud.md) before assigning
+network, deployment or trust boundaries. For editable Google Slides or PPTX,
+follow [slides and export](references/slides-and-export.md). The HTML template
+is a browser presentation, not an editable Google Slides deck.
+
+Choose the audience and requested format from existing context; do not repeat
+questions already answered. Preserve approved inventory and design decisions.
+Use complementary views for context, request/event flow, security and operations
+when relevant, rather than forcing every concern onto one canvas.
+
+Keep an evidence table: component/edge, source, and status (verified, assumed,
+proposed). Never invent topology, regions, IAM grants or failure behavior.
+Illustrative examples must identify themselves on the rendered artifact.
+
+The template supports `DIAGRAM.theme` (`light`, default, or `dark`), `mode`
+(`slides`, default, or `diagram`), `notice`, and `legend` (text entries).
+Slides can include `notes`; components can include `why`. These details are
+part of the shared HTML and must be appropriate for its audience.
 
 You draw deployed systems the way a cloud vendor's reference architecture
 draws them, and you ship the drawing as one HTML file that a person can open,
@@ -25,7 +46,7 @@ place every box yourself, and you verify the result by measuring it.
 
 ## What you produce
 
-One `.html` file. No build step, no imports, no runtime dependency beyond a
+For browser delivery, one `.html` file. No build step, no imports, no runtime dependency beyond a
 font stylesheet. A venue network, an air-gapped laptop and an email attachment
 all have to render it, so everything is inline.
 
@@ -38,14 +59,15 @@ Inside that file, three things stay separate:
 | Renderer | The code that turns the data into SVG. Never carries content. |
 
 Keep them separate even inside a single file. The data is what people edit;
-the renderer is what people never touch.
+the renderer handles presentation and can be extended for new representations.
 
 ## The drawing's grammar
 
 Follow the vendor grammar, because readers already know how to read it:
 
 1. **A cloud boundary.** A thin rounded rectangle with the provider's logo and
-   the region, containing everything that runs in the cloud.
+   a meaningful label. Show regions only when verified; a cloud frame does not
+   imply every service has the same location or network boundary.
 2. **Actors outside it.** People, devices, printers, third-party consumers.
    Plain boxes with a line-art glyph, never product icons.
 3. **Tinted groups inside it.** One per environment or concern, each a soft
@@ -56,7 +78,9 @@ Follow the vendor grammar, because readers already know how to read it:
 5. **Orthogonal connectors.** Only horizontal and vertical segments, with an
    arrowhead on the target. Never curves, never diagonals.
 6. **A numbered request path.** Filled discs carrying 1, 2, 3 … along the
-   arrows that one request travels. Everything else is dashed and unnumbered.
+   arrows that one request travels. Side paths are unnumbered. Define line
+   styles explicitly in a legend; asynchronous and operational paths must not
+   silently share one meaning.
 
 Read `references/layout-rules.md` before you place the first coordinate. It
 carries the geometry rules that are expensive to rediscover.
@@ -73,12 +97,12 @@ ones, or drop the numbers from one of them.
 
 You draw this **with** the person, not for them. A diagram is a claim about a
 system, and the person you are drawing for is the one who knows whether the
-claim is true. Four checkpoints, and at each one you stop and show your work
-before you spend effort on the next.
+claim is true. Use these checkpoints for unresolved choices; existing answers
+and approvals count. Show concrete work and continue within the approved scope.
 
 ### 1. Settle where the drawing will live
 
-Ask, before anything else:
+If the destination is not already specified, ask:
 
 > Where does this end up? A page people scroll, a screen you step through, or
 > an image in a deck?
@@ -104,7 +128,7 @@ Then write both back as a plain list and stop:
 >
 > Have I missed anything, and is that the path you want numbered?
 
-**Do not start placing coordinates until they answer.** Getting the inventory
+**Confirm the inventory before placing coordinates; existing approval counts.** Getting the inventory
 wrong costs a redraw; getting it right costs one message. If you cannot state
 the request path in one sentence, you do not understand the system well enough
 to draw it, and that is the thing to say.
@@ -124,7 +148,8 @@ you show anybody anything. It reports text that escapes its box, labels a card
 paints over, marks that collide, and ids a slide names that the drawing does
 not have. **An empty result is the passing result.** Fix, rebuild, re-measure.
 
-Only after the audit is clean do you look at a screenshot.
+Inspect screenshots as well as the audit: geometry alone cannot establish
+beauty, hierarchy or readable text at the intended viewing distance.
 
 ### 4. Hand it over and ask what is wrong
 
@@ -139,7 +164,8 @@ your guesses is wrong, and they will only tell you if you ask.
 
 ### Then iterate
 
-Changes arrive as changes to the data, never to the renderer. A new component
+Content changes belong in the data; extend the renderer when a requested
+representation needs it. A new component
 is one entry; a new step is one entry and no coordinates. Re-run the audit
 after every change, because a box that moves two pixels can put a label under
 a card, and that defect is invisible in a screenshot.
@@ -164,17 +190,16 @@ turning back into a document.
 
 ## Where the icons come from
 
-`scripts/fetch-gcp-icons.sh` reads the Iconify `gcp` collection, which mirrors
-Google Cloud's product icons behind a JSON API. Use it, because it is the only
-route a script can take: Google distributes the set as a ZIP for people, and
-`cloud.google.com/icons` answers a program with a page shell rather than the
-files.
+`scripts/fetch-gcp-icons.sh` reads the Iconify `gcp` collection as a convenience
+mirror. The [official library](https://cloud.google.com/icons) provides current
+product/category icon ZIPs and a separate legacy console collection. Pick one
+family consistently, verify marks against that library, and record source/date.
 
 Two things follow from working off a mirror.
 
-**The mirror is not the source.** It carries 214 icons and Google's own set
-carries 226. When the product you need is missing, take the file from
-`cloud.google.com/icons` and normalise it by hand.
+**The mirror is not the source.** Counts and coverage change. For a missing
+product use an official asset or a clearly labeled category/neutral symbol;
+never substitute an unrelated product mark. Preserve colors and aspect ratio.
 
 **The marks stay Google's.** Iconify labels the collection Apache 2.0, and that
 is the wrong frame for a trademark, because section 6 of that licence excludes
@@ -185,9 +210,8 @@ not recolour it, and never use one to suggest that Google endorses your work.
 
 ## Rules that are not negotiable
 
-**Measure, do not look.** A label three pixels past its box is invisible in a
-screenshot and obvious to the person reading the printout. Every defect worth
-finding in a diagram of this density was found by a script, not by eyes.
+**Measure and inspect.** Geometry checks catch escaping labels and overlaps;
+screenshots reveal weak hierarchy, poor balance and unreadable scaled text.
 
 **Cards paint over wires.** The units layer is drawn last, so a connector
 label that runs under a card gets eaten by the card's fill. This is the single
@@ -197,8 +221,9 @@ most common defect. The audit catches it.
 `gemini-3-flash · 6 calls` in its subtitle, the arrow does not need the label
 "6 calls". Delete it. Corridor clutter is what makes these diagrams look busy.
 
-**No invented numbers.** Every figure on the drawing comes from configuration,
-a measurement, or a document. If you cannot source it, leave it off and say so.
+**Source factual numbers.** Deployment claims come from configuration,
+measurement or documentation. Clearly labeled illustrative examples may use
+synthetic values; do not transfer those values into a real system as facts.
 
 **Respect the marks.** They are trademarks, not assets. Read *Where the icons
 come from* before you publish a drawing that carries them.
@@ -219,9 +244,13 @@ theme; leave the sheet alone.
 Run every line. Each one failed on a real drawing at least once.
 
 - [ ] The audit returns an empty array.
+- [ ] `node scripts/validate-data.cjs data.js` validates IDs and connector endpoints.
+- [ ] Every slide is visually inspected at its delivery size; labels stay readable.
+- [ ] Assumptions, proposed controls and illustrative figures are identified.
+- [ ] Keyboard, touch, notes, offline fonts and reduced motion work.
 - [ ] Nothing paints outside the viewport at 390, 768 and 1280 px wide.
-- [ ] Every number on the drawing came from configuration, a measurement or a
-      document, and you can say which.
+- [ ] Every factual number has a source; synthetic example values are visibly
+      identified as illustrative.
 - [ ] The drawing carries one sequence of numbers, not two.
 - [ ] No project id, service URL, bucket path, account id or internal hostname
       appears anywhere on the page.

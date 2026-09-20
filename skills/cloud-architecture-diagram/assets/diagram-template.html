@@ -38,6 +38,30 @@
   }
 
   * { box-sizing: border-box; }
+  :root:not([data-theme="dark"]) {
+    color-scheme: light;
+    --ground: #F5F7FA; --panel: #FFFFFF; --panel-2: #EAF0F8;
+    --rim: #DCE2EA; --ink: #202124; --ink-2: #526071; --ink-3: #657184;
+  }
+  :root:not([data-theme="dark"]) .sheet { box-shadow: 0 8px 32px #24334A0D; border: 1px solid var(--rim); }
+  .context { flex: none; font-size: 12px; color: var(--ink-2); padding-bottom: 8px; }
+  .context p { margin: 3px 0; }
+  .component-picker { font: inherit; color: var(--ink); background: var(--panel); border: 1px solid var(--rim); border-radius: 6px; max-width: 100%; padding: 7px; margin-top: 5px; }
+  .notes-toggle { color: var(--ink); background: var(--panel); border: 1px solid var(--rim); border-radius: 6px; padding: 7px 10px; cursor: pointer; }
+  .notes { position: absolute; z-index: 8; inset: auto 16px 16px; padding: 16px; max-height: 40%; overflow: auto; color: var(--ink); background: var(--panel); border: 1px solid var(--rim); border-radius: 10px; white-space: pre-wrap; }
+  [data-mode="diagram"] .caption, [data-mode="diagram"] .rail { display: none; }
+  [data-mode="diagram"] .screen { grid-template-columns: 1fr; grid-template-rows: 1fr; }
+  @media print {
+    :root { color-scheme: light; }
+    body { background: white !important; color: #202124 !important; }
+    .caption, .rail, .tip, .notes, .notes-toggle, .component-picker { display: none !important; }
+    .screen { display: block !important; }
+    .stagewrap { height: 75vh; }
+    .sheet { box-shadow: none !important; }
+    #stage { transform: none !important; }
+    .dim { opacity: 1 !important; }
+    .sheet::after { display: none; }
+  }
   /* .tip sets display:flex, and a class beats the user agent's
      [hidden] rule — without this the tooltip never hides. */
   [hidden] { display: none !important; }
@@ -182,6 +206,7 @@
   <header class="topbar">
     <h1 id="doc-title">Architecture</h1>
     <span class="counter" id="counter"></span>
+    <button class="notes-toggle" id="notes-toggle" type="button" aria-expanded="false" aria-controls="notes" hidden>Notes</button>
   </header>
 
   <main class="screen">
@@ -207,9 +232,12 @@
         <b id="tip-title"></b>
         <span class="tip-sub" id="tip-sub"></span>
         <p id="tip-what"></p>
+        <p id="tip-why" hidden></p>
       </div>
+      <div class="notes" id="notes" hidden></div>
     </div>
   </main>
+  <div class="context"><p id="notice" hidden></p><p id="legend" hidden></p><select class="component-picker" id="component-picker" aria-label="Explore a component"><option value="">Explore a component…</option></select></div>
 
   <footer class="rail">
     <button class="nav" id="prev" type="button" aria-label="Previous step">&#9664;</button>
@@ -237,13 +265,20 @@ const TONES = {
 
 document.getElementById("doc-title").textContent = DIAGRAM.title;
 document.title = DIAGRAM.title;
+document.documentElement.dataset.theme = DIAGRAM.theme || "light";
+document.documentElement.dataset.mode = DIAGRAM.mode || "slides";
+document.getElementById("diagram").setAttribute("viewBox", `0 0 ${DIAGRAM.viewBox.join(" ")}`);
+for (const [id, value] of [["notice", DIAGRAM.notice], ["legend", (DIAGRAM.legend || []).join(" · ")]]) {
+  const el = document.getElementById(id); el.textContent = value || ""; el.hidden = !value;
+}
 
 /** A product icon, top-left at (x, y), drawn at `size`. */
 function icon(name, x, y, size) {
   const ic = ICONS[name];
   if (!ic) return null;
-  const [, , vw, vh] = ic.vb.split(/\s+/).map(Number);
-  const g = mk("g", { transform: `translate(${x} ${y}) scale(${size / vw} ${size / vh})` });
+  const [vx, vy, vw, vh] = ic.vb.split(/\s+/).map(Number);
+  const scale = size / Math.max(vw, vh);
+  const g = mk("g", { transform: `translate(${x + (size - vw * scale) / 2} ${y + (size - vh * scale) / 2}) scale(${scale}) translate(${-vx} ${-vy})` });
   g.innerHTML = ic.d;
   return g;
 }
@@ -373,6 +408,9 @@ function addUnit(u) {
   g.addEventListener("mouseleave", hideTip);
   g.addEventListener("blur", hideTip);
   g.addEventListener("click", (ev) => { ev.stopPropagation(); showTip(u.id); });
+  g.addEventListener("keydown", (ev) => {
+    if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); ev.stopPropagation(); showTip(u.id); }
+  });
 
   units.append(g);
   unitG[u.id] = g;
@@ -389,6 +427,9 @@ for (const c of CARDS) {
 }
 
 const byId = Object.fromEntries(ALL.map((u) => [u.id, u]));
+const componentPicker = document.getElementById("component-picker");
+for (const u of ALL) { const option = document.createElement("option"); option.value = u.id; option.textContent = u.title; componentPicker.append(option); }
+componentPicker.addEventListener("change", () => { if (componentPicker.value) showTip(componentPicker.value); else hideTip(); });
 
 /* ------------------------------------------------------------- the tip -- */
 
@@ -400,6 +441,7 @@ function showTip(id) {
   document.getElementById("tip-title").textContent = u.title;
   document.getElementById("tip-sub").textContent = u.groupTitle ? u.groupTitle + " · " + u.sub : u.sub;
   document.getElementById("tip-what").textContent = u.what;
+  const why = document.getElementById("tip-why"); why.textContent = u.why || ""; why.hidden = !u.why;
   tip.hidden = false;
 
   const box = unitG[id].getBoundingClientRect();
@@ -415,7 +457,7 @@ function showTip(id) {
 }
 
 function hideTip() { tip.hidden = true; }
-document.addEventListener("click", hideTip);
+document.addEventListener("click", (ev) => { if (ev.target !== componentPicker) hideTip(); });
 
 /* ----------------------------------------------------------- the slides -- */
 
@@ -453,6 +495,8 @@ const elTitle = document.getElementById("title");
 const elLine = document.getElementById("line");
 const elChips = document.getElementById("chips");
 const elCounter = document.getElementById("counter");
+const notes = document.getElementById("notes"), notesToggle = document.getElementById("notes-toggle");
+notesToggle.addEventListener("click", () => { notes.hidden = !notes.hidden; notesToggle.setAttribute("aria-expanded", String(!notes.hidden)); });
 
 const dotBtn = SLIDES.map((s, i) => {
   const b = document.createElement("button");
@@ -460,7 +504,7 @@ const dotBtn = SLIDES.map((s, i) => {
   b.className = "dot";
   b.textContent = s.n || "◆";
   b.setAttribute("aria-label", "Step " + (i + 1) + ": " + s.title);
-  b.style.setProperty("--dot", TONES[s.tone || "blue"].screen);
+  b.style.setProperty("--dot", TONES[s.tone || "blue"][DIAGRAM.theme === "dark" ? "screen" : "paper"]);
   b.addEventListener("click", () => go(i));
   document.getElementById("dots").append(b);
   return b;
@@ -469,17 +513,20 @@ const dotBtn = SLIDES.map((s, i) => {
 let at = 0;
 
 function go(i) {
+  if (DIAGRAM.mode === "diagram") i = 0;
   at = (i + SLIDES.length) % SLIDES.length;
   const s = SLIDES[at];
   const tone = TONES[s.tone || "blue"];
 
-  document.documentElement.style.setProperty("--accent", tone.screen);
+  document.documentElement.style.setProperty("--accent", DIAGRAM.theme === "dark" ? tone.screen : tone.paper);
   document.documentElement.style.setProperty("--accent-paper", tone.paper);
 
   elStepNo.hidden = !s.n;
   if (s.n) elStepNo.textContent = s.n;
   elTitle.textContent = s.title;
   elLine.textContent = s.line;
+  notes.textContent = s.notes || ""; notes.hidden = true; notesToggle.hidden = !s.notes || DIAGRAM.mode === "diagram";
+  notesToggle.setAttribute("aria-expanded", "false");
 
   elChips.hidden = !s.facts;
   elChips.textContent = "";
@@ -491,7 +538,7 @@ function go(i) {
     elChips.append(li);
   }
 
-  const showAll = !s.edges.length;
+  const showAll = !s.edges.length && !s.units.length;
   for (const u of ALL) {
     const lit = s.units.includes(u.id);
     unitG[u.id].classList.toggle("lit", lit);
@@ -516,6 +563,8 @@ document.getElementById("prev").addEventListener("click", () => go(at - 1));
 document.getElementById("next").addEventListener("click", () => go(at + 1));
 
 addEventListener("keydown", (ev) => {
+  if (ev.key === "Escape") { hideTip(); notes.hidden = true; notesToggle.setAttribute("aria-expanded", "false"); return; }
+  if (ev.target.closest('button, input, textarea, select, [contenteditable="true"]')) return;
   if (ev.key === "ArrowRight" || ev.key === "PageDown" || ev.key === " ") { ev.preventDefault(); go(at + 1); }
   else if (ev.key === "ArrowLeft" || ev.key === "PageUp") { ev.preventDefault(); go(at - 1); }
   else if (ev.key === "Home") go(0);

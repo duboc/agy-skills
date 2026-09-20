@@ -13,7 +13,7 @@ You work alongside the **Google Ads API Developer Assistant extension**, which h
 
 When a user asks about Google Ads performance, account auditing, campaign optimization, creative testing, spend analysis, or funnel diagnostics:
 
-1. Confirm the user has the Google Ads API Developer Assistant extension installed and configured.
+1. Identify an available authorized Ads connector, SDK/CLI integration or user-supplied export; do not require one particular extension.
 2. Ask for the customer ID if not already set in `customer_id.txt`.
 3. Identify which workflow matches the user's request.
 4. Execute the workflow using GAQL queries and API calls.
@@ -32,13 +32,13 @@ Trigger phrases include:
 
 ## Prerequisites
 
-This skill requires:
+For live API queries, establish these inputs. Supplied exports can be analyzed without live credentials:
 
-1. **Google Ads API Developer Assistant extension** — Installed and configured with valid API credentials. This extension provides the GAQL query execution and code generation layer.
+1. **Authorized data access** — An available connector, supported SDK or compatible extension; verify the customer and manager-account context.
 2. **Google Ads API developer token** — With appropriate access level for the account.
 3. **Customer ID** — Either set in `customer_id.txt` or provided per request.
 
-If the extension is not available, instruct the user to install it:
+An optional integration, when requested and suitable, is:
 ```
 git clone https://github.com/googleads/google-ads-api-developer-assistant
 cd google-ads-api-developer-assistant
@@ -84,7 +84,7 @@ A systematic inspection of the account covering structure, spend efficiency, qua
    - Verify conversion lag and attribution windows
    - Flag any conversion actions with zero conversions in the window
 
-6. **Identify waste**:
+6. **Identify candidates for investigation**; spend without observed conversions is not by itself proof of waste:
    - Keywords with spend but zero conversions
    - Search terms that triggered ads but are irrelevant
    - Campaigns with high impression share loss due to budget
@@ -134,7 +134,7 @@ Deep analysis of where budget is going and where it is being wasted.
 
 1. **Map spend by campaign**. Pull cost, conversions, and conversion value for all active campaigns in the period. Calculate CPA and ROAS for each.
 
-2. **Identify the Pareto split**. Find which 20% of campaigns drive 80% of conversions. Flag campaigns outside this core that consume significant budget.
+2. **Identify the Pareto split**. Measure the actual concentration of conversions across campaigns rather than assuming an 80/20 split. Flag campaigns outside this core that consume significant budget.
 
 3. **Analyze keyword-level spend**. For the top spending campaigns:
    - Pull keyword performance with cost, conversions, quality score
@@ -321,14 +321,14 @@ Evaluate account organization and hierarchy for efficiency and scalability.
 
 ## How to Execute Queries
 
-This skill relies on the Google Ads API Developer Assistant extension for all API interactions. When a workflow step requires data:
+Use the authorized data integration available in the current environment. When a workflow step requires data:
 
 1. **Construct the GAQL query** using the recipes in `references/gaql-recipes.md` as starting points.
-2. **Ask the extension to execute** the query by generating and running Python code.
+2. **Use that integration to execute** the query by generating and running Python code.
 3. **Read the results** from the console output or saved CSV files.
 4. **Chain queries** as needed — use results from one query to parameterize the next.
 
-Always validate the API version before the first query in a session. The extension enforces this as a mandatory step.
+Always validate the API version before the first query in a session. Check field availability and query compatibility against current official Ads documentation.
 
 For mutate operations (adding negative keywords, pausing campaigns, etc.):
 - Generate the code but do NOT execute it.
@@ -352,5 +352,13 @@ After completing any workflow:
 - **Acknowledge data limitations.** Conversion lag, attribution windows, and learning periods affect data accuracy. Note these when relevant.
 - **No business strategy advice.** This skill handles performance analysis, not business decisions like target market selection or pricing.
 - **Respect thresholds.** Do not draw conclusions from statistically insignificant data. Note when sample sizes are too small.
-- **Use the extension.** All GAQL and API interactions go through the Google Ads API Developer Assistant extension. Do not try to call the API directly.
+- **Use authorized access.** Prefer existing connectors/SDKs or supplied exports; report coverage and freshness limitations.
 - **Practical recommendations.** Every finding should have a specific, implementable action item. Avoid vague advice like "optimize your campaigns."
+
+## Interpretation and output contract
+
+Record account currency/timezone, inclusive date range, data extraction time, attribution/conversion windows and primary versus secondary conversion actions. Convert cost_micros explicitly; handle zero denominators and do not average ratios across incompatible segments. Check joins/segmentation for double-counting.
+
+Zero observed conversions can reflect lag, sparse volume, tracking failure or upper-funnel purpose. Label the non-converting-spend ratio descriptively instead of equating it to proven waste. Structural/ad-count heuristics are investigation prompts, not automatic recommendations across all campaign types.
+
+Separate observed association from causal claims. Estimate impact only with stated assumptions; do not invent statistical significance or a guaranteed ROAS lift. Show the supporting rows/query and a bounded next experiment. Auditing remains read-only; budget, bidding and campaign mutations need explicit task scope. Save reports/exports directly when requested rather than asking again.
