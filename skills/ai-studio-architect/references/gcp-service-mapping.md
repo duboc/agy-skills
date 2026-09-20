@@ -178,7 +178,7 @@ gcloud firestore export gs://$BUCKET/backups/$(date +%Y%m%d)
 ```json
 [
   {
-    "origin": ["https://your-domain.com"],
+    "origin": ["https://app.example.com"],
     "method": ["GET", "PUT", "POST", "DELETE", "OPTIONS"],
     "responseHeader": ["Content-Type", "Authorization", "X-Requested-With"],
     "maxAgeSeconds": 3600

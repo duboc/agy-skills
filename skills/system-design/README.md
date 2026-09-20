@@ -1,17 +1,48 @@
-# System Design
+# System Design (`system-design`)
 
-This skill transforms the Agy into an expert Systems Architect. It helps you design scalable backends, evaluate architectural choices, design APIs, and model data with a strong focus on explicit trade-off analysis.
+Design distributed systems, microservice topologies, APIs, and storage schemas with back-of-the-envelope capacity math and explicit architectural trade-off analysis.
 
-## Usage
+---
 
-Trigger this skill by asking for architectural advice or full system designs. For example:
-- "Design a system for a real-time chat application."
-- "What's the right architecture for a high-throughput metrics ingestion service?"
-- "Help me design the data model and API for an e-commerce checkout flow."
-- "Review my proposed architecture for our transition from a monolith to microservices."
+## Overview
 
-## Features
-- **Structured Framework:** Guides you through Requirements Gathering, High-Level Design, Deep Dives, Scaling, and Trade-off Analysis.
-- **API & Data Modeling:** Expert advice on REST/GraphQL/gRPC design and SQL vs NoSQL schema modeling.
-- **Visual Design Documents:** Generates ASCII diagrams to map out component interactions and data flows.
-- **Trade-off Centric:** Evaluates decisions against complexity, cost, team familiarity, and time-to-market.
+The `system-design` skill guides engineers through a structured 5-phase architectural workflow:
+
+1. **Requirements & Scope Calibration**: Functional user journeys, Non-Functional SLOs (latency, availability, durability), and scale constraints.
+2. **Back-of-the-Envelope Capacity Estimation**: RPS, peak bandwidth, cache working-set memory, and 5-year storage sizing.
+3. **High-Level Topology & Data Flow**: Edge routing, stateless compute, data partitioning, and asynchronous event pipelines.
+4. **Component Deep Dive**: API contracts (REST/gRPC/GraphQL), SQL vs NoSQL vs NewSQL selection, sharding keys, and cache invalidation.
+5. **Resilience & Trade-Off Analysis**: Single points of failure (SPOFs), PACELC consistency/latency trade-offs, rate limiting, and graceful degradation.
+
+---
+
+## Reference Guides (`references/`)
+
+| File | Purpose |
+|------|---------|
+| [`references/design-framework.md`](references/design-framework.md) | Step-by-step 5-stage system design blueprint, API contract schemas, and architectural review template. |
+| [`references/capacity-and-tradeoff-cheatsheet.md`](references/capacity-and-tradeoff-cheatsheet.md) | Latency numbers every engineer should know, RPS/bandwidth/storage formulas, and PACELC/caching/queueing trade-off matrix. |
+
+---
+
+## Installation
+
+### Workspace Scope
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh | bash -s -- system-design
+```
+
+### User Scope
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh | bash -s -- system-design --scope user
+```
+
+---
+
+## Usage Examples
+
+- *"Design a multi-region notification delivery service handling 50M daily active users with P99 latency under 200ms."*
+- *"Review our current Postgres + Redis checkout architecture and identify bottlenecks at 10x traffic growth."*
+- *"Compare Kafka vs Google Cloud Pub/Sub vs Cloud Tasks for our asynchronous order fulfillment pipeline."*

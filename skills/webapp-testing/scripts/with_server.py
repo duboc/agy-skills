@@ -21,6 +21,23 @@ import sys
 import argparse
 import os
 import signal
+import shlex
+
+
+def parse_server_cmd(raw_cmd):
+    """Parse server command into (argv, cwd) without invoking a shell."""
+    stripped = raw_cmd.strip()
+    cwd = None
+    if stripped.startswith("cd ") and "&&" in stripped:
+        cd_part, rest = stripped.split("&&", 1)
+        tokens = shlex.split(cd_part, posix=(os.name != "nt"))
+        if len(tokens) == 2 and tokens[0] == "cd":
+            cwd = os.path.abspath(tokens[1])
+            stripped = rest.strip()
+    argv = shlex.split(stripped, posix=(os.name != "nt"))
+    if not argv:
+        raise ValueError(f"Empty server command: {raw_cmd!r}")
+    return argv, cwd
 
 
 def port_open(port):
@@ -119,10 +136,11 @@ def main():
                 raise RuntimeError(f"Port {server['port']} became occupied before launch")
             print(f"Starting server {i+1}/{len(servers)}: {server['cmd']}")
 
-            # Use shell=True to support commands with cd and &&
+            argv, cwd = parse_server_cmd(server['cmd'])
             process = subprocess.Popen(
-                server['cmd'],
-                shell=True,
+                argv,
+                cwd=cwd,
+                shell=False,
                 # Inherit streams: unread PIPEs can deadlock verbose dev servers.
                 start_new_session=(os.name != 'nt'),
                 creationflags=(subprocess.CREATE_NEW_PROCESS_GROUP | subprocess.CREATE_NO_WINDOW)

@@ -47,3 +47,11 @@ cp -r skills/zen-pitch .agents/skills/zen-pitch
 # User scope
 cp -r skills/zen-pitch ~/.gemini/config/skills/zen-pitch
 ```
+
+## Included References
+
+| File | Description |
+|------|-------------|
+| `references/research.md` | Market and domain research protocol, quantitative evidence gathering, and requirement spine extraction |
+| `references/narrative.md` | Story arc structuring, tension-to-resolution transitions, and persuasive executive framing |
+| `references/layouts.md` | Presentation Zen slide archetypes, typography hierarchy, and high-contrast visual layouts |

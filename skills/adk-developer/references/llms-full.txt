@@ -32,7 +32,7 @@ Agent Development Kit (ADK) is designed to empower developers to quickly build, 
 
   Create your first Go ADK agent in minutes.
 
-  [Start with Go](https://adk.dev/get-started/go/index.md)
+  [Start with Go](https://adk.dev/get-started/golang/index.md)
 
 - **Java Quickstart**
 
@@ -18726,7 +18726,7 @@ Turn your ADK agents into full-featured applications with rich, responsive UIs. 
 [AG-UI](https://github.com/ag-ui-protocol/ag-ui) provides a consistent interface to empower rich clients across technology stacks, from mobile to the web and even the command line. There are a number of different clients that support AG-UI:
 
 - [CopilotKit](https://copilotkit.ai) provides tooling and components to tightly integrate your agent with web applications
-- Clients for [Kotlin](https://github.com/ag-ui-protocol/ag-ui/tree/main/sdks/community/kotlin), [Java](https://github.com/ag-ui-protocol/ag-ui/tree/main/sdks/community/java), [Go](https://github.com/ag-ui-protocol/ag-ui/tree/main/sdks/community/go/example/client), and [CLI implementations](https://github.com/ag-ui-protocol/ag-ui/tree/main/apps/client-cli-example/src) in TypeScript
+- Clients for [Kotlin](https://github.com/ag-ui-protocol/ag-ui/tree/main/sdks/community/kotlin), [Java](https://github.com/ag-ui-protocol/ag-ui/tree/main/sdks/community/java), [Go](https://github.com/ag-ui-protocol/ag-ui/tree/main/sdks/community/golang/example/client), and [CLI implementations](https://github.com/ag-ui-protocol/ag-ui/tree/main/apps/client-cli-example/src) in TypeScript
 
 This tutorial uses CopilotKit to create a sample app backed by an ADK agent that demonstrates some of the features supported by AG-UI.
 
@@ -22815,7 +22815,7 @@ The BigQuery Agent Analytics SDK includes an [example Jupyter notebook](https://
 
 ## Feedback
 
-We welcome your feedback on BigQuery Agent Analytics. If you have questions, suggestions, or encounter any issues, please reach out to the team at [bqaa-feedback@google.com](mailto:bqaa-feedback@google.com).
+We welcome your feedback on BigQuery Agent Analytics. If you have questions, suggestions, or encounter any issues, please reach out to the team at [agent-feedback@example.com](mailto:agent-feedback@example.com).
 
 ## Additional resources
 
@@ -25278,7 +25278,7 @@ The server is hosted at `https://api.e2a.dev/mcp` and speaks Streamable HTTP —
 
 ## Use cases
 
-- **Give agents their own inboxes**: Provision dedicated email addresses (e.g. `support-bot@your-domain.com`) and let agents send and receive mail just like a teammate.
+- **Give agents their own inboxes**: Provision dedicated email addresses (e.g. `support-bot@example.com`) and let agents send and receive mail just like a teammate.
 - **Authenticated inbound**: Every incoming message carries SPF, DKIM, and DMARC evidence, so your agent can tell whether the sender is who they claim to be before acting on the content.
 - **Human-in-the-loop review**: Turn on a review hold and outbound messages are parked as `pending_review` until a human approves them — optionally with edits to the subject, body, or recipients before sending.
 - **Automate threaded conversations**: Reply with `In-Reply-To` and `References` headers preserved, so threads stay intact across multiple turns in the recipient's mail client.
@@ -25627,7 +25627,7 @@ The following code sample shows how to set these options for a ***LocalEnvironme
 
 ```python
 local_environment=LocalEnvironment(
-    working_dir="/tmp/my_agent_workspace",
+    working_dir=os.path.expanduser("~/.cache/adk/my_agent_workspace"),
     env_vars={"PORT": "8080", "LOG_LEVEL": "DEBUG"},
 )
 ```
@@ -37751,7 +37751,7 @@ To proceed, confirm that your agent code is configured as follows:
 
 1. Your go.mod and go.sum files are present in your project directory to manage dependencies.
 
-Refer to the following section for more details. You can also find a [sample app](https://github.com/google/adk-docs/tree/main/examples/go/cloud-run) in the Github repo.
+Refer to the following section for more details. You can also find a [sample app](https://github.com/google/adk-docs/tree/main/examples/golang/cloud-run) in the Github repo.
 
 1. Agent code is in a file called `CapitalAgent.java` within your agent directory.
 1. Your agent variable is global and follows the format `public static final BaseAgent ROOT_AGENT`.
@@ -38255,7 +38255,7 @@ export GOOGLE_CLOUD_PROJECT="your-gcp-project-id"
 export GOOGLE_CLOUD_LOCATION="us-central1"
 
 # Set the path to your agent's main Go file
-export AGENT_PATH="./examples/go/cloud-run/main.go"
+export AGENT_PATH="./examples/golang/cloud-run/main.go"
 
 # Set a name for your Cloud Run service
 export SERVICE_NAME="capital-agent-service"
@@ -39716,7 +39716,7 @@ Computing flags & preparing temp : Starting
 
 Deploying to Agent Engine : Finished successfully
 Cleaning temp : Starting
-    >  [Clean temp starting with /tmp/agentEngine_20260424_141040__2470352066]
+    >  [Clean temp starting with $HOME/.cache/adk/agentEngine_session]
 
 Cleaning temp : Finished successfully
 ```
@@ -50031,7 +50031,7 @@ root_agent = LlmAgent(
                         # IMPORTANT: This MUST be an ABSOLUTE path to a folder the
                         # npx process can access.
                         # Replace with a valid absolute path on your system.
-                        # For example: "/Users/youruser/accessible_mcp_files"
+                        # For example: "$HOME/workspace/accessible_mcp_files"
                         # or use a dynamically constructed absolute path:
                         os.path.abspath(TARGET_FOLDER_PATH),
                     ],
@@ -50188,7 +50188,7 @@ export const rootAgent = new LlmAgent({
                         // IMPORTANT: This MUST be an ABSOLUTE path to a folder the
                         // npx process can access.
                         // Replace with a valid absolute path on your system.
-                        // For example: "/Users/youruser/accessible_mcp_files"
+                        // For example: "$HOME/workspace/accessible_mcp_files"
                         TARGET_FOLDER_PATH,
                     ],
                 },
@@ -51114,7 +51114,7 @@ else:
     mcp_connection = StdioConnectionParams(
         server_params=StdioServerParameters(
             command='npx',
-            args=["-y", "@modelcontextprotocol/server-filesystem", "/tmp"]
+            args=["-y", "@modelcontextprotocol/server-filesystem", os.path.expanduser("~/.cache/adk-mcp")]
         )
     )
 
@@ -64858,10 +64858,10 @@ In the `a2a_basic` example, you will first need to expose the `check_prime_agent
 
 First, make sure you have Go installed and your environment is set up.
 
-You can clone and navigate to the [**`a2a_basic`** sample](https://github.com/google/adk-docs/tree/main/examples/go/a2a_basic) here:
+You can clone and navigate to the [**`a2a_basic`** sample](https://github.com/google/adk-docs/tree/main/examples/golang/a2a_basic) here:
 
 ```bash
-cd examples/go/a2a_basic
+cd examples/golang/a2a_basic
 ```
 
 As you'll see, the folder structure is as follows:
@@ -65469,10 +65469,10 @@ You can take an existing agent built using the Go ADK and make it A2A-compatible
 
 First, make sure you have Go installed and your environment is set up.
 
-You can clone and navigate to the [**`a2a_basic`** sample](https://github.com/google/adk-docs/tree/main/examples/go/a2a_basic) here:
+You can clone and navigate to the [**`a2a_basic`** sample](https://github.com/google/adk-docs/tree/main/examples/golang/a2a_basic) here:
 
 ```bash
-cd examples/go/a2a_basic
+cd examples/golang/a2a_basic
 ```
 
 As you'll see, the folder structure is as follows:

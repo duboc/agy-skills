@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 # Splice the icons and the diagram data into the template.
 #
 # Usage:
@@ -14,7 +14,7 @@
 # Rebuild after every edit to the data, then run the audit in
 # references/layout-rules.md. An empty result is the passing result.
 
-set -eu
+set -euo pipefail
 
 die() { printf '%s\n' "$*" >&2; exit 1; }
 

@@ -80,6 +80,7 @@ This downloads `llms.txt` and `llms-full.txt` directly from official ADK documen
 | **llms.txt** | Condensed official ADK API index |
 | **llms-full.txt** | Complete official ADK documentation dump |
 | **architecture-guide.md** | Agent composition, routing strategies, data flow, hierarchical patterns, common mistakes |
+| **callbacks-and-state-guide.md** | Lifecycle callbacks (`before_model`, `after_tool`), session state, memory banks, context caching & compaction |
 | **tooling-guide.md** | Function tools, MCP servers, database connectors, RAG, agent-as-tool, design principles |
 | **remote-agents.md** | A2A protocol: exposing and consuming agents across services, Go patterns, testing |
 | **testing-and-evaluation.md** | InMemoryRunner, eval datasets, 8 built-in metrics, user simulation, CI/CD integration |

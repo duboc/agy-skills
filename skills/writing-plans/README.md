@@ -93,3 +93,4 @@ Plans are saved to `docs/plans/YYYY-MM-DD-<feature-name>.md` and include:
 ## Included References
 
 - **plan-template.md** — The full plan document template with all required sections.
+- **task-decomposition-and-tdd-checklist.md** — Vertical slice sizing, Red-Green-Refactor TDD verification steps, and dependency graph ordering.

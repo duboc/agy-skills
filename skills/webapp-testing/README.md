@@ -101,3 +101,8 @@ available on the page?
 ## Included Scripts
 
 - **with_server.py** — Manages server lifecycle: starts one or more servers, waits for them to be ready, runs a command, then cleans up.
+
+## Included References
+
+- **playwright-selectors-and-assertions.md** — Role/label/test-id locator priority, auto-waiting assertions, and flake-free interaction patterns.
+- **visual-and-console-diagnostics.md** — Console error/pageerror capture, failed network request interception, and isolated `0700` screenshot artifacts.

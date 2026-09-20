@@ -110,7 +110,7 @@ filesystem_tools = MCPToolset(
     connection_params=StdioConnectionParams(
         server_params=StdioServerParameters(
             command="npx",
-            args=["-y", "@modelcontextprotocol/server-filesystem", "/tmp/workspace"],
+            args=["-y", "@modelcontextprotocol/server-filesystem", "./workspace"],
         ),
         timeout=30,
     ),

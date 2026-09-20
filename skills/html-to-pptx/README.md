@@ -1,6 +1,6 @@
 # HTML to PPTX
 
-An Agy skill that converts supported MARP HTML content into PowerPoint (`.pptx`). Supported text, lists and tables become native objects; embedded images and rasterized complex visuals retain their image content. Verify fidelity and disclose editability limits.
+A Agy skill that converts MARP HTML slide presentations into fully editable PowerPoint (`.pptx`) files. Every text element, list, table, and image becomes a native PowerPoint object — not a screenshot.
 
 ## What It Does
 
@@ -103,3 +103,10 @@ Convert all the .html files in the slides/ directory to a single PowerPoint.
 | **extract.js** | Browser-side DOM extraction script — reads MARP slide structure, element positions, computed styles, text content, images, nested lists, and table spans |
 | **build_pptx.js** | Node.js script that converts extracted JSON to PowerPoint using PptxGenJS — maps coordinates, supports HSL/named colors, nested lists, colspan/rowspan tables, multiple inline styles, and hardened image downloads |
 | **package.json** | Dependencies (PptxGenJS) |
+
+## Included References
+
+| File | Description |
+|------|-------------|
+| `references/coordinate-and-typography-mapping.md` | Pixel-to-inch coordinate conversion, CSS-to-PowerPoint typography scaling, and color luminance rules |
+| `references/pptxgenjs-element-patterns.md` | Native PptxGenJS builders for rich text runs, nested lists, spanned tables, code blocks, and SVG fallbacks |

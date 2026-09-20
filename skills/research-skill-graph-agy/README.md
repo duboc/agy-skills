@@ -54,3 +54,12 @@ curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/insta
 ```bash
 curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh | bash -s -- research-skill-graph-agy --scope user
 ```
+
+---
+
+## Included References
+
+| File | Description |
+|------|-------------|
+| `references/evidence-grading-and-synthesis.md` | E1–E4 source credibility rubric, multi-lens conflict resolution, and executive synthesis patterns |
+| `references/knowledge-graph-node-templates.md` | Markdown frontmatter schemas and bidirectional link templates for `.research/` concept, source, and project nodes |

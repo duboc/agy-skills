@@ -97,6 +97,11 @@ if [[ -z "$SKILL_NAME" ]]; then
   exit 1
 fi
 
+if [[ ! "$SKILL_NAME" =~ ^[a-z0-9-]+$ ]]; then
+  echo "Error: Invalid skill name '${SKILL_NAME}'. Only lowercase alphanumeric and hyphens allowed." >&2
+  exit 1
+fi
+
 if [[ "$SCOPE" != "user" && "$SCOPE" != "workspace" ]]; then
   echo "Error: --scope must be 'user' or 'workspace'" >&2
   exit 1
@@ -112,7 +117,9 @@ fi
 echo "Installing skill '${SKILL_NAME}' to ${INSTALL_DIR} ..."
 
 # --- Download and extract ---
+umask 077
 TMPDIR_PATH=$(mktemp -d)
+chmod 700 "$TMPDIR_PATH"
 trap 'rm -rf "$TMPDIR_PATH"' EXIT
 
 echo "Downloading from GitHub ..."

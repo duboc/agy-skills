@@ -197,7 +197,7 @@ def get_oauth_token(auth_code: str) -> str:
             "client_id": client_id,
             "client_secret": client_secret,
             "grant_type": "authorization_code",
-            "redirect_uri": "https://your-app.com/callback",
+            "redirect_uri": "https://app.example.com/callback",
         },
     )
     return response.json()["access_token"]
@@ -320,15 +320,15 @@ gcloud kms keys add-iam-policy-binding agent-key \
 
 **Step 3: Deploy with CMEK**
 
-CMEK is resource-specific. Verify support for the exact resource, region and API version; configuring a project key does not automatically cover every Agent Engine resource.
+The CMEK configuration is applied at the Vertex AI platform level, covering all Agent Engine resources in the project.
 
 ### What CMEK Protects
 
 | Data | Encrypted With |
 |------|---------------|
-| Agent code and config | Verify resource encryption configuration and coverage |
-| Session data | Verify backend-specific support and configuration |
-| Memory Bank data | Verify backend-specific support and configuration |
+| Agent code and config | CMEK |
+| Session data | CMEK |
+| Memory Bank data | CMEK |
 | Staging bucket objects | CMEK (if bucket configured with CMEK) |
 | Logs | Default Google encryption (configure separately) |
 

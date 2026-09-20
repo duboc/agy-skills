@@ -45,13 +45,15 @@ After the frontmatter, write the full instructions that Agy should follow when t
 
 Before submitting a PR, verify:
 
-- [ ] `SKILL.md` has valid YAML frontmatter with `name` and `description` fields
+- [ ] `SKILL.md` has valid YAML frontmatter with `name` and `description` fields and is `< 500` lines
 - [ ] The `name` field matches the directory name
-- [ ] `README.md` exists with usage examples
-- [ ] All scripts are executable and run on both macOS and Linux
+- [ ] `README.md` exists with usage examples and reference table
+- [ ] At least 2 decoupled reference files exist in `references/*.md` and are linked from `SKILL.md`
+- [ ] All scripts are executable (`chmod +x`), use `set -euo pipefail` (Bash) or `shell=False` (Python), and run on both macOS and Linux
+- [ ] `python3 scripts/validate_skills.py` passes all 5 Core Pillars (`27/27 PASS`)
 - [ ] The skill works when installed via `scripts/install.sh <skill-name>`
 - [ ] The skill works when copied manually to `~/.gemini/config/skills/<name>/`
-- [ ] No hardcoded absolute paths in any file
+- [ ] No hardcoded absolute paths (`/Users/<name>`), internal shortlinks, or non-RFC2606 emails in any file
 
 ## Pull Request Guidelines
 

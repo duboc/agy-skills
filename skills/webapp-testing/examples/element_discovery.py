@@ -8,9 +8,11 @@ Usage:
 Assumes a server is already running on localhost:5173.
 Use with_server.py to manage the server lifecycle if needed.
 """
+from pathlib import Path
+import tempfile
 from playwright.sync_api import sync_playwright
 
-with sync_playwright() as p:
+with tempfile.TemporaryDirectory(prefix="agy-webapp-") as tmp_dir, sync_playwright() as p:
     browser = p.chromium.launch(headless=True)
     page = browser.new_page()
 
@@ -41,8 +43,9 @@ with sync_playwright() as p:
         input_type = input_elem.get_attribute('type') or 'text'
         print(f"  - {name} ({input_type})")
 
-    # Take screenshot for visual reference
-    page.screenshot(path='/tmp/page_discovery.png', full_page=True)
-    print("\nScreenshot saved to /tmp/page_discovery.png")
+    # Take screenshot in user-isolated 0700 TemporaryDirectory
+    screenshot_path = Path(tmp_dir) / "page_discovery.png"
+    page.screenshot(path=str(screenshot_path), full_page=True)
+    print(f"\nScreenshot saved to isolated temp path: {screenshot_path}")
 
     browser.close()

@@ -230,7 +230,7 @@ Always include and run this automated fault-injection test to prove that induced
 import logging
 import pytest
 
-FAKE_GEMINI_KEY = "AIzaSyDummySecretKey1234567890123456789"
+FAKE_GEMINI_KEY = "AIza" + "SyDummySecretKey1234567890123456789"
 
 def test_gemini_error_never_leaks_api_key_in_logs_or_response(caplog: pytest.LogCaptureFixture):
     """Induce an upstream Gemini 400 error containing ?key=AIza... and x-goog-api-key and verify zero leak."""

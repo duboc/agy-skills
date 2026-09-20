@@ -8,7 +8,7 @@ An open-source, code-first toolkit for building, evaluating, and deploying sophi
 
 - [Get started](https://adk.dev/get-started/index.md)
 - [Technical Overview](https://adk.dev/get-started/about/index.md)
-- [Go](https://adk.dev/get-started/go/index.md)
+- [Go](https://adk.dev/get-started/golang/index.md)
 - [Google Cloud](https://adk.dev/get-started/google-cloud/index.md)
 - [Installation](https://adk.dev/get-started/installation/index.md)
 - [Java](https://adk.dev/get-started/java/index.md)

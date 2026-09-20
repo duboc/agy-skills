@@ -122,3 +122,4 @@ Remove the worktree for the auth feature — it's been merged
 | File | Description |
 |------|-------------|
 | **worktree-commands.md** | Complete git worktree command reference — creation, listing, removal, maintenance, common patterns, constraints, and troubleshooting |
+| **parallel-agent-isolation-patterns.md** | Multi-agent port offsets, isolated dependency caches, lockfile conflict avoidance, and cleanup lifecycle |

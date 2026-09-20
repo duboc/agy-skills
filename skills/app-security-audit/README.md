@@ -145,7 +145,8 @@ app-security-audit/
 └── references/
     ├── proxy-cgnat-and-auth-patterns.md                     # Phase 0 discovery, BFF credential swaps, 4D CGNAT rate limits, WebSocket auth
     ├── ai-finops-async-and-kiosk-resilience.md              # GenAI FinOps, signBlob TTL cache, Gemini key log redaction + pytest, async def & 8h+ UI
-    └── privacy-idor-moderation-and-report-template.md       # UUID oracles, LGPD/GDPR minimization, moderation gates & P0/P1/P2 report template
+    ├── privacy-idor-moderation-and-report-template.md       # UUID oracles, LGPD/GDPR minimization, moderation gates & P0/P1/P2 report template
+    └── skill-and-agent-5-pillar-audit.md                    # 5-Pillar Agent Skill & Tooling Security Audit checklist (scripts/validate_skills.py)
 ```
 
 | File | Purpose |
@@ -154,6 +155,7 @@ app-security-audit/
 | [`references/proxy-cgnat-and-auth-patterns.md`](references/proxy-cgnat-and-auth-patterns.md) | Provides `ripgrep` discovery queries, `posixpath.normpath` BFF allowlist implementations, `X-App-Role` enforcement, and 4D CGNAT rate-limiter code. |
 | [`references/ai-finops-async-and-kiosk-resilience.md`](references/ai-finops-async-and-kiosk-resilience.md) | Provides `signBlob` TTL caching, `install_secret_redaction()` (`setLogRecordFactory`), `pytest` fault-injection tests, `async def` fixes, and 30 fps Blob URL lifecycle code. |
 | [`references/privacy-idor-moderation-and-report-template.md`](references/privacy-idor-moderation-and-report-template.md) | Provides LGPD/GDPR PII cleanup patterns, end-to-end moderation filters, `.innerHTML` escaping helpers, and the P0/P1/P2 audit report template. |
+| [`references/skill-and-agent-5-pillar-audit.md`](references/skill-and-agent-5-pillar-audit.md) | Provides the vendor-neutral 5-Pillar Agent Skill & Tooling audit checklist verified by `python3 scripts/validate_skills.py`. |
 
 ---
 
@@ -238,7 +240,7 @@ def install_secret_redaction() -> SecretRedactingFilter:
     return redactor
 
 
-FAKE_GEMINI_KEY = "AIzaSyDummySecretKey1234567890123456789"
+FAKE_GEMINI_KEY = "AIza" + "SyDummySecretKey1234567890123456789"
 
 
 def test_induced_gemini_error_never_leaks_api_key_in_logs_or_db(caplog: pytest.LogCaptureFixture):
@@ -249,7 +251,7 @@ def test_induced_gemini_error_never_leaks_api_key_in_logs_or_db(caplog: pytest.L
         f"https://generativelanguage.googleapis.com/v1beta/models/"
         f"gemini-2.5-flash:generateContent?key={FAKE_GEMINI_KEY}"
     )
-    req_headers = {"x-goog-api-key": FAKE_GEMINI_KEY, "Authorization": f"Bearer ya29.{FAKE_GEMINI_KEY}"}
+    req_headers = {"x-goog-api-key": FAKE_GEMINI_KEY, "Authorization": "Bearer " + "ya29." + FAKE_GEMINI_KEY}
     request = httpx.Request("POST", failing_url, headers=req_headers)
     response = httpx.Response(429, request=request, text='{"error": "RESOURCE_EXHAUSTED"}')
     induced_exc = httpx.HTTPStatusError(

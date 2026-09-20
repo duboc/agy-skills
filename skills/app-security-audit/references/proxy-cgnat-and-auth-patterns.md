@@ -176,7 +176,7 @@ def require_device_session_on_post(request: Request, secret: str = APP_SIGNING_S
     return device_id
 
 def canonical_email(raw_email: str) -> str:
-    """Normalize email for Layer-2 cooldown so user+1@gmail.com or u.s.e.r@gmail.com cannot bypass limits."""
+    """Normalize email for Layer-2 cooldown so user+1@example.com or u.s.e.r@example.com cannot bypass limits."""
     clean = (raw_email or "").strip().lower()
     if "@" not in clean:
         return clean

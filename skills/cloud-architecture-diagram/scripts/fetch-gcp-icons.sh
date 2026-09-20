@@ -1,12 +1,14 @@
-#!/bin/sh
+#!/usr/bin/env bash
 # Fetch Google Cloud product icons and emit the ICONS object.
 #
 # The icons come from the Iconify `gcp` collection, which mirrors Google Cloud's
 # product icons and returns each icon's path data through a JSON API, so nothing
-# here has to parse SVG. Official current and legacy icon ZIPs are available at
-# cloud.google.com/icons. Check this convenience mirror against the chosen family.
+# here has to parse SVG. It is the only route a script can take: Google ships the
+# set as a ZIP for people, and cloud.google.com/icons answers a program with a
+# page shell rather than the files.
 #
-# Coverage changes; missing assets can come from cloud.google.com/icons. The marks stay
+# The mirror carries 214 icons and Google's own set carries 226, so a product it
+# does not have comes from cloud.google.com/icons by hand. The marks stay
 # Google's: Iconify's Apache 2.0 label is the wrong frame for a trademark, and
 # Google's terms are a permission to reference their technology accurately,
 # under their brand guidelines.
@@ -22,7 +24,7 @@
 # Names that are not in the `gcp` set are looked up in `logos` instead, which
 # is where the plain Google Cloud wordmark lives.
 
-set -eu
+set -euo pipefail
 
 API="https://api.iconify.design"
 

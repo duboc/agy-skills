@@ -99,7 +99,7 @@ from a2a.types import AgentCard
 
 custom_card = AgentCard(
     name="inventory_service",
-    url="https://inventory.internal.company.com",
+    url="https://inventory.example.com",
     description="Production inventory management service",
     version="2.1.0",
     capabilities={},

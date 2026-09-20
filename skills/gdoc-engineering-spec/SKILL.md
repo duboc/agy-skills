@@ -60,7 +60,7 @@ Consult [`references/spec-schema-and-examples.md`](references/spec-schema-and-ex
 - **Archetype D:** Operational Runbook & Cutover Playbook (Topology, Cutover Steps, Troubleshooting, Rollback)
 
 ### Step 2: Author the Declarative `spec.json`
-Create a JSON file (e.g., `/tmp/spec_doc.json` or `spec_doc.json` in the workspace) defining the `title` and `tabs` array using the building blocks supported by `build_gdoc_spec.py`:
+Create a JSON file (e.g., `$HOME/.cache/gdoc-spec/spec_doc.json` or `spec_doc.json` in the workspace) defining the `title` and `tabs` array using the building blocks supported by `build_gdoc_spec.py`:
 - `title`: `{ "type": "title", "title": "...", "subtitle": "...", "metadata": [{"label": "Status", "value": "HOMOLOGAÇÃO", "style": "badge_amber"}] }`
 - `callout`: `{ "type": "callout", "theme": "amber|blue|green|red", "title": "⚠️ ...", "lines": ["• ..."] }`
 - `heading`: `{ "type": "heading", "level": 1|2|3, "text": "1. ..." }`

@@ -173,3 +173,8 @@ drawings of equipment and rooms, reach for `technical-drawing`.
 
 It does not make generic HTML explainers. For diffs, plans, recaps and data
 tables, reach for `visual-explainer`.
+
+## Additional References
+
+- [`references/google-cloud.md`](references/google-cloud.md)
+- [`references/visual-design.md`](references/visual-design.md)
