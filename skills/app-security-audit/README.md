@@ -12,7 +12,7 @@ Perform end-to-end attack-surface discovery, route & BFF proxy mapping, Google C
 - **AI FinOps, Quota DoS & Induced Gemini API Key Error-Log Leak Testing**:
   - Protects multi-call Gemini / Imagen / Live API pipelines against Denial-of-Wallet (`X-Resource-Owner-Token`, terminal state locks, attempt caps, semaphores).
   - Eliminates IAM `signBlob` & GCE Metadata Server quota exhaustion via thread-safe in-memory Signed URL TTL caching and OAuth credential reuse.
-  - Prevents & tests **Gemini API Key (`?key=AIza...` / `x-goog-api-key`) leakage in induced error logs and stack traces** (`httpx.HTTPStatusError`, `SecretRedactingFilter`, `sanitize_exception`, and `pytest` `caplog` fault-injection recipes).
+  - Prevents & tests **Gemini API Key (`?key=AIza...` / `x-goog-api-key`) leakage in induced error logs and stack traces** (`httpx.HTTPStatusError`, `install_secret_redaction`, `SecretRedactingFilter`, `sanitize_exception`, and `pytest` `caplog` fault-injection recipes).
   - Defends Visual & Live Audio/TTS pipelines against multi-modal prompt injection and client-payload early-return bypasses.
 - **Async Event-Loop & 8h+ Kiosk/Broadcast Resilience**: Detects FastAPI `async def` synchronous I/O freezes, hidden `GET` hardware mutations, `POST` auto-retry toggle bugs, dual-screen `auto-finish` races, 30 fps `activeBlobUrl`/`loadingBlobUrl` memory leaks, `?mode=audio` WebSocket bandwidth waste, and zombie viewer queues.
 - **LGPD/GDPR Privacy, UUID Oracles & End-to-End Moderation**: Eliminates `409 Conflict` UUID oracles, orphaned participant PII, unmoderated fallback/voice leaks (`Team #XXXX` masking), cross-station contamination, and `.innerHTML` DOM XSS.

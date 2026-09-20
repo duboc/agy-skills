@@ -141,19 +141,21 @@ An attacker or auditor can intentionally induce a Gemini API error (e.g., submit
 ### Required Defense & Redaction Pattern
 1. **Pass API Keys via Header (`x-goog-api-key`) or Vertex AI ADC — Never URL Query Strings (`?key=`)**:
    - In REST calls, pass `headers={"x-goog-api-key": GEMINI_API_KEY}` instead of `?key=...` so `exc.request.url` never contains the secret.
-2. **Attach a `SecretRedactingFilter` to Python `logging` + `sanitize_exception(exc)`**:
+2. **Install Process-Wide Log Redaction (`install_secret_redaction()`) + `sanitize_exception(exc)`**:
+   - **Critical Python `logging` Pitfall**: Calling `logging.getLogger().addFilter(SecretRedactingFilter())` alone **does NOT redact child loggers** (`logging.getLogger(__name__)`, `logging.getLogger("httpx")`, `logging.getLogger("uvicorn")`)! Python's `Logger.callHandlers()` walks `c = c.parent` and invokes `hdlr.handle(record)` on ancestor handlers without calling `c.filter(record)` on ancestor `Logger` instances.
+   - Always wrap `logging.setLogRecordFactory` AND attach `SecretRedactingFilter` to root handlers via `install_secret_redaction()` so **every** `LogRecord` is scrubbed at creation time before reaching `stdout`, Cloud Logging, or `pytest` `caplog`.
 
 ```python
 import logging
 import re
 
 _SECRET_PATTERNS: list[tuple[re.Pattern[str], str]] = [
-    # 1. Query string ?key=... or &key=...
-    (re.compile(r"([?&](?:api_)?key=)[^&\s\"']+", re.IGNORECASE), r"\1[REDACTED]"),
-    # 2. x-goog-api-key header in serialized dicts or logs
+    # 1. Query string ?key=... or &key=... (including URL-encoded %3Fkey= / %26key=)
+    (re.compile(r"((?:[?&]|%(?:3[fF]|26))(?:api_)?key=)[^&\s\"'(),\]}>]+", re.IGNORECASE), r"\1[REDACTED]"),
+    # 2. x-goog-api-key header in serialized dicts, HTTP headers, or logs
     (re.compile(r"(x-goog-api-key['\"]?\s*[:=]\s*['\"]?)[^'\"\s,}]+", re.IGNORECASE), r"\1[REDACTED]"),
     # 3. OAuth2 / Bearer tokens (ya29., JWTs, master tokens)
-    (re.compile(r"(Bearer\s+)[A-Za-z0-9._\-]+", re.IGNORECASE), r"\1[REDACTED]"),
+    (re.compile(r"(Bearer\s+)[A-Za-z0-9._\-~+/]+=*", re.IGNORECASE), r"\1[REDACTED]"),
     # 4. Standalone Google / Gemini API keys (AIza + 35 base64url chars) anywhere else
     (re.compile(r"AIza[0-9A-Za-z_-]{35}"), "AIza[REDACTED]"),
 ]
@@ -166,16 +168,33 @@ def sanitize_secrets(text: str) -> str:
     return cleaned
 
 def sanitize_exception(exc: BaseException) -> str:
-    """Return a safe, secret-redacted description of an exception for logs/DB."""
+    """Return a safe, secret-redacted description of an exception and scrub exc.args in place."""
+    if getattr(exc, "args", None):
+        try:
+            exc.args = tuple(
+                sanitize_secrets(a) if isinstance(a, str) else a
+                for a in exc.args
+            )
+        except Exception:
+            pass
     return f"{type(exc).__name__}: {sanitize_secrets(str(exc))}"
 
 class SecretRedactingFilter(logging.Filter):
-    """Logging filter that scrubs API keys from log messages, args, and tracebacks."""
+    """Logging filter that scrubs API keys from log messages, args, exc.args, and tracebacks."""
     def filter(self, record: logging.LogRecord) -> bool:
         record.msg = sanitize_secrets(record.getMessage())
         record.args = ()
         if record.exc_info:
-            # Format and scrub traceback text so ?key=AIza... in URL frames is redacted
+            if isinstance(record.exc_info, tuple) and len(record.exc_info) == 3:
+                exc_val = record.exc_info[1]
+                if isinstance(exc_val, BaseException) and getattr(exc_val, "args", None):
+                    try:
+                        exc_val.args = tuple(
+                            sanitize_secrets(a) if isinstance(a, str) else a
+                            for a in exc_val.args
+                        )
+                    except Exception:
+                        pass
             formatter = logging.Formatter()
             record.exc_text = sanitize_secrets(formatter.formatException(record.exc_info))
             record.exc_info = None
@@ -183,12 +202,29 @@ class SecretRedactingFilter(logging.Filter):
             record.exc_text = sanitize_secrets(record.exc_text)
         return True
 
-# Attach to root logger at startup:
-logging.getLogger().addFilter(SecretRedactingFilter())
+def install_secret_redaction() -> SecretRedactingFilter:
+    """Install secret redaction across LogRecordFactory + root handlers so all child loggers are scrubbed."""
+    redactor = SecretRedactingFilter()
+    root = logging.getLogger()
+    root.addFilter(redactor)
+    for handler in root.handlers:
+        handler.addFilter(redactor)
+    old_factory = logging.getLogRecordFactory()
+    if not getattr(old_factory, "_secret_redacting", False):
+        def _redacting_factory(*args, **kwargs):
+            record = old_factory(*args, **kwargs)
+            redactor.filter(record)
+            return record
+        _redacting_factory._secret_redacting = True
+        logging.setLogRecordFactory(_redacting_factory)
+    return redactor
+
+# Call once at application startup:
+install_secret_redaction()
 ```
 
 ### Active Fault-Injection Test Recipe (`pytest` + `caplog`)
-Always include and run this automated fault-injection test to prove that induced Gemini API failures never leak `GEMINI_API_KEY` into HTTP responses, DB error fields, or application logs:
+Always include and run this automated fault-injection test to prove that induced Gemini API failures logged from child modules never leak `GEMINI_API_KEY` into HTTP responses, DB error fields, or application logs:
 
 ```python
 import logging
@@ -198,51 +234,52 @@ FAKE_GEMINI_KEY = "AIzaSyDummySecretKey1234567890123456789"
 
 def test_gemini_error_never_leaks_api_key_in_logs_or_response(caplog: pytest.LogCaptureFixture):
     """Induce an upstream Gemini 400 error containing ?key=AIza... and x-goog-api-key and verify zero leak."""
+    install_secret_redaction()
     caplog.set_level(logging.ERROR)
-    logger = logging.getLogger("app.gemini_test")
-    logger.addFilter(SecretRedactingFilter())
+    # Use a child module logger (without manually adding a filter to it) to verify propagation redaction
+    child_logger = logging.getLogger("app.services.gemini_client")
 
     failing_url = (
         f"https://generativelanguage.googleapis.com/v1beta/models/"
         f"gemini-2.5-flash:generateContent?key={FAKE_GEMINI_KEY}"
     )
+    req_headers = {"x-goog-api-key": FAKE_GEMINI_KEY, "Authorization": f"Bearer ya29.{FAKE_GEMINI_KEY}"}
 
-    # 1. Simulate failing Gemini SDK/HTTP call (supports httpx.HTTPStatusError or stdlib fallback)
+    # 1. Simulate failing Gemini SDK/HTTP call and log RAW exc + RAW headers on child logger
     try:
-        import httpx
-        req = httpx.Request("POST", failing_url, headers={"x-goog-api-key": FAKE_GEMINI_KEY})
-        resp = httpx.Response(400, request=req, json={"error": {"message": "Invalid image payload"}})
-        raise httpx.HTTPStatusError(
-            f"Client error '400 Bad Request' for url '{failing_url}' (raw_key={FAKE_GEMINI_KEY})",
-            request=req,
-            response=resp,
-        )
-    except ImportError:
         try:
+            import httpx
+            req = httpx.Request("POST", failing_url, headers=req_headers)
+            resp = httpx.Response(400, request=req, json={"error": {"message": "Invalid image payload"}})
+            raise httpx.HTTPStatusError(
+                f"Client error '400 Bad Request' for url '{failing_url}' (raw_key={FAKE_GEMINI_KEY})",
+                request=req,
+                response=resp,
+            )
+        except ImportError:
             raise RuntimeError(
                 f"httpx.HTTPStatusError: Client error '400 Bad Request' for url '{failing_url}' "
-                f"headers={{'x-goog-api-key': '{FAKE_GEMINI_KEY}'}} raw_key={FAKE_GEMINI_KEY}"
+                f"(raw_key={FAKE_GEMINI_KEY})"
             )
-        except Exception as exc:
-            safe_err = sanitize_exception(exc)
-            logger.exception("Gemini pipeline failed: %s", safe_err)
-            persisted_db_status = {"photo_status": "error", "photo_error": "generation_failed"}
     except Exception as exc:
+        # Even if a developer passes raw `exc` and raw `req_headers` directly to logger.exception:
+        child_logger.exception("Gemini pipeline failed: %s | headers=%s", exc, req_headers)
         safe_err = sanitize_exception(exc)
-        logger.exception("Gemini pipeline failed: %s", safe_err)
         persisted_db_status = {"photo_status": "error", "photo_error": "generation_failed"}
 
-    # 2. Assert zero leakage in DB / API status payload & sanitized exception string
+    # 2. Assert zero leakage in DB / API status payload, sanitized exception, and in-place str(exc)
     assert FAKE_GEMINI_KEY not in str(persisted_db_status)
     assert FAKE_GEMINI_KEY not in safe_err
     assert "AIzaSyDummySecretKey" not in safe_err
     assert "?key=[REDACTED]" in safe_err
     assert "AIza[REDACTED]" in safe_err
 
-    # 3. Assert zero leakage in captured application logs & tracebacks (caplog)
+    # 3. Assert zero leakage in captured application logs, header dicts & tracebacks (caplog)
     assert FAKE_GEMINI_KEY not in caplog.text
     assert "AIzaSyDummySecretKey" not in caplog.text
     assert "?key=[REDACTED]" in caplog.text
+    assert "x-goog-api-key': '[REDACTED]'" in caplog.text
+    assert "Bearer [REDACTED]" in caplog.text
     assert "AIza[REDACTED]" in caplog.text
 ```
 
