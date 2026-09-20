@@ -6,14 +6,14 @@
 
 Each skill lives under `skills/<skill-name>/` with the following layout:
 
-```
+```text
 skills/<skill-name>/
-├── SKILL.md              (required — entry point with YAML frontmatter)
-├── README.md             (required — human-readable docs)
-├── references/           (optional — templates, guides, cheat sheets)
-│   └── *.md
-└── scripts/              (optional — helper scripts the skill can invoke)
-    └── *.sh
+├── SKILL.md              (required — entry point with YAML frontmatter, < 500 lines)
+├── README.md             (required — human-readable docs & reference table)
+├── references/           (required — >= 2 decoupled guides, templates, or cheat sheets)
+│   └── *.md | *.txt
+└── scripts/              (optional — helper scripts with chmod +x and set -euo pipefail / shell=False)
+    └── *.sh | *.py | *.js
 ```
 
 ### SKILL.md Format

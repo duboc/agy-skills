@@ -86,42 +86,35 @@ class ValidateSkillsTests(unittest.TestCase):
         self.assertTrue(any("go/internal-doc" in e for e in errs), errs)
 
     def test_agents_md_and_gemini_md_routing_and_link_integrity(self):
-        import re
+        errs = validate_skills.check_root_workspace_files(REPO_ROOT)
+        self.assertEqual(errs, [], f"Root workspace governance validation failed: {errs}")
 
-        skill_names = sorted(
-            d.name for d in (REPO_ROOT / "skills").iterdir() if d.is_dir() and not d.name.startswith(".")
+    def test_root_workspace_validator_catches_broken_anchor_and_missing_reference(self):
+        fake_root = Path(self.tmp.name) / "fake-repo"
+        (fake_root / "skills" / "sample-skill" / "references").mkdir(parents=True)
+        (fake_root / "scripts").mkdir(parents=True)
+        (fake_root / "skills" / "sample-skill" / "SKILL.md").write_text(VALID_SKILL_MD, encoding="utf-8")
+        (fake_root / "skills" / "sample-skill" / "references" / "ref-one.md").write_text("# 1\n", encoding="utf-8")
+        (fake_root / "skills" / "sample-skill" / "references" / "ref-two.md").write_text("# 2\n", encoding="utf-8")
+        (fake_root / "scripts" / "install.sh").write_text("  sample-skill   Desc\n", encoding="utf-8")
+        # AGENTS.md omits ref-two.md and has a broken #non-existent-anchor
+        (fake_root / "AGENTS.md").write_text(
+            "# Heading\n[bad](#non-existent-anchor)\nskills/sample-skill/SKILL.md\nskills/sample-skill/references/ref-one.md\n",
+            encoding="utf-8",
         )
-        self.assertEqual(len(skill_names), 28)
+        (fake_root / "GEMINI.md").write_text(
+            "# Heading\nskills/sample-skill/SKILL.md\nskills/sample-skill/references/ref-one.md\nskills/sample-skill/references/ref-two.md\n",
+            encoding="utf-8",
+        )
+        (fake_root / "README.md").write_text("# Readme\nskills/sample-skill/\n", encoding="utf-8")
+        (fake_root / "CONTRIBUTING.md").write_text("# Contributing\n", encoding="utf-8")
 
-        for doc_name in ("AGENTS.md", "GEMINI.md", "README.md"):
-            doc_path = REPO_ROOT / doc_name
-            self.assertTrue(doc_path.exists(), f"Missing {doc_name}")
-            content = doc_path.read_text(encoding="utf-8")
-
-            for sname in skill_names:
-                expected = f"skills/{sname}/SKILL.md" if doc_name != "README.md" else f"skills/{sname}/"
-                self.assertIn(
-                    expected,
-                    content,
-                    f"{doc_name} missing entry for {expected}",
-                )
-
-            for match in re.finditer(r"\]\(([^)#\s]+)\)", content):
-                target = match.group(1)
-                if target.startswith(("http://", "https://", "mailto:", "file://")):
-                    continue
-                resolved = (REPO_ROOT / target).resolve()
-                self.assertTrue(resolved.exists(), f"{doc_name} contains broken relative link: {target}")
-
-            for i, line in enumerate(content.splitlines(), 1):
-                um = re.search(r"(?:file://)?/Users/[a-zA-Z0-9_.-]+", line)
-                if um and "<" not in um.group(0):
-                    self.fail(f"{doc_name}:{i}: hardcoded personal path '{um.group(0)}'")
-                for em in re.finditer(r"\b[a-zA-Z0-9._%+-]+@([a-zA-Z0-9.-]+\.[a-zA-Z]{2,})\b", line):
-                    domain = em.group(1).lower()
-                    self.assertIn(domain, validate_skills.ALLOWED_EMAIL_DOMAINS, f"{doc_name}:{i}: non-RFC2606 email")
+        errs = validate_skills.check_root_workspace_files(fake_root)
+        self.assertTrue(any("broken heading anchor: #non-existent-anchor" in e for e in errs), errs)
+        self.assertTrue(any("AGENTS.md missing reference link 'skills/sample-skill/references/ref-two.md'" in e for e in errs), errs)
 
 
 if __name__ == "__main__":
     unittest.main()
+
 

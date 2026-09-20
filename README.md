@@ -8,7 +8,7 @@ A curated repository of modular, production-grade skills for **Agy** (`agy`) and
 
 - [Overview](#overview)
 - [Prerequisites](#prerequisites)
-- [Quickstart Installation](#quickstart-installation)
+- [Quickstart Installation & Antigravity `AGENTS.md` Discovery](#quickstart-installation--antigravity-agentsmd-discovery)
 - [Skill Catalog](#skill-catalog)
 - [Featured Skill: Google Cloud, Generative AI & Live-Event Security Audit (`app-security-audit`)](#featured-skill-google-cloud-generative-ai--live-event-security-audit-app-security-audit)
 - [Skill Reference by Category](#skill-reference-by-category)
@@ -19,6 +19,7 @@ A curated repository of modular, production-grade skills for **Agy** (`agy`) and
   - [5. Presentations & Executive Communication](#5-presentations--executive-communication)
   - [6. Software Engineering, Testing & Developer Operations](#6-software-engineering-testing--developer-operations)
 - [Database Migration Toolkit](#database-migration-toolkit)
+- [5-Pillar Skill Security & Context Hygiene Standard (`scripts/validate_skills.py`)](#5-pillar-skill-security--context-hygiene-standard-scriptsvalidate_skillspy)
 - [Contributing](#contributing)
 - [License](#license)
 

@@ -219,7 +219,7 @@ Refer to `references/worktree-commands.md` for the complete command reference.
 ## Guidelines
 
 - **Never skip ignore verification** for project-local worktree directories. Worktree contents appearing in `git status` or getting committed is a serious problem.
-- **Never assume the directory location.** Follow the priority order: existing directory > GEMINI.md preference > ask the user.
+- **Never assume the directory location.** Follow the priority order: existing directory > `AGENTS.md` / `GEMINI.md` preference > ask the user.
 - **Report baseline failures.** Investigate whether they block the requested work; continue independent work within existing authorization rather than treating every pre-existing failure as a new approval gate.
 - **Auto-detect, don't guess.** Only run setup commands that match detected project files. Do not assume a project uses npm just because it has JavaScript files.
 - **Report the full path.** The user needs to know exactly where the worktree was created so they can navigate to it.

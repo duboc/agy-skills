@@ -314,6 +314,104 @@ def check_pillar_5_context_hygiene(skill_dir: Path) -> Tuple[int, bool, int, Lis
     return lines_count, has_readme, ref_count, errors
 
 
+def github_slug(heading_text: str) -> str:
+    s = heading_text.strip().lower()
+    s = re.sub(r"[`*~]", "", s)
+    s = re.sub(r"[^\w\s-]", "", s)
+    s = re.sub(r"\s", "-", s)
+    return s
+
+
+def check_root_workspace_files(repo_root: Path = REPO_ROOT) -> List[str]:
+    """Validate AGENTS.md, GEMINI.md, README.md, CONTRIBUTING.md, and scripts/install.sh."""
+    errors: List[str] = []
+    skills_dir = repo_root / "skills"
+    skill_dirs = sorted([d for d in skills_dir.iterdir() if d.is_dir() and not d.name.startswith(".")])
+    skill_names = [d.name for d in skill_dirs]
+
+    root_docs = ("AGENTS.md", "GEMINI.md", "README.md", "CONTRIBUTING.md")
+    install_sh = repo_root / "scripts" / "install.sh"
+    if not install_sh.exists():
+        errors.append("Missing scripts/install.sh")
+    else:
+        install_text = install_sh.read_text(encoding="utf-8", errors="replace")
+        for sname in skill_names:
+            if not re.search(rf"^\s+{re.escape(sname)}\s+", install_text, re.MULTILINE):
+                errors.append(f"scripts/install.sh usage catalog missing skill '{sname}'")
+
+    user_path_re = re.compile(r"(?:file://)?/Users/[a-zA-Z0-9_.-]+")
+    go_link_re = re.compile(r"(?<![a-zA-Z0-9_./-])go/[a-zA-Z0-9_/-]+")
+    email_re = re.compile(r"\b[a-zA-Z0-9._%+-]+@([a-zA-Z0-9.-]+\.[a-zA-Z]{2,})\b")
+    bad_tmp_re = re.compile(r"(?<![\w$])/tmp/[a-zA-Z0-9_.-]+")
+
+    for doc_name in root_docs:
+        doc_path = repo_root / doc_name
+        if not doc_path.exists():
+            errors.append(f"Missing {doc_name}")
+            continue
+        content = doc_path.read_text(encoding="utf-8", errors="replace")
+
+        if doc_name in ("AGENTS.md", "GEMINI.md"):
+            for sd in skill_dirs:
+                expected_skill_md = f"skills/{sd.name}/SKILL.md"
+                if expected_skill_md not in content:
+                    errors.append(f"{doc_name} missing routing entry for '{expected_skill_md}'")
+                refs_dir = sd / "references"
+                if refs_dir.exists():
+                    for rf in sorted(refs_dir.iterdir()):
+                        if rf.is_file() and rf.suffix in {".md", ".txt"}:
+                            expected_ref = f"skills/{sd.name}/references/{rf.name}"
+                            if expected_ref not in content:
+                                errors.append(f"{doc_name} missing reference link '{expected_ref}'")
+        elif doc_name == "README.md":
+            for sname in skill_names:
+                expected_dir = f"skills/{sname}/"
+                if expected_dir not in content:
+                    errors.append(f"{doc_name} missing skill entry for '{expected_dir}'")
+
+        headings = set()
+        for line in content.splitlines():
+            hm = re.match(r"^#{1,6}\s+(.*)$", line)
+            if hm:
+                headings.add(github_slug(hm.group(1)))
+
+        for match in re.finditer(r"\]\(([^)\s]+)\)", content):
+            raw_target = match.group(1)
+            if raw_target.startswith(("http://", "https://", "mailto:", "file://")):
+                continue
+            if raw_target.startswith("#"):
+                anchor = raw_target[1:]
+                if anchor not in headings:
+                    errors.append(f"{doc_name} contains broken heading anchor: #{anchor}")
+                continue
+            path_part = raw_target.split("#", 1)[0]
+            if not path_part or "<" in path_part or "{" in path_part or "$" in path_part:
+                continue
+            resolved = (repo_root / path_part).resolve()
+            if not resolved.exists():
+                errors.append(f"{doc_name} contains broken relative link: {path_part}")
+
+        for i, line in enumerate(content.splitlines(), 1):
+            um = user_path_re.search(line)
+            if um and "<" not in um.group(0):
+                errors.append(f"{doc_name}:{i}: hardcoded personal path '{um.group(0)}'")
+            gm = go_link_re.search(line)
+            if gm and not gm.group(0).startswith(("go/src", "go/bin", "go/pkg", "go/doc")):
+                errors.append(f"{doc_name}:{i}: internal shortlink '{gm.group(0)}'")
+            tm = bad_tmp_re.search(line)
+            if tm and "<" not in tm.group(0):
+                errors.append(f"{doc_name}:{i}: forbidden shared /tmp path '{tm.group(0)}'")
+            for em in email_re.finditer(line):
+                full_email = em.group(0)
+                domain = em.group(1).lower()
+                if full_email.startswith(("git@", "npm@")) or domain.endswith(".gserviceaccount.com"):
+                    continue
+                if domain not in ALLOWED_EMAIL_DOMAINS:
+                    errors.append(f"{doc_name}:{i}: non-RFC2606 email '{full_email}'")
+
+    return errors
+
+
 def main() -> int:
     skill_dirs = sorted([d for d in SKILLS_DIR.iterdir() if d.is_dir() and not d.name.startswith(".")])
     header = (
@@ -360,7 +458,15 @@ def main() -> int:
             f"{'PASS' if not p5_errs else 'FAIL':^6} | {'PASS' if ok else 'FAIL':^6}"
         )
 
+    root_errs = check_root_workspace_files(REPO_ROOT)
+    if root_errs:
+        all_failures["ROOT_WORKSPACE_DOCS"] = [("Root Workspace Governance", e) for e in root_errs]
+
     print(sep)
+    print(
+        f"Root Workspace Docs (AGENTS.md, GEMINI.md, README.md, CONTRIBUTING.md, scripts/install.sh): "
+        f"{'PASS' if not root_errs else 'FAIL'}"
+    )
     print(f"Summary: {passed_count}/{len(skill_dirs)} skills passed all 5 Core Pillars.")
 
     if all_failures:
@@ -377,3 +483,4 @@ def main() -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
+
