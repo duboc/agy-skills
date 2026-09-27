@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Google Cloud Zen Presentation</title>
+  <link rel="stylesheet" href="gcloud-theme.css">
+</head>
+<body>
+  <section class="slide title">
+    <h1>Edge Resilience at Live Events</h1>
+    <p>Eliminating Venue Wi-Fi CGNAT Lockouts Without Weakening Rate Limits</p>
+    <aside class="notes">
+      Open with the core promise: high-density live events break naive IP rate limiters, and the fix is architectural rather than raising quotas blindly.
+    </aside>
+  </section>
+
+  <section class="slide stats">
+    <h1>98%</h1>
+    <h2>Legitimate attendees locked out when 300 devices share one venue NAT IP</h2>
+    <aside class="notes">
+      State the hero number clearly: a flat 5 req/10m IP limit blocks every attendee after the 5th person on shared venue Wi-Fi.
+    </aside>
+  </section>
+
+  <section class="slide invert lead">
+    <h1>What if rate limiting identified the device before the POST ever fired?</h1>
+    <aside class="notes">
+      Pause for two seconds on the pivot slide. Let the question land before moving to the mechanism.
+    </aside>
+  </section>
+
+  <section class="slide">
+    <h2>A signed GET session cookie isolates each attendee behind shared CGNAT</h2>
+    <p>Four-dimensional rate limiting combines <strong>device session</strong>, <strong>email cooldown</strong>, and <strong>split IP burst/sustained buckets</strong>.</p>
+    <aside class="notes">
+      Walk through how the initial GET request issues an HttpOnly signed cookie so subsequent POST submissions are metered per device.
+    </aside>
+  </section>
+
+  <section class="slide closing">
+    <h1>98% blocked becomes 100% isolated</h1>
+    <p>Deploy 4D CGNAT rate limiting before the next live event</p>
+    <aside class="notes">
+      Return to the opening 98% metric and close with the concrete deployment action.
+    </aside>
+  </section>
+</body>
+</html>

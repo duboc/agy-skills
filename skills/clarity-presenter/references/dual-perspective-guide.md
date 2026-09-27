@@ -102,45 +102,46 @@ Adjust the emphasis based on who is in the room.
 
 ### Technical-Heavy Example
 
-```markdown
-## Istio sidecar proxies intercept all pod-to-pod traffic for mTLS
+```html
+<section class="slide">
+  <h2>Istio sidecar proxies intercept all pod-to-pod traffic for mTLS</h2>
+  <ul>
+    <li>Envoy proxy injected automatically via admission webhook</li>
+    <li>Certificate rotation every 24 hours via workload identity</li>
+    <li>Zero application code changes required</li>
+  </ul>
+</section>
 
-- Envoy proxy injected automatically via admission webhook
-- Certificate rotation every 24 hours via citadel
-- Zero application code changes required
-
----
-
-<!-- _class: invert -->
-
-## Automated encryption eliminates internal-traffic audit findings
-
+<section class="slide invert">
+  <h2>Automated encryption eliminates internal-traffic audit findings</h2>
+</section>
 ```
 
 ### Business-Heavy Example
 
-```markdown
-## Service mesh encrypts all internal traffic without code changes
+```html
+<section class="slide">
+  <h2>Service mesh encrypts all internal traffic without code changes</h2>
+</section>
 
----
-
-<!-- _class: invert -->
-
-## Automated encryption eliminated 3 audit findings and saves 120 engineering hours per compliance cycle
-
-- SOC 2 internal-traffic requirement: auto-satisfied
-- PCI DSS encryption mandate: covered by default
-- Annual audit prep reduced from 2 weeks to 2 days
+<section class="slide invert">
+  <h2>Automated encryption eliminated 3 audit findings and saves 120 engineering hours per compliance cycle</h2>
+  <ul>
+    <li>SOC 2 internal-traffic requirement: auto-satisfied</li>
+    <li>PCI DSS encryption mandate: covered by default</li>
+    <li>Annual audit prep reduced from 2 weeks to 2 days</li>
+  </ul>
+</section>
 ```
 
 ## Visual Distinction Rules
 
-| Slide Type | Background | Class | Headline Format |
-|-----------|------------|-------|-----------------|
-| Technical | White (default) | *(none)* | `## [Technical assertion]` |
-| Business | Dark grey | `invert` | `## [Business assertion]` |
-| Business (alt) | Blue | `section` | `## [Business assertion]` |
+| Slide Type | Background | HTML Container | Headline Format |
+|-----------|------------|----------------|-----------------|
+| Technical | White (default) | `<section class="slide">` | `<h2>[Technical assertion]</h2>` |
+| Business | Dark grey (`#202124`) | `<section class="slide invert">` | `<h2>[Business assertion]</h2>` |
+| Business (alt) | Google Blue (`#4285F4`) | `<section class="slide section">` | `<h2>[Business assertion]</h2>` |
 
-**Alternation pattern**: Default → Invert → Default → Invert (or Default → Section for variety).
+**Alternation pattern**: `slide` → `slide invert` → `slide` → `slide invert` (or `slide` → `slide section` for variety).
 
 The visual contrast (white vs dark) makes it immediately obvious which perspective is being presented, even to someone glancing at the deck without reading.

@@ -62,7 +62,6 @@ ALLOWED_DOMAINS = {
     "unpkg.com",
     "cdnjs.cloudflare.com",
     "playwright.dev",
-    "marp.app",
     "mermaid.js.org",
     "d3js.org",
     "threejs.org",

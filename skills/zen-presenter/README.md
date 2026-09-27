@@ -1,142 +1,63 @@
-# Zen Presenter
+# Zen Presenter (`zen-presenter`)
 
-A Agy skill for generating MARP presentation decks that follow the **Presentation Zen** philosophy — minimal text, high visual impact, and storytelling-driven design. Uses Google identity styling and outputs self-contained HTML with optional PowerPoint export.
+Build high-impact, storytelling-driven presentations and persuasive pitch decks following **Presentation Zen** principles with a **Google Cloud look & feel**, pure self-contained HTML output, local **LibreOffice (`soffice --headless`)** asset generation (`.pptx`, `.docx`, `.xlsx`), and native upload to **Google Workspace (`Slides`, `Docs`, `Sheets`)**.
 
-## What It Does
+## Overview
 
-This skill transforms any topic into a visually striking slide deck by applying Garr Reynolds' Presentation Zen principles. It guides Agy through:
-
-1. **Topic discovery** — Captures the subject, audience, and core takeaway.
-2. **Design consultation** — Asks about background images (optional), mood, and typography preferences before generating anything.
-3. **Story arc planning** — Structures the deck as a narrative: hook, tension, exploration, climax, resolution.
-4. **Zen slide generation** — Produces MARP Markdown with a target of 10 words per slide, retaining essential context and sources, zero bullet points, and either full-bleed Unsplash backgrounds or clean theme-based design.
-5. **HTML rendering** — Converts the MARP deck to a self-contained HTML file via Marp CLI that can be presented directly in any browser.
-6. **PowerPoint offer** — Asks the user if they want to export to `.pptx` via Marp CLI.
-
-## When Does It Activate?
-
-The skill activates when you ask Agy to create presentations, slides, or decks. Keywords include:
-
-| Trigger | Example |
-|---------|---------|
-| Create a presentation | "Create a presentation about cloud architecture" |
-| Generate slides | "Generate slides for my team meeting on observability" |
-| Build a deck | "Build a MARP deck about Kubernetes best practices" |
-| Zen presentation | "Make a Zen-style presentation about leadership" |
-| MARP slides | "Create MARP slides about AI safety" |
-
-## Topics Covered
-
-| Area | Details |
-|------|---------|
-| **Presentation Zen** | Restraint (Kanso), Naturalness (Shizen), Emptiness (Ma), signal-to-noise ratio |
-| **MARP Markdown** | Frontmatter directives, background images, filters, themes, custom themes, export commands |
-| **Visual Design** | Mood presets, typography styles, image metaphor selection, slide type classes |
-| **Story Structure** | Narrative arcs, audience adaptation, hook-tension-climax-resolution |
-| **Google Identity** | Google colors (blue, red, yellow, green), Inter/Google Sans fonts, gradient bar accents |
-| **Background Images** | Optional — user chooses whether to use full-bleed Unsplash images or clean theme-based design |
-| **Diagrams** | Pre-rendered SVG embedding, Mermaid CLI workflow, Kroki URL rendering, minimal diagram guidelines |
+`zen-presenter` unifies quick Presentation Zen slide generation and deep research-to-narrative pitch deck creation into a single workflow:
+1. **Research & Requirements Spine (Optional for pitches)**: Conduct 4-layer domain research, extract a quantitative hero metric, and map challenges to solutions in a Requirements Spine (`references/research-and-spine.md`).
+2. **Narrative Arc**: Structure the deck into Tension (~40%), a single dark Pivot slide, and Resolution (~55%).
+3. **Pure Google Cloud HTML First**: Generate a self-contained 16:9 HTML deck (`assets/gcloud-slides-template.html` + `assets/gcloud-theme.css`) using Google Sans / Roboto typography, `#4285F4` / `#202124` contrast, inline `<svg>` diagrams, and the 4-color Google gradient bar.
+4. **Local LibreOffice Asset Creation**: Convert the HTML via `scripts/export_to_google_workspace.py` (`soffice --headless`) into a local `.pptx` (for Slides), `.docx` (for Docs), or `.xlsx` (for Sheets), and render `.pdf` for visual QA.
+5. **Google Workspace Upload**: Upload the local Office asset to Google Drive API v3 with automatic conversion to native **Google Slides**, **Google Docs**, or **Google Sheets**.
 
 ## Installation
 
-### Option B: One-liner
-
+### Workspace scope
 ```bash
 curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh | bash -s -- zen-presenter
 ```
 
-For user-scope installation (available across all projects):
-
+### User scope
 ```bash
 curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh | bash -s -- zen-presenter --scope user
 ```
 
-### Option C: Manual
+## Exporting HTML via LibreOffice to Google Workspace
 
 ```bash
-cp -r skills/zen-presenter ~/.gemini/config/skills/zen-presenter
+# Export HTML deck to local .pptx via LibreOffice and upload to Google Slides
+python3 skills/zen-presenter/scripts/export_to_google_workspace.py deck.html \
+  --platform slides \
+  --output ./deck.pptx \
+  --title "Q3 Reliability Executive Pitch" \
+  --upload
+
+# Export HTML executive brief to local .docx and upload to Google Docs
+python3 skills/zen-presenter/scripts/export_to_google_workspace.py brief.html \
+  --platform docs \
+  --output ./brief.docx \
+  --title "Q3 Reliability Narrative Brief" \
+  --upload
+
+# Export Requirements Spine HTML table to local .xlsx and upload to Google Sheets
+python3 skills/zen-presenter/scripts/export_to_google_workspace.py spine.html \
+  --platform sheets \
+  --output ./spine.xlsx \
+  --title "Q3 Reliability Requirements Spine" \
+  --upload
 ```
 
-## Usage Examples
-
-Once installed, the skill activates when you ask Agy to create presentations.
-
-### Basic deck generation
-
-```
-Create a presentation about microservices architecture for a developer conference.
-```
-
-### With audience context
-
-```
-I need a Zen-style presentation about data privacy for an executive audience.
-The one takeaway should be: "Privacy is a competitive advantage, not a cost."
-```
-
-### Clean design (no background images)
-
-```
-Generate slides about cloud-native architecture, no background images.
-Professional mood, around 8 slides.
-```
-
-### With background images
-
-```
-Create a presentation about sustainable engineering with full-bleed nature
-images, calm mood, and white text on dark backgrounds. Around 8 slides.
-```
-
-### Quick deck with defaults
-
-```
-Make a quick Zen presentation about why Kubernetes matters. You decide the look and feel.
-```
-
-## Google Identity Theme
-
-The skill includes a custom Marp CSS theme (`gcloud-theme.css`) styled after the Google identity. Features:
-
-- **Inter / Google Sans** font family
-- **Google color palette** (blue, red, yellow, green)
-- **Slide type classes** for visual variety without images: `title`, `section`, `lead`, `stats`, `speaker`, `quote`, `invert`, `closing`
-- **Google gradient bar** on title and closing slides
-- Clean, professional look suitable for most audiences
-
-### Setting up the custom theme in VS Code
-
-1. Copy `gcloud-theme.css` to your workspace
-2. Open workspace settings (F1 → "Preferences: Open Workspace Settings")
-3. Search "Marp: Themes" and add the path `./gcloud-theme.css`
-4. Use `theme: gcloud` in your Markdown frontmatter
-
-### Using with Marp CLI
-
-```bash
-# Render to self-contained HTML
-npx @marp-team/marp-cli@latest slides.md --html --theme ./gcloud-theme.css -o slides.html
-
-# Export to PowerPoint
-npx @marp-team/marp-cli@latest slides.md --theme ./gcloud-theme.css --pptx -o slides.pptx
-
-# Export to PDF
-npx @marp-team/marp-cli@latest slides.md --pdf --theme ./gcloud-theme.css -o slides.pdf
-```
-
-## Included References
+## Included Files
 
 | File | Description |
-|------|-------------|
-| **marp-syntax-guide.md** | Complete MARP Markdown syntax reference — frontmatter, background images, filters, themes, custom themes, export commands |
-| **zen-design-principles.md** | Presentation Zen philosophy — restraint, naturalness, emptiness, visual metaphor guide, story arc structure |
-| **visual-themes.md** | Visual theme presets and slide type class reference |
-| **diagram-guide.md** | Diagram embedding workflows — pre-rendered SVG, Kroki URLs, Mermaid CLI, style guidelines for minimal diagrams |
-
-## Included Assets
-
-| File | Description |
-|------|-------------|
-| **gcloud-theme.css** | Custom Marp CSS theme with Google identity styling and slide type classes |
-| **deck-template.md** | Starter template using the gcloud theme (clean design, no images) |
-| **deck-template-images.md** | Starter template with full-bleed Unsplash background images |
+| :--- | :--- |
+| [`SKILL.md`](SKILL.md) | Core workflow, generation rules, and 5-pillar security guardrails |
+| [`scripts/export_to_google_workspace.py`](scripts/export_to_google_workspace.py) | Converts Google Cloud `.html` via headless LibreOffice (`.pptx`, `.docx`, `.xlsx`) and uploads to Google Slides, Docs, or Sheets |
+| [`assets/gcloud-theme.css`](assets/gcloud-theme.css) | Google Cloud 16:9 HTML presentation stylesheet |
+| [`assets/gcloud-slides-template.html`](assets/gcloud-slides-template.html) | Starter 16:9 Google Cloud HTML slide deck template |
+| [`references/zen-design-principles.md`](references/zen-design-principles.md) | Presentation Zen philosophy (Restraint, Naturalness, Emptiness) and visual metaphors |
+| [`references/research-and-spine.md`](references/research-and-spine.md) | 4-layer domain research, Requirements Spine matrix, and 6 persuasive narrative arcs |
+| [`references/visual-themes.md`](references/visual-themes.md) | Google Cloud HTML/CSS token presets and slide classes |
+| [`references/diagram-guide.md`](references/diagram-guide.md) | Minimal 3–4 node inline `<svg>` diagram patterns |
+| [`references/html-libreoffice-workspace-pipeline.md`](references/html-libreoffice-workspace-pipeline.md) | Detailed HTML → LibreOffice → Google Workspace (`Slides`, `Docs`, `Sheets`) pipeline |

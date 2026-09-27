@@ -32,7 +32,7 @@ Agy Skills extend your coding agent with repeatable engineering workflows across
 1. **Security, Cloud Architecture & Infrastructure**: Discover exposed routes, audit BFF proxies and CGNAT rate limits, prevent Vertex AI / Gemini FinOps exhaustion, redact induced API-key error logs (`app-security-audit`), and draw interactive Google Cloud reference architectures (`cloud-architecture-diagram`).
 2. **Product Management, Research & Specifications**: Produce engineering-ready PRDs (`feature-spec`), Pageless multi-tab Google Docs specifications (`gdoc-engineering-spec`), and 6-lens local knowledge graphs (`research-skill-graph-agy`).
 3. **UI/UX Design, Technical Drawing & Visual Explanations**: Audit interfaces against WCAG standards (`design-critique`), draw dimensioned orthographic SVGs (`technical-drawing`), manage design token taxonomies (`design-system-management`), author recovery-oriented UI microcopy (`ux-copywriter`), and generate interactive HTML explainers (`visual-explainer`).
-4. **Presentations & Executive Communication**: Compile Presentation Zen pitch decks (`zen-pitch`, `zen-presenter`), SCQA assertion-evidence decks (`clarity-presenter`), and editable PowerPoint files (`html-to-pptx`).
+4. **Presentations & Executive Communication**: Build Google Cloud Presentation Zen & persuasive pitch decks (`zen-presenter`) and SCQA assertion-evidence dual-perspective decks (`clarity-presenter`) that always generate self-contained HTML first, use headless LibreOffice (`soffice --headless`) to create the local Office asset (`.pptx`, `.docx`, `.xlsx`), and upload to Google Workspace (`Slides`, `Docs`, `Sheets`).
 5. **Software Engineering, Testing & Developer Operations**: Automate Playwright web testing (`webapp-testing`), upgrade Spring Boot applications (`spring-boot-upgrader`), author Google Developer Standard documentation (`documentation`), and analyze engineering session history (`developer-growth-analysis`).
 
 ---
@@ -41,13 +41,13 @@ Agy Skills extend your coding agent with repeatable engineering workflows across
 
 - **Antigravity (`agy` / Jetski)**, **Gemini CLI**, or a compatible AI coding agent environment that discovers workspace rules via [`AGENTS.md`](AGENTS.md) / [`GEMINI.md`](GEMINI.md) and loads `SKILL.md` definitions from `.agents/skills/`, `.agent/skills/`, or `~/.gemini/config/skills/`.
 - **`curl`**, **`bash`**, and **`tar`** for one-command installation.
-- **Optional runtime tools** (skill-dependent): `ripgrep` (`rg`), `python3`, `pytest`, `node` / `npx` (for Playwright or Marp slide compilation).
+- **Optional runtime tools** (skill-dependent): `ripgrep` (`rg`), `python3`, `pytest`, `soffice` (LibreOffice for local `.pptx`/`.docx`/`.xlsx` export before Google Workspace upload), and `node` / `npx` (for Playwright).
 
 ---
 
 ## Quickstart Installation & Antigravity `AGENTS.md` Discovery
 
-Antigravity automatically discovers [`AGENTS.md`](AGENTS.md) (and [`GEMINI.md`](GEMINI.md) for Gemini CLI compatibility) when traversing from the working directory to the repository root, and uses progressive disclosure to load installed skills from `.agents/skills/<skill-name>/SKILL.md` (workspace scope) or `~/.gemini/config/skills/<skill-name>/SKILL.md` (user global scope). See [**`AGENTS.md`**](AGENTS.md) for the complete **18-Skill Activation & Routing Table** and **Antigravity Agent Operational Guidelines**.
+Antigravity automatically discovers [`AGENTS.md`](AGENTS.md) (and [`GEMINI.md`](GEMINI.md) for Gemini CLI compatibility) when traversing from the working directory to the repository root, and uses progressive disclosure to load installed skills from `.agents/skills/<skill-name>/SKILL.md` (workspace scope) or `~/.gemini/config/skills/<skill-name>/SKILL.md` (user global scope). See [**`AGENTS.md`**](AGENTS.md) for the complete **16-Skill Activation & Routing Table** and **Antigravity Agent Operational Guidelines**.
 
 ### Method 1: Install a single skill via `curl` (recommended)
 
@@ -98,10 +98,8 @@ cp -r skills/app-security-audit ~/.gemini/config/skills/app-security-audit
 | **[`design-system-management`](skills/design-system-management/)** | Design & Visualization | Architect design tokens, accessible component APIs, and governance documentation | Token taxonomy JSON/CSS, component specs, deprecation plans | `curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh \| bash -s -- design-system-management` |
 | **[`ux-copywriter`](skills/ux-copywriter/)** | Design & Visualization | Write concise, accessible microcopy for CTAs, onboarding flows, empty states, and actionable error messages | UI copy decks, state microcopy tables, localization guidelines | `curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh \| bash -s -- ux-copywriter` |
 | **[`visual-explainer`](skills/visual-explainer/)** | Design & Visualization | Build self-contained HTML pages that visually explain systems, code diffs, execution plans, and structured data | Interactive single-file HTML visual explainers | `curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh \| bash -s -- visual-explainer` |
-| **[`zen-pitch`](skills/zen-pitch/)** | Presentations | Research a problem domain, build a narrative requirements spine, and compile a Presentation Zen slide deck | Research brief, narrative spine, Marp HTML/PDF/PPTX pitch deck | `curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh \| bash -s -- zen-pitch` |
-| **[`zen-presenter`](skills/zen-presenter/)** | Presentations | Generate Marp presentation decks using Presentation Zen principles and Google identity styling | Self-contained HTML slide deck and optional PowerPoint export | `curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh \| bash -s -- zen-presenter` |
-| **[`clarity-presenter`](skills/clarity-presenter/)** | Presentations | Generate Marp decks combining SCQA narrative structure with assertion-evidence slide design | Dual-perspective assertion-evidence HTML/PPTX slide deck | `curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh \| bash -s -- clarity-presenter` |
-| **[`html-to-pptx`](skills/html-to-pptx/)** | Presentations | Convert Marp HTML presentations into editable PowerPoint (`.pptx`) files with native text boxes and tables | Native editable `.pptx` presentation file | `curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh \| bash -s -- html-to-pptx` |
+| **[`zen-presenter`](skills/zen-presenter/)** | Presentations | Build Presentation Zen & research-backed pitch decks in pure Google Cloud HTML, export local `.pptx`/`.docx`/`.xlsx` via LibreOffice, and upload to Google (`Slides`, `Docs`, `Sheets`) | Self-contained Google Cloud `.html`, local LibreOffice `.pptx`/`.docx`/`.xlsx`, Google Workspace upload | `curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh \| bash -s -- zen-presenter` |
+| **[`clarity-presenter`](skills/clarity-presenter/)** | Presentations | Build SCQA + assertion-evidence dual-perspective decks in pure Google Cloud HTML, export local `.pptx`/`.docx`/`.xlsx` via LibreOffice, and upload to Google (`Slides`, `Docs`, `Sheets`) | Self-contained Google Cloud `.html`, local LibreOffice `.pptx`/`.docx`/`.xlsx`, Google Workspace upload | `curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh \| bash -s -- clarity-presenter` |
 | **[`webapp-testing`](skills/webapp-testing/)** | Engineering & Ops | Test local web applications with Playwright, managing server lifecycles, console logs, and DOM snapshots | Automated Playwright test scripts, screenshots, failure traces | `curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh \| bash -s -- webapp-testing` |
 | **[`spring-boot-upgrader`](skills/spring-boot-upgrader/)** | Engineering & Ops | Migrate Spring Boot applications to version 4.0 with phased upgrade plans and Jackson 3 migration rules | Dependency migration plan, updated build files, compatibility fixes | `curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh \| bash -s -- spring-boot-upgrader` |
 | **[`documentation`](skills/documentation/)** | Engineering & Ops | Write and maintain technical documentation, READMEs, API references, ADRs, and operational runbooks | Developer documentation, API reference guides, runbooks | `curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh \| bash -s -- documentation` |
@@ -111,7 +109,7 @@ cp -r skills/app-security-audit ~/.gemini/config/skills/app-security-audit
 
 ## Community & Official Upstream Skills Traceback
 
-To avoid maintaining duplicate or outdated skills when official upstream or community catalogs provide actively maintained versions, the following workflows have been retired from `duboc/agy-skills` in favor of their canonical upstream sources:
+To avoid maintaining duplicate or outdated skills when official upstream or community catalogs provide actively maintained versions, the following workflows have been retired or consolidated in `duboc/agy-skills`:
 
 | Retired `agy-skills` Skill | Domain / Capability | Canonical Upstream Repository & Replacement Skills | Installation / Usage |
 | :--- | :--- | :--- | :--- |
@@ -125,6 +123,9 @@ To avoid maintaining duplicate or outdated skills when official upstream or comm
 | `writing-plans` | Atomic, test-driven implementation plans | [**`obra/superpowers`**](https://github.com/obra/superpowers) (`writing-plans`, `test-driven-development`, `executing-plans`, `subagent-driven-development`) | Installed via `obra/superpowers` |
 | `using-git-worktrees` | Isolated Git worktree creation and baseline test verification | [**`obra/superpowers`**](https://github.com/obra/superpowers) (`using-git-worktrees`, `finishing-a-development-branch`) | Installed via `obra/superpowers` |
 | `software-troubleshooter` | Structured root-cause debugging and hypothesis verification | [**`obra/superpowers`**](https://github.com/obra/superpowers) (`systematic-debugging`, `verification-before-completion`) | Installed via `obra/superpowers` |
+| `zen-pitch` | Domain research, requirements spine, and Presentation Zen pitch decks | Consolidated into [**`skills/zen-presenter`**](skills/zen-presenter/) (`references/research-and-spine.md` + `scripts/export_to_google_workspace.py`) | Included in `zen-presenter` |
+| `html-to-pptx` | HTML presentation to local Office asset & Google Workspace export | Consolidated into [**`skills/zen-presenter`**](skills/zen-presenter/) and [**`skills/clarity-presenter`**](skills/clarity-presenter/) (`scripts/export_to_google_workspace.py` via headless LibreOffice) | Included in `zen-presenter` & `clarity-presenter` |
+
 
 ---
 
@@ -251,25 +252,15 @@ Each skill below follows a standard directory architecture (`SKILL.md`, [`README
 
 ### 4. Presentations & Executive Communication
 
-#### [`zen-pitch`](skills/zen-pitch/) — Research-to-Narrative Presentation Zen Pitch Decks
-- **Purpose**: Research a problem domain, synthesize findings into a numbered requirements spine (`R1..Rn`), map every requirement to a concrete resolution, and compile a persuasive Presentation Zen slide deck in Marp HTML/PDF/PPTX.
-- **Deliverables & References**: `01-research-brief.md`, `02-narrative-spine.md`, `03-deck.md`, compiled `03-deck.html`, [`references/narrative.md`](skills/zen-pitch/references/narrative.md), [`references/layouts.md`](skills/zen-pitch/references/layouts.md).
-- **Example Prompt**: `"Research venue Wi-Fi CGNAT failure modes and build a 12-slide Presentation Zen pitch deck showing how our edge proxy architecture resolves them."`
+#### [`zen-presenter`](skills/zen-presenter/) — Presentation Zen & Research-Backed Pitch Decks (Google Cloud HTML → LibreOffice → Google Workspace)
+- **Purpose**: Build high-impact Presentation Zen decks and research-backed persuasive pitches (`references/research-and-spine.md`) in pure Google Cloud HTML (`assets/gcloud-theme.css`), convert to local `.pptx`/`.docx`/`.xlsx` via headless LibreOffice (`soffice --headless`), and upload to Google Workspace (`Slides`, `Docs`, `Sheets`).
+- **Deliverables & References**: Self-contained Google Cloud `.html`, local LibreOffice `.pptx`/`.docx`/`.xlsx`, [`scripts/export_to_google_workspace.py`](skills/zen-presenter/scripts/export_to_google_workspace.py), [`references/research-and-spine.md`](skills/zen-presenter/references/research-and-spine.md), [`references/html-libreoffice-workspace-pipeline.md`](skills/zen-presenter/references/html-libreoffice-workspace-pipeline.md).
+- **Example Prompt**: `"Research venue Wi-Fi CGNAT failure modes, build a 10-slide Presentation Zen HTML deck with Google Cloud styling, export via LibreOffice, and upload to Google Slides."`
 
-#### [`zen-presenter`](skills/zen-presenter/) — Presentation Zen Marp Slide Generator
-- **Purpose**: Generate high-contrast, minimal Marp presentation decks with Google identity styling, custom inline SVG visuals, and self-contained HTML/PPTX output.
-- **Deliverables & References**: Marp Markdown source, self-contained HTML slide deck, and PPTX export ([`references/`](skills/zen-presenter/)).
-- **Example Prompt**: `"Create a 10-slide Presentation Zen deck summarizing our Q3 architecture reliability milestones."`
-
-#### [`clarity-presenter`](skills/clarity-presenter/) — SCQA & Assertion-Evidence Technical Decks
-- **Purpose**: Build executive and engineering slide decks combining Situation-Complication-Question-Answer (SCQA) narrative structure with assertion-evidence visual layouts.
-- **Deliverables & References**: Dual-perspective assertion-evidence Marp HTML/PPTX presentation ([`references/`](skills/clarity-presenter/)).
-- **Example Prompt**: `"Build an SCQA assertion-evidence deck presenting our Cloud Run latency root-cause analysis and threadpool remediation."`
-
-#### [`html-to-pptx`](skills/html-to-pptx/) — Marp HTML to Native Editable PowerPoint Converter
-- **Purpose**: Convert Marp HTML slide decks into native, editable PowerPoint (`.pptx`) files preserving editable text boxes, lists, tables, and embedded vector/raster graphics.
-- **Deliverables & References**: Native editable `.pptx` file and conversion scripts ([`scripts/`](skills/html-to-pptx/)).
-- **Example Prompt**: `"Convert our compiled Marp HTML presentation into a native editable PowerPoint (.pptx) file."`
+#### [`clarity-presenter`](skills/clarity-presenter/) — SCQA & Assertion-Evidence Dual-Perspective Decks (Google Cloud HTML → LibreOffice → Google Workspace)
+- **Purpose**: Build executive and engineering presentations combining McKinsey SCQA narrative structure with assertion-evidence headlines and dual-perspective paired slides (white technical + dark business) in pure Google Cloud HTML, convert to local `.pptx`/`.docx`/`.xlsx` via headless LibreOffice, and upload to Google Workspace (`Slides`, `Docs`, `Sheets`).
+- **Deliverables & References**: Dual-perspective Google Cloud `.html`, local LibreOffice `.pptx`/`.docx`/`.xlsx`, [`scripts/export_to_google_workspace.py`](skills/clarity-presenter/scripts/export_to_google_workspace.py), [`references/scqa-framework-guide.md`](skills/clarity-presenter/references/scqa-framework-guide.md), [`references/dual-perspective-guide.md`](skills/clarity-presenter/references/dual-perspective-guide.md), [`references/html-libreoffice-workspace-pipeline.md`](skills/clarity-presenter/references/html-libreoffice-workspace-pipeline.md).
+- **Example Prompt**: `"Build an SCQA assertion-evidence HTML deck presenting our Cloud Run latency root-cause analysis, export the local PPTX via LibreOffice, and upload to Google Slides."`
 
 ---
 

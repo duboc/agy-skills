@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Google Cloud Clarity SCQA Presentation</title>
+  <link rel="stylesheet" href="gcloud-theme.css">
+</head>
+<body>
+  <section class="slide title">
+    <h1>Cloud Run Active-Active Regional Failover</h1>
+    <p>SCQA Architecture &amp; Business Impact Proposal</p>
+    <aside class="notes">
+      Introduce the SCQA narrative covering both engineering architecture (white slides) and executive SLA/cost impact (dark slides).
+    </aside>
+  </section>
+
+  <section class="slide">
+    <h2>Our checkout API processes 50K requests per second across a single primary region</h2>
+    <p>Current single-region topology meets baseline traffic but lacks pre-warmed regional redundancy.</p>
+    <aside class="notes">
+      Situation: ground both engineering and business stakeholders in current production throughput.
+    </aside>
+  </section>
+
+  <section class="slide invert">
+    <h2>Manual regional failover takes 6 minutes and costs $180K per outage event</h2>
+    <p>Cold-start connection pool saturation violates our <strong>99.99% enterprise SLA</strong>.</p>
+    <aside class="notes">
+      Complication (Business perspective): translate technical failover latency into concrete SLA and financial exposure.
+    </aside>
+  </section>
+
+  <section class="slide lead">
+    <h1>How can we achieve sub-50ms regional failover without doubling idle compute spend?</h1>
+    <aside class="notes">
+      Central SCQA Question slide — the hinge between Complication and Answer.
+    </aside>
+  </section>
+
+  <section class="slide">
+    <h2>Global Load Balancing with active-active Cloud Run eliminates cold-start failover delays</h2>
+    <ul>
+      <li>Anycast health probes shift traffic in under 50ms</li>
+      <li>Pre-warmed minimum instances prevent connection pool exhaustion</li>
+      <li>Cloud Spanner multi-region provides zero-RPO transactional consistency</li>
+    </ul>
+    <aside class="notes">
+      Answer (Technical perspective): explain the mechanism behind sub-50ms failover.
+    </aside>
+  </section>
+
+  <section class="slide invert">
+    <h2>Active-active routing reduces incident revenue exposure by 90% for $12K/month</h2>
+    <ul>
+      <li>Protects <strong>$180K per incident</strong> in gross checkout volume</li>
+      <li>Eliminates 2 AM manual traffic-shifting pages for on-call SREs</li>
+      <li>Satisfies enterprise tier SLA audit requirements</li>
+    </ul>
+    <aside class="notes">
+      Answer (Business perspective): pair the technical mechanism with the ROI and risk reduction.
+    </aside>
+  </section>
+
+  <section class="slide closing">
+    <h1>Approve Phase 1 active-active deployment for the checkout service this sprint</h1>
+    <p>Full dual-region cutover completes in 3 weeks with zero maintenance window</p>
+    <aside class="notes">
+      Close with a specific, actionable decision for leadership.
+    </aside>
+  </section>
+</body>
+</html>

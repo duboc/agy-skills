@@ -53,7 +53,7 @@ SCQA is a storytelling framework developed at McKinsey for structuring persuasiv
 - One question only
 - Phrased as "How can we..." or "What is the best way to..."
 - Should feel inevitable given the Situation and Complication
-- Use `<!-- _class: lead -->` for centered, prominent display
+- Use `<section class="slide lead">` for centered, prominent display
 
 **Examples**:
 - "How can we maintain sub-100ms latency at 3x current traffic?"

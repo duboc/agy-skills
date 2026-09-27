@@ -47,7 +47,7 @@ skills/<skill-name>/
 
 ---
 
-## 2. Antigravity Skill Activation & Routing Table (All 18 Skills)
+## 2. Antigravity Skill Activation & Routing Table (All 16 Skills)
 
 When a request matches any of the trigger intents below, activate the corresponding skill by reading its `SKILL.md` entry point first, then load the relevant `references/` guides on demand. For general agentic coding workflows (`obra/superpowers`) and official Google product skills (`google/skills` and `google/agents-cli`), see the [**Community & Official Upstream Skills Traceback**](README.md#community--official-upstream-skills-traceback) in [`README.md`](README.md).
 
@@ -76,14 +76,12 @@ When a request matches any of the trigger intents below, activate the correspond
 | **`ux-copywriter`** | Write accessible, scannable UI microcopy for CTAs, onboarding flows, empty states, confirmation modals, and actionable recovery-oriented error messages | [`skills/ux-copywriter/SKILL.md`](skills/ux-copywriter/SKILL.md) | [`copy-patterns.md`](skills/ux-copywriter/references/copy-patterns.md), [`voice-and-tone.md`](skills/ux-copywriter/references/voice-and-tone.md) |
 | **`visual-explainer`** | Generate self-contained interactive HTML explainers for complex systems, code diffs, execution plans, and structured data tables | [`skills/visual-explainer/SKILL.md`](skills/visual-explainer/SKILL.md) | [`css-patterns.md`](skills/visual-explainer/references/css-patterns.md), [`libraries.md`](skills/visual-explainer/references/libraries.md), [`responsive-nav.md`](skills/visual-explainer/references/responsive-nav.md), [`slide-patterns.md`](skills/visual-explainer/references/slide-patterns.md) |
 
-### 2.4 Presentations & Executive Communication (4 Skills)
+### 2.4 Presentations & Executive Communication (2 Skills)
 
 | Skill Name | Trigger Intents & When to Activate | Entry Point (`SKILL.md`) | On-Demand Reference Guides (`references/`) |
 | :--- | :--- | :--- | :--- |
-| **`zen-pitch`** | Research a problem domain, synthesize a numbered requirements spine (`R1..Rn`), and compile a persuasive Presentation Zen slide deck (Marp HTML/PDF/PPTX) | [`skills/zen-pitch/SKILL.md`](skills/zen-pitch/SKILL.md) | [`research.md`](skills/zen-pitch/references/research.md), [`narrative.md`](skills/zen-pitch/references/narrative.md), [`layouts.md`](skills/zen-pitch/references/layouts.md) |
-| **`zen-presenter`** | Generate Marp presentation decks following Presentation Zen principles (minimal text, high visual impact, Google identity styling, self-contained HTML) | [`skills/zen-presenter/SKILL.md`](skills/zen-presenter/SKILL.md) | [`zen-design-principles.md`](skills/zen-presenter/references/zen-design-principles.md), [`marp-syntax-guide.md`](skills/zen-presenter/references/marp-syntax-guide.md), [`diagram-guide.md`](skills/zen-presenter/references/diagram-guide.md), [`visual-themes.md`](skills/zen-presenter/references/visual-themes.md) |
-| **`clarity-presenter`** | Generate Marp slide decks using the SCQA narrative framework and assertion-evidence slide design with dual-perspective paired slides | [`skills/clarity-presenter/SKILL.md`](skills/clarity-presenter/SKILL.md) | [`scqa-framework-guide.md`](skills/clarity-presenter/references/scqa-framework-guide.md), [`assertion-evidence-guide.md`](skills/clarity-presenter/references/assertion-evidence-guide.md), [`dual-perspective-guide.md`](skills/clarity-presenter/references/dual-perspective-guide.md), [`diagram-guide.md`](skills/clarity-presenter/references/diagram-guide.md), [`visual-themes.md`](skills/clarity-presenter/references/visual-themes.md) |
-| **`html-to-pptx`** | Convert Marp HTML slide presentations into editable native PowerPoint (`.pptx`) files with editable text boxes, lists, tables, and embedded graphics | [`skills/html-to-pptx/SKILL.md`](skills/html-to-pptx/SKILL.md) | [`coordinate-and-typography-mapping.md`](skills/html-to-pptx/references/coordinate-and-typography-mapping.md), [`pptxgenjs-element-patterns.md`](skills/html-to-pptx/references/pptxgenjs-element-patterns.md) |
+| **`zen-presenter`** | Build Presentation Zen decks and research-backed persuasive pitch decks in pure Google Cloud HTML, convert to local `.pptx`/`.docx`/`.xlsx` via headless LibreOffice (`soffice --headless`), and upload to Google Workspace (`Slides`, `Docs`, `Sheets`) | [`skills/zen-presenter/SKILL.md`](skills/zen-presenter/SKILL.md) | [`zen-design-principles.md`](skills/zen-presenter/references/zen-design-principles.md), [`research-and-spine.md`](skills/zen-presenter/references/research-and-spine.md), [`visual-themes.md`](skills/zen-presenter/references/visual-themes.md), [`diagram-guide.md`](skills/zen-presenter/references/diagram-guide.md), [`html-libreoffice-workspace-pipeline.md`](skills/zen-presenter/references/html-libreoffice-workspace-pipeline.md) |
+| **`clarity-presenter`** | Build SCQA + assertion-evidence dual-perspective decks in pure Google Cloud HTML, convert to local `.pptx`/`.docx`/`.xlsx` via headless LibreOffice (`soffice --headless`), and upload to Google Workspace (`Slides`, `Docs`, `Sheets`) | [`skills/clarity-presenter/SKILL.md`](skills/clarity-presenter/SKILL.md) | [`scqa-framework-guide.md`](skills/clarity-presenter/references/scqa-framework-guide.md), [`assertion-evidence-guide.md`](skills/clarity-presenter/references/assertion-evidence-guide.md), [`dual-perspective-guide.md`](skills/clarity-presenter/references/dual-perspective-guide.md), [`visual-themes.md`](skills/clarity-presenter/references/visual-themes.md), [`diagram-guide.md`](skills/clarity-presenter/references/diagram-guide.md), [`html-libreoffice-workspace-pipeline.md`](skills/clarity-presenter/references/html-libreoffice-workspace-pipeline.md) |
 
 ### 2.5 Software Engineering, Testing & Developer Operations (4 Skills)
 
@@ -113,14 +111,14 @@ Every skill in `duboc/agy-skills` is continuously validated against **5 Core Ven
 Before committing any modification to a skill, validator, or documentation file, run both the 5-pillar validator and the unit test suite from the repository root:
 
 ```bash
-# 1. Run the 5-Pillar Skill Security & Context Hygiene Validator across all 18 skills
+# 1. Run the 5-Pillar Skill Security & Context Hygiene Validator across all 16 skills
 python3 scripts/validate_skills.py
 
 # 2. Run the unit test suite for the validator and repository guardrails
 python3 -m unittest discover -s tests -v
 ```
 
-Both commands must complete with a `0` exit code (`18/18 skills passed all 5 Core Pillars` and `OK` on all unit tests).
+Both commands must complete with a `0` exit code (`16/16 skills passed all 5 Core Pillars` and `OK` on all unit tests).
 
 ---
 

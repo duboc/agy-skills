@@ -25,9 +25,9 @@ Examples:
   $(basename "$0") app-security-audit
   $(basename "$0") app-security-audit --scope user
 
-Available skills (18):
+Available skills (16):
   app-security-audit            Google Cloud, GenAI/Gemini, BFF proxy, CGNAT & 8h+ kiosk security audit
-  clarity-presenter             Marp decks with SCQA narrative + assertion-evidence design
+  clarity-presenter             SCQA + assertion-evidence Google Cloud HTML decks -> LibreOffice -> Google Workspace
   cloud-architecture-diagram    Draw a deployed system as a Google Cloud reference architecture
   design-critique               Evaluate UI/UX designs and frontend code for usability & WCAG accessibility
   design-system-management      Architect design tokens, component APIs, and design system governance
@@ -35,15 +35,13 @@ Available skills (18):
   documentation                 Write READMEs, API references, ADRs, and runbooks per Google Developer style
   feature-spec                  Write engineering-ready PRDs, INVEST stories, Given/When/Then criteria & MoSCoW scope
   gdoc-engineering-spec         Build Pageless, multi-tab Google Docs engineering specs, RFCs & runbooks
-  html-to-pptx                  Convert Marp HTML slides to editable native PowerPoint (.pptx)
   research-skill-graph-agy      Investigate questions through 6 analytical lenses in a local .research/ graph
   spring-boot-upgrader          Migrate Spring Boot apps to 4.0 with phased upgrade plans
   technical-drawing             Create precise, dimensioned orthographic technical drawings in SVG
   ux-copywriter                 Write clear, accessible UI microcopy and recovery-oriented error messages
   visual-explainer              Generate self-contained interactive HTML explainers for systems and diffs
   webapp-testing                Test local web apps with Playwright, console capture, and DOM snapshots
-  zen-pitch                     Research a domain, build a requirements spine, and compile a Presentation Zen deck
-  zen-presenter                 Marp slide decks following Presentation Zen principles
+  zen-presenter                 Presentation Zen & pitch decks in Google Cloud HTML -> LibreOffice -> Google Workspace
 EOF
 }
 

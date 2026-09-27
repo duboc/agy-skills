@@ -1,223 +1,75 @@
-# Diagram Guide for Clarity Presenter
+# Diagram Guide for Clarity Presenter (Inline SVG & Google Cloud HTML)
 
-How to include diagrams as visual evidence in SCQA assertion-evidence presentations. Diagrams support assertion headlines — they are the evidence, not decoration.
+How to include diagrams as visual evidence in SCQA assertion-evidence HTML presentations. Diagrams support assertion headlines (`<h2>`) — they are the evidence, not decoration.
 
-## Diagrams as Evidence
+## Diagrams as Evidence in Dual-Perspective Decks
 
-The assertion-evidence model (see `assertion-evidence-guide.md`) lists **Diagrams and Architecture** as a primary evidence type. Use diagrams when the assertion is about system structure, data flow, or relationships.
+| Slide Type | HTML Container | Diagram Role |
+| :--- | :--- | :--- |
+| **Technical** (white) | `<section class="slide">` | Architecture, data flow, request sequence — proves *how* the mechanism works |
+| **Business** (dark) | `<section class="slide invert">` | Process flow, incident cost reduction, rollout timeline — proves *why it matters* |
 
-The diagram supports the headline claim. It does not restate it.
+## Embedding Inline SVG in Pure HTML
 
-| Slide Type | Diagram Role |
-|-----------|--------------|
-| **Technical** (white) | Architecture, data flow, sequence diagrams — shows *how* |
-| **Business** (dark) | Process flow, impact diagrams, timelines — shows *why it matters* |
+Because `clarity-presenter` outputs self-contained HTML directly without Marp, embed diagrams as inline `<svg>` elements inside `<section class="slide">`:
 
-## MARP Limitation
+### Technical Slide Example (White Background)
 
-MARP has no native Mermaid or diagram rendering support. Diagrams must be pre-rendered as images (SVG or PNG) and embedded using standard MARP image syntax.
+```html
+<section class="slide">
+  <h2>Active-active replication eliminates cold-start regional failover delays</h2>
+  <svg viewBox="0 0 860 240" width="100%" height="240" role="img" aria-label="Active-active regional replication">
+    <defs>
+      <marker id="arrow-tech" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M 0 1 L 8 5 L 0 9 z" fill="#4285F4"/>
+      </marker>
+    </defs>
+    <rect x="30" y="65" width="220" height="100" rx="10" fill="#E8F0FE" stroke="#4285F4" stroke-width="2"/>
+    <text x="140" y="110" text-anchor="middle" font-family="Roboto, Arial, sans-serif" font-size="18" font-weight="600" fill="#1967D2">Global Load Balancer</text>
+    <text x="140" y="136" text-anchor="middle" font-family="Roboto, Arial, sans-serif" font-size="14" fill="#5F6368">Anycast Health Routing</text>
 
-## Approach A: Pre-rendered SVG (Recommended)
+    <line x1="250" y1="95" x2="350" y2="65" stroke="#4285F4" stroke-width="2.5" marker-end="url(#arrow-tech)"/>
+    <line x1="250" y1="135" x2="350" y2="165" stroke="#4285F4" stroke-width="2.5" marker-end="url(#arrow-tech)"/>
 
-The most reliable method. Create diagrams externally, export as SVG, embed as images.
+    <rect x="360" y="20" width="220" height="80" rx="10" fill="#F8F9FA" stroke="#34A853" stroke-width="2"/>
+    <text x="470" y="65" text-anchor="middle" font-family="Roboto, Arial, sans-serif" font-size="17" font-weight="600" fill="#137333">us-central1 (Active)</text>
 
-### Workflow
-
-1. **Create the diagram** using [mermaid.live](https://mermaid.live), a local editor, or Mermaid CLI.
-2. **Export as SVG** (preferred) or PNG.
-3. **Place the file** alongside the deck (e.g., `./diagrams/architecture.svg`).
-4. **Embed in MARP** below the assertion headline.
-
-### MARP Embedding Syntax
-
-Below the assertion headline (most common for clarity decks):
-```markdown
-## Active-active replication eliminates cold-start failover delays
-
-![width:700px](./diagrams/active-active.svg)
+    <rect x="360" y="130" width="220" height="80" rx="10" fill="#F8F9FA" stroke="#34A853" stroke-width="2"/>
+    <text x="470" y="175" text-anchor="middle" font-family="Roboto, Arial, sans-serif" font-size="17" font-weight="600" fill="#137333">southamerica-east1 (Active)</text>
+  </svg>
+  <p><em>Pre-warmed connection pools in both regions keep P99 failover under 50ms.</em></p>
+  <aside class="notes">
+    Emphasize that both regions serve live traffic continuously, avoiding cold-start connection pool exhaustion during failover.
+  </aside>
+</section>
 ```
 
-Split layout (diagram + evidence text side by side):
-```markdown
-![bg right:45% contain](./diagrams/architecture.svg)
+### Business Slide Example (Dark `invert` Background)
 
-## Service mesh reduces inter-service latency by 40%
-- Sidecar proxy handles routing
-- Connection pooling across pods
+```html
+<section class="slide invert">
+  <h2>Sub-50ms automatic failover reduces incident revenue exposure by 90%</h2>
+  <svg viewBox="0 0 860 220" width="100%" height="220" role="img" aria-label="Incident cost comparison">
+    <rect x="40" y="30" width="350" height="150" rx="12" fill="#2D2E31" stroke="#EA4335" stroke-width="2"/>
+    <text x="215" y="75" text-anchor="middle" font-family="Roboto, Arial, sans-serif" font-size="18" font-weight="600" fill="#F28B82">Before: Manual Failover</text>
+    <text x="215" y="115" text-anchor="middle" font-family="Roboto, Arial, sans-serif" font-size="28" font-weight="700" fill="#FFFFFF">$180K / incident</text>
+    <text x="215" y="148" text-anchor="middle" font-family="Roboto, Arial, sans-serif" font-size="14" fill="#9AA0A6">4–8 min operator response window</text>
+
+    <rect x="470" y="30" width="350" height="150" rx="12" fill="#1E3A2F" stroke="#34A853" stroke-width="2"/>
+    <text x="645" y="75" text-anchor="middle" font-family="Roboto, Arial, sans-serif" font-size="18" font-weight="600" fill="#81C995">After: Active-Active Routing</text>
+    <text x="645" y="115" text-anchor="middle" font-family="Roboto, Arial, sans-serif" font-size="28" font-weight="700" fill="#FFFFFF">$12K / month</text>
+    <text x="645" y="148" text-anchor="middle" font-family="Roboto, Arial, sans-serif" font-size="14" fill="#E8EAED">Zero manual intervention required</text>
+  </svg>
+  <aside class="notes">
+    Compare the single-incident loss ($180K) against the predictable monthly active-active footprint ($12K/month).
+  </aside>
+</section>
 ```
 
-Full-bleed background (less common for clarity, useful for impact visuals):
-```markdown
-![bg contain](./diagrams/data-flow.svg)
-```
-
-### Mermaid CLI
-
-Render SVG locally without a browser:
-
-```bash
-npx -p @mermaid-js/mermaid-cli mmdc -i diagram.mmd -o diagram.svg --theme neutral
-```
-
-Batch render all diagrams:
-
-```bash
-npx -p @mermaid-js/mermaid-cli mmdc -i diagrams/ -o output/ -e svg
-```
-
-Recommended Mermaid themes:
-- `neutral` — for technical slides (white background)
-- `dark` — for business slides (`invert` class, dark background)
-
-## Approach B: Kroki URL-Based Rendering
-
-Encode diagram source as a URL. No local tooling needed, but requires internet.
-
-### Workflow
-
-1. **Write the diagram** in Mermaid syntax.
-2. **Base64-encode** the source:
-   ```bash
-   echo 'graph LR; A-->B-->C' | base64 | tr -d '\n'
-   ```
-3. **Embed as image URL** in MARP:
-   ```markdown
-   ## Request routing shifts to the nearest healthy region in under 50ms
-
-   ![width:700px](https://kroki.io/mermaid/svg/Z3JhcGggTFI7IEEtLT5CLS0+Qw==)
-   ```
-
-Kroki supports Mermaid, PlantUML, Graphviz, D2, and other diagram formats: `https://kroki.io/{type}/svg/{base64}`.
-
-## Approach C: Mermaid CLI Batch Workflow
-
-For decks with multiple diagrams, set up a build step:
-
-```bash
-# 1. Create diagrams/ folder with .mmd files
-mkdir -p diagrams
-
-# 2. Render all to SVG (neutral theme for technical slides)
-for f in diagrams/*.mmd; do
-  npx -p @mermaid-js/mermaid-cli mmdc -i "$f" -o "${f%.mmd}.svg" --theme neutral
-done
-
-# 3. Optionally render dark variants for business slides
-for f in diagrams/*.mmd; do
-  npx -p @mermaid-js/mermaid-cli mmdc -i "$f" -o "${f%.mmd}-dark.svg" --theme dark
-done
-
-# 4. Build the deck
-npx @marp-team/marp-cli@latest deck.md --html --theme gcloud-theme.css -o deck.html
-```
-
-## Diagram Types by Evidence Category
-
-| Evidence Type | Diagram Type | When to Use |
-|--------------|-------------|-------------|
-| Architecture | Flowchart, C4 context | System structure assertions ("Service mesh routes traffic through sidecar proxies") |
-| Data flow | Sequence diagram | Integration/pipeline assertions ("Events flow from ingestion to analytics in under 2 seconds") |
-| Comparison | Side-by-side flowcharts | Before/after assertions ("Migration reduces the data path from 5 hops to 2") |
-| Process | Activity diagram | Workflow assertions ("Automated rollback triggers within one health-check interval") |
-| Timeline | Simplified Gantt | Migration/rollout assertions ("Three-phase migration completes in 8 weeks") |
-| Metrics | Use `stats` class instead | Quantitative assertions — diagrams are not the best evidence for numbers |
-
-## Clarity Diagram Style Guidelines
-
-Clarity decks allow more detail than Zen decks, but diagrams must still support readability at presentation scale.
-
-### Rules
+## Clarity Diagram Rules
 
 | Principle | Rule |
-|-----------|------|
-| **Evidence, not decoration** | Every diagram must support an assertion headline. No orphan diagrams. |
-| **Readable at scale** | Maximum 8-10 nodes. If more are needed, split into multiple slides. |
-| **Consistent styling** | Use the same Mermaid theme across all diagrams in one deck. |
-| **Technical vs business** | Technical diagrams show mechanisms; business diagrams show impact/flow. |
-| **One accent color** | Match the theme accent (Google blue `#4285F4` for gcloud default). |
-| **Labels** | Node labels: 1-5 words. Edge labels: optional, 1-3 words. |
-
-### Technical Slide Diagrams
-
-Best diagram types: flowcharts, sequence diagrams, C4 context, deployment diagrams.
-
-Focus: components, connections, data paths, request flows.
-
-### Business Slide Diagrams
-
-Best diagram types: simplified process flows, impact chains, timeline views.
-
-Focus: outcomes, cost paths, risk flows, timeline milestones.
-
-## Example Slides
-
-### Technical Slide with Architecture Evidence
-
-**Mermaid source** (`diagrams/active-active.mmd`):
-```mermaid
-graph LR
-    LB[Global Load Balancer] --> R1[Region A]
-    LB --> R2[Region B]
-    R1 <-->|sync| R2
-    R1 --> DB1[(Primary)]
-    R2 --> DB2[(Replica)]
-```
-
-**MARP slide:**
-```markdown
----
-
-## Active-active replication eliminates cold-start failover delays
-
-![width:700px](./diagrams/active-active.svg)
-
-*Pre-warmed connections in each region*
-```
-
-### Business Slide with Impact Flow
-
-**Mermaid source** (`diagrams/cost-impact.mmd`):
-```mermaid
-graph TD
-    A[Outage Event] --> B[Manual Failover\n4-8 min]
-    B --> C[Lost Transactions\n$180K per incident]
-    A --> D[Auto Failover\n< 50ms]
-    D --> E[Near-zero loss\n$12K/month infra]
-```
-
-**MARP slide:**
-```markdown
----
-<!-- _class: invert -->
-
-## Active-active cuts incident revenue loss by 90% at predictable cost
-
-![width:650px](./diagrams/cost-impact-dark.svg)
-
-*$12K/month infrastructure vs $180K/incident*
-```
-
-### Dual-Perspective Pair with Diagrams
-
-Two consecutive slides, each with a diagram supporting the same concept from different angles:
-
-**Technical (white):**
-```markdown
----
-
-## Global load balancing distributes traffic based on real-time health scores
-
-![width:700px](./diagrams/load-balancing.svg)
-```
-
-**Business (dark):**
-```markdown
----
-<!-- _class: invert -->
-
-## Automatic traffic shifting keeps SLA compliance above 99.99%
-
-![width:650px](./diagrams/sla-flow-dark.svg)
-
-*Eliminates manual intervention that currently takes 4-8 minutes*
-```
+| :--- | :--- |
+| **Evidence, not decoration** | Every diagram must directly prove the slide's `<h2>` assertion headline. |
+| **Readable at projection scale** | Maximum 6–8 nodes per slide; font size `>= 14px`. |
+| **Technical vs. Business** | Technical diagrams show system topology/protocol flow; business diagrams show SLA, cost, or timeline impact. |
