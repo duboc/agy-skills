@@ -34,7 +34,7 @@ Agy Skills extend your coding agent with repeatable engineering workflows across
 3. **Product Management, Research & Specifications**: Produce engineering-ready PRDs (`feature-spec`) and 6-lens local knowledge graphs (`research-skill-graph-agy`).
 4. **UI/UX Design, Technical Drawing & Visual Explanations**: Audit interfaces against WCAG standards (`design-critique`), draw dimensioned orthographic SVGs (`technical-drawing`), and generate interactive HTML explainers (`visual-explainer`).
 5. **Presentations & Executive Communication**: Compile Presentation Zen pitch decks (`zen-pitch`, `zen-presenter`), SCQA assertion-evidence decks (`clarity-presenter`), and editable PowerPoint files (`html-to-pptx`).
-6. **Software Engineering, Testing & Developer Operations**: Troubleshoot production systems, write TDD execution plans, automate Playwright web testing, and upgrade Spring Boot applications.
+6. **Software Engineering, Testing & Developer Operations**: Automate Playwright web testing, upgrade Spring Boot applications, author Google Developer Standard documentation, and analyze engineering session history (while leveraging [`obra/superpowers`](https://github.com/obra/superpowers) for foundational TDD planning, Git worktrees, and systematic debugging).
 
 ---
 
@@ -48,7 +48,7 @@ Agy Skills extend your coding agent with repeatable engineering workflows across
 
 ## Quickstart Installation & Antigravity `AGENTS.md` Discovery
 
-Antigravity automatically discovers [`AGENTS.md`](AGENTS.md) (and [`GEMINI.md`](GEMINI.md) for Gemini CLI compatibility) when traversing from the working directory to the repository root, and uses progressive disclosure to load installed skills from `.agents/skills/<skill-name>/SKILL.md` (workspace scope) or `~/.gemini/config/skills/<skill-name>/SKILL.md` (user global scope). See [**`AGENTS.md`**](AGENTS.md) for the complete **28-Skill Activation & Routing Table** and **Antigravity Agent Operational Guidelines**.
+Antigravity automatically discovers [`AGENTS.md`](AGENTS.md) (and [`GEMINI.md`](GEMINI.md) for Gemini CLI compatibility) when traversing from the working directory to the repository root, and uses progressive disclosure to load installed skills from `.agents/skills/<skill-name>/SKILL.md` (workspace scope) or `~/.gemini/config/skills/<skill-name>/SKILL.md` (user global scope). See [**`AGENTS.md`**](AGENTS.md) for the complete **25-Skill Activation & Routing Table** and **Antigravity Agent Operational Guidelines**.
 
 ### Method 1: Install a single skill via `curl` (recommended)
 
@@ -110,9 +110,6 @@ cp -r skills/app-security-audit ~/.gemini/config/skills/app-security-audit
 | **[`zen-presenter`](skills/zen-presenter/)** | Presentations | Generate Marp presentation decks using Presentation Zen principles and Google identity styling | Self-contained HTML slide deck and optional PowerPoint export | `curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh \| bash -s -- zen-presenter` |
 | **[`clarity-presenter`](skills/clarity-presenter/)** | Presentations | Generate Marp decks combining SCQA narrative structure with assertion-evidence slide design | Dual-perspective assertion-evidence HTML/PPTX slide deck | `curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh \| bash -s -- clarity-presenter` |
 | **[`html-to-pptx`](skills/html-to-pptx/)** | Presentations | Convert Marp HTML presentations into editable PowerPoint (`.pptx`) files with native text boxes and tables | Native editable `.pptx` presentation file | `curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh \| bash -s -- html-to-pptx` |
-| **[`software-troubleshooter`](skills/software-troubleshooter/)** | Engineering & Ops | Perform root-cause analysis and code inspection for bugs, regressions, and production incidents | Diagnostic report, root-cause proof, verified patch | `curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh \| bash -s -- software-troubleshooter` |
-| **[`writing-plans`](skills/writing-plans/)** | Engineering & Ops | Produce granular, test-driven implementation plans with exact file paths and atomic verification steps | Step-by-step TDD implementation plan | `curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh \| bash -s -- writing-plans` |
-| **[`using-git-worktrees`](skills/using-git-worktrees/)** | Engineering & Ops | Create isolated Git worktrees with `.gitignore` verification, dependency setup, and baseline test runs | Isolated Git worktree environment with verified test baseline | `curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh \| bash -s -- using-git-worktrees` |
 | **[`webapp-testing`](skills/webapp-testing/)** | Engineering & Ops | Test local web applications with Playwright, managing server lifecycles, console logs, and DOM snapshots | Automated Playwright test scripts, screenshots, failure traces | `curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh \| bash -s -- webapp-testing` |
 | **[`spring-boot-upgrader`](skills/spring-boot-upgrader/)** | Engineering & Ops | Migrate Spring Boot applications to version 4.0 with phased upgrade plans and Jackson 3 migration rules | Dependency migration plan, updated build files, compatibility fixes | `curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh \| bash -s -- spring-boot-upgrader` |
 | **[`documentation`](skills/documentation/)** | Engineering & Ops | Write and maintain technical documentation, READMEs, API references, ADRs, and operational runbooks | Developer documentation, API reference guides, runbooks | `curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh \| bash -s -- documentation` |
@@ -306,20 +303,7 @@ Each skill below follows a standard directory architecture (`SKILL.md`, [`README
 
 ### 6. Software Engineering, Testing & Developer Operations
 
-#### [`software-troubleshooter`](skills/software-troubleshooter/) — Structured Root-Cause Analysis & Debugging
-- **Purpose**: Perform systematic root-cause analysis, call-graph inspection, and hypothesis verification for production bugs, race conditions, and test failures.
-- **Deliverables & References**: Root-cause diagnostic report (`input -> expected -> actual -> root cause`), regression test, and verified patch ([`references/`](skills/software-troubleshooter/)).
-- **Example Prompt**: `"Investigate why WebSocket broadcasts stall during concurrent badge generation and verify the root cause."`
-
-#### [`writing-plans`](skills/writing-plans/) — Atomic Test-Driven Implementation Plans
-- **Purpose**: Decompose feature specifications or security remediation specs into atomic, test-driven implementation tasks with exact file paths, test code, and verification commands.
-- **Deliverables & References**: Step-by-step TDD execution plan (`docs/plans/YYYY-MM-DD-<feature>.md`).
-- **Example Prompt**: `"Write a phased TDD implementation plan to deploy the P0 and P1 findings from our security audit."`
-
-#### [`using-git-worktrees`](skills/using-git-worktrees/) — Isolated Git Worktree Provisioning
-- **Purpose**: Create isolated Git worktrees for parallel feature branches with automated directory selection, `.gitignore` safety verification, dependency installation, and baseline test runs.
-- **Deliverables & References**: Verified isolated Git worktree environment with clean baseline test execution.
-- **Example Prompt**: `"Set up an isolated Git worktree for the security-hardening branch and verify the pytest baseline passes."`
+> **Note:** Foundational development workflow skills (Socratic brainstorming, TDD execution planning, isolated Git worktree management, systematic root-cause debugging, and subagent-driven development) are provided by [`obra/superpowers`](https://github.com/obra/superpowers).
 
 #### [`webapp-testing`](skills/webapp-testing/) — Automated Playwright Web Application Verification
 - **Purpose**: Test local and staging web applications with Playwright, managing dev-server lifecycles, DOM assertions, network interception, console error capture, and screenshots.

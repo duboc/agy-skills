@@ -47,7 +47,7 @@ skills/<skill-name>/
 
 ---
 
-## 2. Antigravity Skill Activation & Routing Table (All 28 Skills)
+## 2. Antigravity Skill Activation & Routing Table (All 25 Skills)
 
 When a request matches any of the trigger intents below, activate the corresponding skill by reading its `SKILL.md` entry point first, then load the relevant `references/` guides on demand.
 
@@ -97,13 +97,10 @@ When a request matches any of the trigger intents below, activate the correspond
 | **`clarity-presenter`** | Generate Marp slide decks using the SCQA narrative framework and assertion-evidence slide design with dual-perspective paired slides | [`skills/clarity-presenter/SKILL.md`](skills/clarity-presenter/SKILL.md) | [`scqa-framework-guide.md`](skills/clarity-presenter/references/scqa-framework-guide.md), [`assertion-evidence-guide.md`](skills/clarity-presenter/references/assertion-evidence-guide.md), [`dual-perspective-guide.md`](skills/clarity-presenter/references/dual-perspective-guide.md), [`diagram-guide.md`](skills/clarity-presenter/references/diagram-guide.md), [`visual-themes.md`](skills/clarity-presenter/references/visual-themes.md) |
 | **`html-to-pptx`** | Convert Marp HTML slide presentations into editable native PowerPoint (`.pptx`) files with editable text boxes, lists, tables, and embedded graphics | [`skills/html-to-pptx/SKILL.md`](skills/html-to-pptx/SKILL.md) | [`coordinate-and-typography-mapping.md`](skills/html-to-pptx/references/coordinate-and-typography-mapping.md), [`pptxgenjs-element-patterns.md`](skills/html-to-pptx/references/pptxgenjs-element-patterns.md) |
 
-### 2.6 Software Engineering, Testing & Developer Operations (7 Skills)
+### 2.6 Software Engineering, Testing & Developer Operations (4 Skills)
 
 | Skill Name | Trigger Intents & When to Activate | Entry Point (`SKILL.md`) | On-Demand Reference Guides (`references/`) |
 | :--- | :--- | :--- | :--- |
-| **`software-troubleshooter`** | Perform structured root-cause analysis, call-graph inspection, and hypothesis verification to diagnose bugs, race conditions, and regressions | [`skills/software-troubleshooter/SKILL.md`](skills/software-troubleshooter/SKILL.md) | [`code-inspection-patterns.md`](skills/software-troubleshooter/references/code-inspection-patterns.md), [`report-template.md`](skills/software-troubleshooter/references/report-template.md) |
-| **`writing-plans`** | Decompose feature specs or remediation specs into atomic, test-driven implementation plans with exact file paths and verification commands | [`skills/writing-plans/SKILL.md`](skills/writing-plans/SKILL.md) | [`plan-template.md`](skills/writing-plans/references/plan-template.md), [`task-decomposition-and-tdd-checklist.md`](skills/writing-plans/references/task-decomposition-and-tdd-checklist.md) |
-| **`using-git-worktrees`** | Create isolated Git worktrees for parallel feature development with smart directory selection (`AGENTS.md` / `GEMINI.md` check), `.gitignore` verification, and baseline test runs | [`skills/using-git-worktrees/SKILL.md`](skills/using-git-worktrees/SKILL.md) | [`worktree-commands.md`](skills/using-git-worktrees/references/worktree-commands.md), [`parallel-agent-isolation-patterns.md`](skills/using-git-worktrees/references/parallel-agent-isolation-patterns.md) |
 | **`webapp-testing`** | Verify local and staging web applications using Playwright with automated server lifecycle management, console error capture, and DOM snapshots | [`skills/webapp-testing/SKILL.md`](skills/webapp-testing/SKILL.md) | [`playwright-selectors-and-assertions.md`](skills/webapp-testing/references/playwright-selectors-and-assertions.md), [`visual-and-console-diagnostics.md`](skills/webapp-testing/references/visual-and-console-diagnostics.md) |
 | **`spring-boot-upgrader`** | Plan and execute phased Spring Boot migrations (including Spring Boot 4.0, Spring Framework 7, Jakarta EE, and Jackson 3 upgrades) | [`skills/spring-boot-upgrader/SKILL.md`](skills/spring-boot-upgrader/SKILL.md) | [`migration-guide.md`](skills/spring-boot-upgrader/references/migration-guide.md), [`jackson3-migration.md`](skills/spring-boot-upgrader/references/jackson3-migration.md), [`starter-renames.md`](skills/spring-boot-upgrader/references/starter-renames.md) |
 | **`documentation`** | Write and maintain READMEs, API references, Architecture Decision Records (ADRs), and runbooks following Diátaxis and the Google Developer Documentation Style Guide | [`skills/documentation/SKILL.md`](skills/documentation/SKILL.md) | [`diataxis-and-google-style-guide.md`](skills/documentation/references/diataxis-and-google-style-guide.md), [`document-types.md`](skills/documentation/references/document-types.md) |
@@ -128,14 +125,14 @@ Every skill in `duboc/agy-skills` is continuously validated against **5 Core Ven
 Before committing any modification to a skill, validator, or documentation file, run both the 5-pillar validator and the unit test suite from the repository root:
 
 ```bash
-# 1. Run the 5-Pillar Skill Security & Context Hygiene Validator across all 28 skills
+# 1. Run the 5-Pillar Skill Security & Context Hygiene Validator across all 25 skills
 python3 scripts/validate_skills.py
 
 # 2. Run the unit test suite for the validator and repository guardrails
 python3 -m unittest discover -s tests -v
 ```
 
-Both commands must complete with a `0` exit code (`28/28 skills passed all 5 Core Pillars` and `OK` on all unit tests).
+Both commands must complete with a `0` exit code (`25/25 skills passed all 5 Core Pillars` and `OK` on all unit tests).
 
 ---
 
