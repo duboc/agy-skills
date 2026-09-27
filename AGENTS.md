@@ -47,38 +47,26 @@ skills/<skill-name>/
 
 ---
 
-## 2. Antigravity Skill Activation & Routing Table (All 25 Skills)
+## 2. Antigravity Skill Activation & Routing Table (All 18 Skills)
 
-When a request matches any of the trigger intents below, activate the corresponding skill by reading its `SKILL.md` entry point first, then load the relevant `references/` guides on demand.
+When a request matches any of the trigger intents below, activate the corresponding skill by reading its `SKILL.md` entry point first, then load the relevant `references/` guides on demand. For general agentic coding workflows (`obra/superpowers`) and official Google product skills (`google/skills` and `google/agents-cli`), see the [**Community & Official Upstream Skills Traceback**](README.md#community--official-upstream-skills-traceback) in [`README.md`](README.md).
 
-### 2.1 Security, Cloud Architecture & Infrastructure (4 Skills)
+### 2.1 Security, Cloud Architecture & Infrastructure (2 Skills)
 
 | Skill Name | Trigger Intents & When to Activate | Entry Point (`SKILL.md`) | On-Demand Reference Guides (`references/`) |
 | :--- | :--- | :--- | :--- |
 | **`app-security-audit`** | Security audit, attack-surface discovery, BFF proxy credential-swap hardening (`posixpath.normpath`, `X-App-Role`), 4D CGNAT/Wi-Fi rate limits, Vertex AI/Gemini FinOps & `signBlob` caching, induced `GEMINI_API_KEY` (`AIza`) log redaction, FastAPI `async def` unfreezing, 8h+ kiosk memory leaks, LGPD/GDPR privacy | [`skills/app-security-audit/SKILL.md`](skills/app-security-audit/SKILL.md) | [`proxy-cgnat-and-auth-patterns.md`](skills/app-security-audit/references/proxy-cgnat-and-auth-patterns.md), [`ai-finops-async-and-kiosk-resilience.md`](skills/app-security-audit/references/ai-finops-async-and-kiosk-resilience.md), [`privacy-idor-moderation-and-report-template.md`](skills/app-security-audit/references/privacy-idor-moderation-and-report-template.md), [`skill-and-agent-5-pillar-audit.md`](skills/app-security-audit/references/skill-and-agent-5-pillar-audit.md) |
 | **`cloud-architecture-diagram`** | Draw Google Cloud architecture diagrams, interactive HTML system maps, stepped request/event walkthroughs, official GCP product icons, environment boundary zones | [`skills/cloud-architecture-diagram/SKILL.md`](skills/cloud-architecture-diagram/SKILL.md) | [`google-cloud.md`](skills/cloud-architecture-diagram/references/google-cloud.md), [`layout-rules.md`](skills/cloud-architecture-diagram/references/layout-rules.md), [`visual-design.md`](skills/cloud-architecture-diagram/references/visual-design.md), [`slideshow.md`](skills/cloud-architecture-diagram/references/slideshow.md), [`slides-and-export.md`](skills/cloud-architecture-diagram/references/slides-and-export.md) |
-| **`ai-studio-architect`** | Migrate Google AI Studio Build-mode prototypes to Google Cloud Run production services with Secret Manager, Dockerfiles, and scoped IAM | [`skills/ai-studio-architect/SKILL.md`](skills/ai-studio-architect/SKILL.md) | [`ai-studio-stack-guide.md`](skills/ai-studio-architect/references/ai-studio-stack-guide.md), [`gcp-service-mapping.md`](skills/ai-studio-architect/references/gcp-service-mapping.md) |
-| **`system-design`** | Design distributed systems, API contracts, data storage topologies, caching tiers, SLA/capacity estimates, and explicit trade-off matrices | [`skills/system-design/SKILL.md`](skills/system-design/SKILL.md) | [`design-framework.md`](skills/system-design/references/design-framework.md), [`capacity-and-tradeoff-cheatsheet.md`](skills/system-design/references/capacity-and-tradeoff-cheatsheet.md) |
 
-### 2.2 Google ADK & Vertex AI Agent Engine (4 Skills)
-
-| Skill Name | Trigger Intents & When to Activate | Entry Point (`SKILL.md`) | On-Demand Reference Guides (`references/`) |
-| :--- | :--- | :--- | :--- |
-| **`adk-developer`** | Build single-agent or multi-agent systems with Google's Agent Development Kit (Python, Java, Go, TypeScript), `LlmAgent`, `SequentialAgent`, `ParallelAgent`, `LoopAgent`, MCP tools, callbacks, `adk eval` | [`skills/adk-developer/SKILL.md`](skills/adk-developer/SKILL.md) | [`architecture-guide.md`](skills/adk-developer/references/architecture-guide.md), [`tooling-guide.md`](skills/adk-developer/references/tooling-guide.md), [`callbacks-and-state-guide.md`](skills/adk-developer/references/callbacks-and-state-guide.md), [`testing-and-evaluation.md`](skills/adk-developer/references/testing-and-evaluation.md), [`production-guide.md`](skills/adk-developer/references/production-guide.md), [`remote-agents.md`](skills/adk-developer/references/remote-agents.md), [`cross-language.md`](skills/adk-developer/references/cross-language.md), [`llms.txt`](skills/adk-developer/references/llms.txt), [`llms-full.txt`](skills/adk-developer/references/llms-full.txt) |
-| **`agent-engine-deploy`** | Package, deploy, update, query, and configure scaling or A2A protocols for ADK agents on Vertex AI Agent Engine | [`skills/agent-engine-deploy/SKILL.md`](skills/agent-engine-deploy/SKILL.md) | [`deployment-patterns.md`](skills/agent-engine-deploy/references/deployment-patterns.md), [`performance-scaling.md`](skills/agent-engine-deploy/references/performance-scaling.md), [`a2a-agent-engine.md`](skills/agent-engine-deploy/references/a2a-agent-engine.md) |
-| **`agent-engine-sessions-memory`** | Implement multi-turn session persistence, TTL policies, tenant isolation, and Vertex AI Agent Engine Memory Bank retrieval | [`skills/agent-engine-sessions-memory/SKILL.md`](skills/agent-engine-sessions-memory/SKILL.md) | [`sessions-api-guide.md`](skills/agent-engine-sessions-memory/references/sessions-api-guide.md), [`memory-bank-guide.md`](skills/agent-engine-sessions-memory/references/memory-bank-guide.md) |
-| **`agent-engine-ops`** | Monitor, trace (Cloud Trace / OpenTelemetry), secure (IAM, VPC-SC, CMEK), and evaluate deployed agents on Vertex AI Agent Engine | [`skills/agent-engine-ops/SKILL.md`](skills/agent-engine-ops/SKILL.md) | [`monitoring-alerting.md`](skills/agent-engine-ops/references/monitoring-alerting.md), [`security-identity.md`](skills/agent-engine-ops/references/security-identity.md) |
-
-### 2.3 Product Management, Research & Specifications (4 Skills)
+### 2.2 Product Management, Research & Specifications (3 Skills)
 
 | Skill Name | Trigger Intents & When to Activate | Entry Point (`SKILL.md`) | On-Demand Reference Guides (`references/`) |
 | :--- | :--- | :--- | :--- |
 | **`feature-spec`** | Author 12-section PRDs, INVEST user stories, traceable Given/When/Then acceptance criteria (`AC-US01-1`), API contracts, WCAG 2.1 AA rules, PII-safe analytics schemas, and MoSCoW scope plans | [`skills/feature-spec/SKILL.md`](skills/feature-spec/SKILL.md) | [`prd-template.md`](skills/feature-spec/references/prd-template.md), [`user-stories-and-requirements.md`](skills/feature-spec/references/user-stories-and-requirements.md), [`technical-and-edge-cases.md`](skills/feature-spec/references/technical-and-edge-cases.md), [`analytics-spec.md`](skills/feature-spec/references/analytics-spec.md), [`metrics-and-scope.md`](skills/feature-spec/references/metrics-and-scope.md), [`ai-and-llm-specs.md`](skills/feature-spec/references/ai-and-llm-specs.md) |
 | **`gdoc-engineering-spec`** | Create, format, or publish Pageless multi-tab Google Docs (`?tab=`) for engineering specs, partner API guides, RFCs/Design Docs, or staging-to-production cutover runbooks | [`skills/gdoc-engineering-spec/SKILL.md`](skills/gdoc-engineering-spec/SKILL.md) | [`spec-schema-and-examples.md`](skills/gdoc-engineering-spec/references/spec-schema-and-examples.md), [`google-docs-api-styling-guide.md`](skills/gdoc-engineering-spec/references/google-docs-api-styling-guide.md) |
 | **`research-skill-graph-agy`** | Deep-dive research and claim validation across 6 analytical lenses (`technical`, `economic`, `historical`, `geopolitical`, `contrarian`, `first-principles`) stored in a local `.research/` Markdown graph | [`skills/research-skill-graph-agy/SKILL.md`](skills/research-skill-graph-agy/SKILL.md) | [`evidence-grading-and-synthesis.md`](skills/research-skill-graph-agy/references/evidence-grading-and-synthesis.md), [`knowledge-graph-node-templates.md`](skills/research-skill-graph-agy/references/knowledge-graph-node-templates.md) |
-| **`google-ads-funnel`** | Funnel-as-Code Google Ads account audits, GAQL spend analysis, creative variant testing, and conversion attribution diagnostics | [`skills/google-ads-funnel/SKILL.md`](skills/google-ads-funnel/SKILL.md) | [`audit-checklist.md`](skills/google-ads-funnel/references/audit-checklist.md), [`funnel-playbook.md`](skills/google-ads-funnel/references/funnel-playbook.md), [`gaql-recipes.md`](skills/google-ads-funnel/references/gaql-recipes.md) |
 
-### 2.4 UI/UX Design, Technical Drawing & Visual Explanations (5 Skills)
+### 2.3 UI/UX Design, Technical Drawing & Visual Explanations (5 Skills)
 
 | Skill Name | Trigger Intents & When to Activate | Entry Point (`SKILL.md`) | On-Demand Reference Guides (`references/`) |
 | :--- | :--- | :--- | :--- |
@@ -88,7 +76,7 @@ When a request matches any of the trigger intents below, activate the correspond
 | **`ux-copywriter`** | Write accessible, scannable UI microcopy for CTAs, onboarding flows, empty states, confirmation modals, and actionable recovery-oriented error messages | [`skills/ux-copywriter/SKILL.md`](skills/ux-copywriter/SKILL.md) | [`copy-patterns.md`](skills/ux-copywriter/references/copy-patterns.md), [`voice-and-tone.md`](skills/ux-copywriter/references/voice-and-tone.md) |
 | **`visual-explainer`** | Generate self-contained interactive HTML explainers for complex systems, code diffs, execution plans, and structured data tables | [`skills/visual-explainer/SKILL.md`](skills/visual-explainer/SKILL.md) | [`css-patterns.md`](skills/visual-explainer/references/css-patterns.md), [`libraries.md`](skills/visual-explainer/references/libraries.md), [`responsive-nav.md`](skills/visual-explainer/references/responsive-nav.md), [`slide-patterns.md`](skills/visual-explainer/references/slide-patterns.md) |
 
-### 2.5 Presentations & Executive Communication (4 Skills)
+### 2.4 Presentations & Executive Communication (4 Skills)
 
 | Skill Name | Trigger Intents & When to Activate | Entry Point (`SKILL.md`) | On-Demand Reference Guides (`references/`) |
 | :--- | :--- | :--- | :--- |
@@ -97,7 +85,7 @@ When a request matches any of the trigger intents below, activate the correspond
 | **`clarity-presenter`** | Generate Marp slide decks using the SCQA narrative framework and assertion-evidence slide design with dual-perspective paired slides | [`skills/clarity-presenter/SKILL.md`](skills/clarity-presenter/SKILL.md) | [`scqa-framework-guide.md`](skills/clarity-presenter/references/scqa-framework-guide.md), [`assertion-evidence-guide.md`](skills/clarity-presenter/references/assertion-evidence-guide.md), [`dual-perspective-guide.md`](skills/clarity-presenter/references/dual-perspective-guide.md), [`diagram-guide.md`](skills/clarity-presenter/references/diagram-guide.md), [`visual-themes.md`](skills/clarity-presenter/references/visual-themes.md) |
 | **`html-to-pptx`** | Convert Marp HTML slide presentations into editable native PowerPoint (`.pptx`) files with editable text boxes, lists, tables, and embedded graphics | [`skills/html-to-pptx/SKILL.md`](skills/html-to-pptx/SKILL.md) | [`coordinate-and-typography-mapping.md`](skills/html-to-pptx/references/coordinate-and-typography-mapping.md), [`pptxgenjs-element-patterns.md`](skills/html-to-pptx/references/pptxgenjs-element-patterns.md) |
 
-### 2.6 Software Engineering, Testing & Developer Operations (4 Skills)
+### 2.5 Software Engineering, Testing & Developer Operations (4 Skills)
 
 | Skill Name | Trigger Intents & When to Activate | Entry Point (`SKILL.md`) | On-Demand Reference Guides (`references/`) |
 | :--- | :--- | :--- | :--- |
@@ -125,14 +113,14 @@ Every skill in `duboc/agy-skills` is continuously validated against **5 Core Ven
 Before committing any modification to a skill, validator, or documentation file, run both the 5-pillar validator and the unit test suite from the repository root:
 
 ```bash
-# 1. Run the 5-Pillar Skill Security & Context Hygiene Validator across all 25 skills
+# 1. Run the 5-Pillar Skill Security & Context Hygiene Validator across all 18 skills
 python3 scripts/validate_skills.py
 
 # 2. Run the unit test suite for the validator and repository guardrails
 python3 -m unittest discover -s tests -v
 ```
 
-Both commands must complete with a `0` exit code (`25/25 skills passed all 5 Core Pillars` and `OK` on all unit tests).
+Both commands must complete with a `0` exit code (`18/18 skills passed all 5 Core Pillars` and `OK` on all unit tests).
 
 ---
 

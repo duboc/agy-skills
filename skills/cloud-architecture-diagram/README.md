@@ -166,7 +166,7 @@ over its address list is not.
 ## What it does not do
 
 It does not decide your architecture. Bring the inventory and the request path;
-this skill draws them. For the design conversation, reach for `system-design`.
+this skill draws them. For the design conversation, reach for `google-cloud-solution-architecture` (`google/skills`).
 
 It does not draw physical objects to scale. For dimensioned orthographic
 drawings of equipment and rooms, reach for `technical-drawing`.

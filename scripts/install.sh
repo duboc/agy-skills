@@ -25,12 +25,7 @@ Examples:
   $(basename "$0") app-security-audit
   $(basename "$0") app-security-audit --scope user
 
-Available skills (25):
-  adk-developer                 Build agents with Google's ADK (Python, Java, Go, TS)
-  agent-engine-deploy           Deploy ADK agents on Vertex AI Agent Engine
-  agent-engine-ops              Monitor, trace, secure, and evaluate Agent Engine agents
-  agent-engine-sessions-memory  Manage sessions and memory for Agent Engine agents
-  ai-studio-architect           Convert AI Studio prototypes to production on GCP
+Available skills (18):
   app-security-audit            Google Cloud, GenAI/Gemini, BFF proxy, CGNAT & 8h+ kiosk security audit
   clarity-presenter             Marp decks with SCQA narrative + assertion-evidence design
   cloud-architecture-diagram    Draw a deployed system as a Google Cloud reference architecture
@@ -40,11 +35,9 @@ Available skills (25):
   documentation                 Write READMEs, API references, ADRs, and runbooks per Google Developer style
   feature-spec                  Write engineering-ready PRDs, INVEST stories, Given/When/Then criteria & MoSCoW scope
   gdoc-engineering-spec         Build Pageless, multi-tab Google Docs engineering specs, RFCs & runbooks
-  google-ads-funnel             Funnel-as-Code workflows for Google Ads account audits and diagnostics
   html-to-pptx                  Convert Marp HTML slides to editable native PowerPoint (.pptx)
   research-skill-graph-agy      Investigate questions through 6 analytical lenses in a local .research/ graph
   spring-boot-upgrader          Migrate Spring Boot apps to 4.0 with phased upgrade plans
-  system-design                 Design distributed systems and APIs with explicit trade-off analysis
   technical-drawing             Create precise, dimensioned orthographic technical drawings in SVG
   ux-copywriter                 Write clear, accessible UI microcopy and recovery-oriented error messages
   visual-explainer              Generate self-contained interactive HTML explainers for systems and diffs

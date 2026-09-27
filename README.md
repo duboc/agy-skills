@@ -10,14 +10,14 @@ A curated repository of modular, production-grade skills for **Agy** (`agy`) and
 - [Prerequisites](#prerequisites)
 - [Quickstart Installation & Antigravity `AGENTS.md` Discovery](#quickstart-installation--antigravity-agentsmd-discovery)
 - [Skill Catalog](#skill-catalog)
+- [Community & Official Upstream Skills Traceback](#community--official-upstream-skills-traceback)
 - [Featured Skill: Google Cloud, Generative AI & Live-Event Security Audit (`app-security-audit`)](#featured-skill-google-cloud-generative-ai--live-event-security-audit-app-security-audit)
 - [Skill Reference by Category](#skill-reference-by-category)
   - [1. Security, Cloud Architecture & Infrastructure](#1-security-cloud-architecture--infrastructure)
-  - [2. Google ADK & Vertex AI Agent Engine](#2-google-adk--vertex-ai-agent-engine)
-  - [3. Product Management, Research & Specifications](#3-product-management-research--specifications)
-  - [4. UI/UX Design, Technical Drawing & Visual Explanations](#4-uiux-design-technical-drawing--visual-explanations)
-  - [5. Presentations & Executive Communication](#5-presentations--executive-communication)
-  - [6. Software Engineering, Testing & Developer Operations](#6-software-engineering-testing--developer-operations)
+  - [2. Product Management, Research & Specifications](#2-product-management-research--specifications)
+  - [3. UI/UX Design, Technical Drawing & Visual Explanations](#3-uiux-design-technical-drawing--visual-explanations)
+  - [4. Presentations & Executive Communication](#4-presentations--executive-communication)
+  - [5. Software Engineering, Testing & Developer Operations](#5-software-engineering-testing--developer-operations)
 - [Database Migration Toolkit](#database-migration-toolkit)
 - [5-Pillar Skill Security & Context Hygiene Standard (`scripts/validate_skills.py`)](#5-pillar-skill-security--context-hygiene-standard-scriptsvalidate_skillspy)
 - [Contributing](#contributing)
@@ -27,14 +27,13 @@ A curated repository of modular, production-grade skills for **Agy** (`agy`) and
 
 ## Overview
 
-Agy Skills extend your coding agent with repeatable engineering workflows across six core disciplines:
+Agy Skills extend your coding agent with repeatable engineering workflows across five specialized disciplines (while delegating general agentic workflows and official Google product skills to [`obra/superpowers`](https://github.com/obra/superpowers), [`google/skills`](https://github.com/google/skills), and [`google/agents-cli`](https://github.com/google/agents-cli)):
 
-1. **Security, Cloud Architecture & Infrastructure**: Discover exposed routes, audit BFF proxies and CGNAT rate limits, prevent Vertex AI / Gemini FinOps exhaustion, redact induced API-key error logs, and draw interactive Google Cloud reference architectures.
-2. **Google ADK & Vertex AI Agent Engine**: Build, deploy, manage sessions, and monitor multi-agent systems using Google's Agent Development Kit (ADK).
-3. **Product Management, Research & Specifications**: Produce engineering-ready PRDs (`feature-spec`) and 6-lens local knowledge graphs (`research-skill-graph-agy`).
-4. **UI/UX Design, Technical Drawing & Visual Explanations**: Audit interfaces against WCAG standards (`design-critique`), draw dimensioned orthographic SVGs (`technical-drawing`), and generate interactive HTML explainers (`visual-explainer`).
-5. **Presentations & Executive Communication**: Compile Presentation Zen pitch decks (`zen-pitch`, `zen-presenter`), SCQA assertion-evidence decks (`clarity-presenter`), and editable PowerPoint files (`html-to-pptx`).
-6. **Software Engineering, Testing & Developer Operations**: Automate Playwright web testing, upgrade Spring Boot applications, author Google Developer Standard documentation, and analyze engineering session history (while leveraging [`obra/superpowers`](https://github.com/obra/superpowers) for foundational TDD planning, Git worktrees, and systematic debugging).
+1. **Security, Cloud Architecture & Infrastructure**: Discover exposed routes, audit BFF proxies and CGNAT rate limits, prevent Vertex AI / Gemini FinOps exhaustion, redact induced API-key error logs (`app-security-audit`), and draw interactive Google Cloud reference architectures (`cloud-architecture-diagram`).
+2. **Product Management, Research & Specifications**: Produce engineering-ready PRDs (`feature-spec`), Pageless multi-tab Google Docs specifications (`gdoc-engineering-spec`), and 6-lens local knowledge graphs (`research-skill-graph-agy`).
+3. **UI/UX Design, Technical Drawing & Visual Explanations**: Audit interfaces against WCAG standards (`design-critique`), draw dimensioned orthographic SVGs (`technical-drawing`), manage design token taxonomies (`design-system-management`), author recovery-oriented UI microcopy (`ux-copywriter`), and generate interactive HTML explainers (`visual-explainer`).
+4. **Presentations & Executive Communication**: Compile Presentation Zen pitch decks (`zen-pitch`, `zen-presenter`), SCQA assertion-evidence decks (`clarity-presenter`), and editable PowerPoint files (`html-to-pptx`).
+5. **Software Engineering, Testing & Developer Operations**: Automate Playwright web testing (`webapp-testing`), upgrade Spring Boot applications (`spring-boot-upgrader`), author Google Developer Standard documentation (`documentation`), and analyze engineering session history (`developer-growth-analysis`).
 
 ---
 
@@ -48,7 +47,7 @@ Agy Skills extend your coding agent with repeatable engineering workflows across
 
 ## Quickstart Installation & Antigravity `AGENTS.md` Discovery
 
-Antigravity automatically discovers [`AGENTS.md`](AGENTS.md) (and [`GEMINI.md`](GEMINI.md) for Gemini CLI compatibility) when traversing from the working directory to the repository root, and uses progressive disclosure to load installed skills from `.agents/skills/<skill-name>/SKILL.md` (workspace scope) or `~/.gemini/config/skills/<skill-name>/SKILL.md` (user global scope). See [**`AGENTS.md`**](AGENTS.md) for the complete **25-Skill Activation & Routing Table** and **Antigravity Agent Operational Guidelines**.
+Antigravity automatically discovers [`AGENTS.md`](AGENTS.md) (and [`GEMINI.md`](GEMINI.md) for Gemini CLI compatibility) when traversing from the working directory to the repository root, and uses progressive disclosure to load installed skills from `.agents/skills/<skill-name>/SKILL.md` (workspace scope) or `~/.gemini/config/skills/<skill-name>/SKILL.md` (user global scope). See [**`AGENTS.md`**](AGENTS.md) for the complete **18-Skill Activation & Routing Table** and **Antigravity Agent Operational Guidelines**.
 
 ### Method 1: Install a single skill via `curl` (recommended)
 
@@ -91,16 +90,9 @@ cp -r skills/app-security-audit ~/.gemini/config/skills/app-security-audit
 | :--- | :--- | :--- | :--- | :--- |
 | **[`app-security-audit`](skills/app-security-audit/)** | Security & Cloud FinOps | End-to-end attack-surface discovery, BFF credential-swap & 4D CGNAT rate-limit auditing, Gemini FinOps & induced API-key error-log leak testing, `async def` & 8h+ kiosk resilience, LGPD/GDPR privacy | Route & GCP Surface Map, P0/P1/P2 Hardening Spec, `pytest` Fault-Injection Suite | `curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh \| bash -s -- app-security-audit` |
 | **[`cloud-architecture-diagram`](skills/cloud-architecture-diagram/)** | Architecture & Cloud | Draw deployed systems using official Google Cloud icons, tinted environment boundaries, orthogonal routing, and stepped request flows | Self-contained interactive HTML diagram & stepped slideshow | `curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh \| bash -s -- cloud-architecture-diagram` |
-| **[`ai-studio-architect`](skills/ai-studio-architect/)** | Architecture & Cloud | Convert Google AI Studio prototypes into production services on Cloud Run with Secret Manager and IAM hardening | Production deployment scripts, Dockerfile, Cloud Run config | `curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh \| bash -s -- ai-studio-architect` |
-| **[`system-design`](skills/system-design/)** | Architecture & Cloud | Design distributed services, data models, and APIs with explicit trade-off analysis | System design document, capacity estimates, trade-off matrix | `curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh \| bash -s -- system-design` |
-| **[`adk-developer`](skills/adk-developer/)** | Google ADK & Agents | Build single-agent and multi-agent systems with Google's Agent Development Kit (Python, Java, Go, TypeScript) | ADK agent code, tool definitions, callbacks, `adk eval` suites | `curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh \| bash -s -- adk-developer` |
-| **[`agent-engine-deploy`](skills/agent-engine-deploy/)** | Google ADK & Agents | Deploy, update, and query ADK agents on Vertex AI Agent Engine | Deployment pipelines, runtime configurations, query clients | `curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh \| bash -s -- agent-engine-deploy` |
-| **[`agent-engine-sessions-memory`](skills/agent-engine-sessions-memory/)** | Google ADK & Agents | Manage multi-turn sessions and persistent memory banks on Vertex AI Agent Engine | Session lifecycle managers, memory bank integration code | `curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh \| bash -s -- agent-engine-sessions-memory` |
-| **[`agent-engine-ops`](skills/agent-engine-ops/)** | Google ADK & Agents | Monitor, trace, secure, and evaluate deployed agents on Vertex AI Agent Engine | Cloud Trace telemetry, IAM guardrails, evaluation pipelines | `curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh \| bash -s -- agent-engine-ops` |
 | **[`feature-spec`](skills/feature-spec/)** | Product & Research | Write engineering-ready PRDs, INVEST user stories (`AC-US01-1`), API contracts, WCAG rules, PII telemetry schemas, and MoSCoW scope plans | 12-section PRD, Given/When/Then criteria, API & telemetry tables | `curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh \| bash -s -- feature-spec` |
 | **[`gdoc-engineering-spec`](skills/gdoc-engineering-spec/)** | Product & Research | Build Pageless, multi-tab Google Docs engineering specifications, API/partner guides, RFCs, and cutover runbooks | Multi-tab Google Doc (`?tab=` deep-links), `build_gdoc_spec.py` engine | `curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh \| bash -s -- gdoc-engineering-spec` |
 | **[`research-skill-graph-agy`](skills/research-skill-graph-agy/)** | Product & Research | Investigate complex technical or strategic questions through 6 opposing analytical lenses on the local filesystem | `.research/` Markdown knowledge graph, contradiction matrices | `curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh \| bash -s -- research-skill-graph-agy` |
-| **[`google-ads-funnel`](skills/google-ads-funnel/)** | Product & Research | Audit Google Ads accounts, analyze spend, test creatives, and diagnose conversions using Funnel-as-Code | Ads API audit reports, conversion diagnostics, funnel scripts | `curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh \| bash -s -- google-ads-funnel` |
 | **[`design-critique`](skills/design-critique/)** | Design & Visualization | Evaluate UI mockups, screenshots, and frontend code (React/Tailwind/HTML) for hierarchy, usability, and WCAG 2.1 AA compliance | Prioritized P0–P3 UX audit report, concrete CSS/React fixes | `curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh \| bash -s -- design-critique` |
 | **[`technical-drawing`](skills/technical-drawing/)** | Design & Visualization | Create scale-accurate orthographic SVG drawings (side/end/top views) with dimension lines (cotas), leader callouts, and FOV cones | Self-contained dimensioned SVG/HTML technical drawings | `curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh \| bash -s -- technical-drawing` |
 | **[`design-system-management`](skills/design-system-management/)** | Design & Visualization | Architect design tokens, accessible component APIs, and governance documentation | Token taxonomy JSON/CSS, component specs, deprecation plans | `curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh \| bash -s -- design-system-management` |
@@ -114,6 +106,25 @@ cp -r skills/app-security-audit ~/.gemini/config/skills/app-security-audit
 | **[`spring-boot-upgrader`](skills/spring-boot-upgrader/)** | Engineering & Ops | Migrate Spring Boot applications to version 4.0 with phased upgrade plans and Jackson 3 migration rules | Dependency migration plan, updated build files, compatibility fixes | `curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh \| bash -s -- spring-boot-upgrader` |
 | **[`documentation`](skills/documentation/)** | Engineering & Ops | Write and maintain technical documentation, READMEs, API references, ADRs, and operational runbooks | Developer documentation, API reference guides, runbooks | `curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh \| bash -s -- documentation` |
 | **[`developer-growth-analysis`](skills/developer-growth-analysis/)** | Engineering & Ops | Analyze session history to identify engineering patterns, recurring friction points, and learning paths | Developer growth report with targeted technical resources | `curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh \| bash -s -- developer-growth-analysis` |
+
+---
+
+## Community & Official Upstream Skills Traceback
+
+To avoid maintaining duplicate or outdated skills when official upstream or community catalogs provide actively maintained versions, the following workflows have been retired from `duboc/agy-skills` in favor of their canonical upstream sources:
+
+| Retired `agy-skills` Skill | Domain / Capability | Canonical Upstream Repository & Replacement Skills | Installation / Usage |
+| :--- | :--- | :--- | :--- |
+| `adk-developer` | Build single-agent and multi-agent systems with Google ADK | [**`google/agents-cli`**](https://github.com/google/agents-cli) (`google-agents-cli-adk-code`, `google-agents-cli-scaffold`, `google-agents-cli-workflow`) & [**`google/skills`**](https://github.com/google/skills) (`google-cloud-solution-build-deploy-agents`, `google-agents-cli-onboarding`) | `npx skills add google/skills` or `google/agents-cli` |
+| `agent-engine-deploy` | Deploy, update, and scale ADK agents on Vertex AI / Agent Platform | [**`google/agents-cli`**](https://github.com/google/agents-cli) (`google-agents-cli-deploy`, `google-agents-cli-publish`) & [**`google/skills`**](https://github.com/google/skills) (`agent-platform-deploy`, `agent-platform-endpoint-management`, `google-cloud-solution-build-deploy-agents`) | `npx skills add google/skills` |
+| `agent-engine-sessions-memory` | Manage multi-turn sessions and memory on Agent Platform | [**`google/agents-cli`**](https://github.com/google/agents-cli) (`google-agents-cli-adk-code`) & [**`google/skills`**](https://github.com/google/skills) (`gemini-agents-api`, `gemini-interactions-api`) | `npx skills add google/skills` |
+| `agent-engine-ops` | Monitor, trace, secure, and evaluate deployed agents | [**`google/agents-cli`**](https://github.com/google/agents-cli) (`google-agents-cli-observability`, `google-agents-cli-eval`) & [**`google/skills`**](https://github.com/google/skills) (`agent-platform-alert-configuration`, `agent-platform-eval-flywheel`, `agent-platform-troubleshooting`, `google-cloud-solution-multi-agent-security`) | `npx skills add google/skills` |
+| `ai-studio-architect` | Migrate Google AI Studio prototypes to Google Cloud Run / Agent Platform | [**`google/skills`**](https://github.com/google/skills) (`agent-platform-migrate-from-ai-studio`, `cloud-run-basics`, `google-cloud-solution-architecture`) | `npx skills add google/skills` |
+| `google-ads-funnel` | Google Ads account diagnostics, GAQL queries, and conversion troubleshooting | [**`google/skills`**](https://github.com/google/skills) (`google-ads-api-account-diagnostics`, `google-ads-api-mcp-setup`, `google-ads-api-quickstart`) | `npx skills add google/skills` |
+| `system-design` | Cloud system architecture, capacity sizing, and trade-off analysis | [**`google/skills`**](https://github.com/google/skills) (`google-cloud-solution-architecture`, `google-cloud-waf-*` Well-Architected Framework pillars) & [**`obra/superpowers`**](https://github.com/obra/superpowers) (`brainstorming`) | `npx skills add google/skills` |
+| `writing-plans` | Atomic, test-driven implementation plans | [**`obra/superpowers`**](https://github.com/obra/superpowers) (`writing-plans`, `test-driven-development`, `executing-plans`, `subagent-driven-development`) | Installed via `obra/superpowers` |
+| `using-git-worktrees` | Isolated Git worktree creation and baseline test verification | [**`obra/superpowers`**](https://github.com/obra/superpowers) (`using-git-worktrees`, `finishing-a-development-branch`) | Installed via `obra/superpowers` |
+| `software-troubleshooter` | Structured root-cause debugging and hypothesis verification | [**`obra/superpowers`**](https://github.com/obra/superpowers) (`systematic-debugging`, `verification-before-completion`) | Installed via `obra/superpowers` |
 
 ---
 
@@ -188,43 +199,9 @@ Each skill below follows a standard directory architecture (`SKILL.md`, [`README
 - **Deliverables & References**: Single-file HTML architecture diagram, [`references/google-cloud.md`](skills/cloud-architecture-diagram/references/google-cloud.md), [`references/layout-rules.md`](skills/cloud-architecture-diagram/references/layout-rules.md), [`references/visual-design.md`](skills/cloud-architecture-diagram/references/visual-design.md).
 - **Example Prompt**: `"Draw a Google Cloud reference architecture diagram for this repository showing the Cloud Run BFF, FastAPI backend, Firestore, GCS, and Vertex AI flows."`
 
-#### [`ai-studio-architect`](skills/ai-studio-architect/) — Google AI Studio to Cloud Run Productionizer
-- **Purpose**: Migrate Google AI Studio Build-mode prototypes into production services on Google Cloud Run with automated containerization, Secret Manager API-key bindings, and least-privilege IAM service accounts.
-- **Deliverables & References**: Production `Dockerfile`, Cloud Run deployment scripts, Secret Manager bindings, [`references/`](skills/ai-studio-architect/).
-- **Example Prompt**: `"Convert this AI Studio prototype into a hardened Cloud Run service using Secret Manager for the Gemini API key."`
-
-#### [`system-design`](skills/system-design/) — Distributed System & Service Architecture
-- **Purpose**: Design backend services, API contracts, caching tiers, and data storage topologies with explicit capacity estimation, consistency models, and architectural trade-off matrices.
-- **Deliverables & References**: System architecture specification, SLA/capacity sizing tables, failure-mode analysis, [`references/`](skills/system-design/).
-- **Example Prompt**: `"Design a multi-region event ingestion and real-time leaderboard architecture with explicit latency and consistency trade-offs."`
-
 ---
 
-### 2. Google ADK & Vertex AI Agent Engine
-
-#### [`adk-developer`](skills/adk-developer/) — Agent Development Kit (ADK) Engineering
-- **Purpose**: Build single-agent and multi-agent architectures using Google's Agent Development Kit across Python, Java, Kotlin, Go, and TypeScript (`LlmAgent`, `SequentialAgent`, `ParallelAgent`, `LoopAgent`, `LiveAgent`, MCP tools, and A2A protocol).
-- **Deliverables & References**: Agent orchestration code, tool definitions, lifecycle callbacks, and `adk eval` test suites ([`references/`](skills/adk-developer/references/)).
-- **Example Prompt**: `"Build a multi-agent ADK workflow with a coordinator agent, parallel research subagents, and structured output validation."`
-
-#### [`agent-engine-deploy`](skills/agent-engine-deploy/) — Vertex AI Agent Engine Deployment
-- **Purpose**: Package, deploy, update, version, and query ADK agents on Vertex AI Agent Engine with reproducible dependency and environment configurations.
-- **Deliverables & References**: Vertex AI Agent Engine deployment scripts, runtime configurations, and client query wrappers ([`references/`](skills/agent-engine-deploy/)).
-- **Example Prompt**: `"Deploy our ADK agent to Vertex AI Agent Engine in us-central1 and generate a streaming query client."`
-
-#### [`agent-engine-sessions-memory`](skills/agent-engine-sessions-memory/) — Agent Session & Memory Bank Management
-- **Purpose**: Configure multi-turn conversation session state persistence and long-term cross-session memory banks on Vertex AI Agent Engine.
-- **Deliverables & References**: Session lifecycle managers, memory bank ingestion hooks, and retrieval configurations ([`references/`](skills/agent-engine-sessions-memory/)).
-- **Example Prompt**: `"Add persistent Vertex AI Agent Engine session tracking and long-term user preference memory to our ADK agent."`
-
-#### [`agent-engine-ops`](skills/agent-engine-ops/) — Agent Observability, Guardrails & Evaluation
-- **Purpose**: Instrument deployed Vertex AI agents with Cloud Trace OpenTelemetry spans, `before_model` safety callbacks, IAM access policies, and automated `LlmAsAJudge` evaluation pipelines.
-- **Deliverables & References**: Telemetry instrumentation, prompt-injection guardrails, and CI evaluation suites ([`references/`](skills/agent-engine-ops/)).
-- **Example Prompt**: `"Configure Cloud Trace instrumentation, before_model safety guardrails, and an evaluation dataset for our deployed Agent Engine service."`
-
----
-
-### 3. Product Management, Research & Specifications
+### 2. Product Management, Research & Specifications
 
 #### [`feature-spec`](skills/feature-spec/) — Engineering-Ready Product Requirements Documents (PRDs)
 - **Purpose**: Author 12-section PRDs with INVEST user stories, traceable Given/When/Then acceptance criteria (`AC-US01-1`), API contract tables, state machines, WCAG 2.1 AA accessibility rules, PII-redacted analytics schemas, LLM fallback budgets, and MoSCoW scope management.
@@ -241,14 +218,9 @@ Each skill below follows a standard directory architecture (`SKILL.md`, [`README
 - **Deliverables & References**: `.research/projects/<topic>/executive-summary.md`, `deep-dive.md`, `contradictions.md`, `open-questions.md`, [`references/evidence-grading-and-synthesis.md`](skills/research-skill-graph-agy/references/evidence-grading-and-synthesis.md), and [`references/knowledge-graph-node-templates.md`](skills/research-skill-graph-agy/references/knowledge-graph-node-templates.md).
 - **Example Prompt**: `"Research the cost, latency, and scalability trade-offs between Gemini Live WebSockets and WebRTC relays using all 6 analytical lenses."`
 
-#### [`google-ads-funnel`](skills/google-ads-funnel/) — Funnel-as-Code Google Ads Diagnostics
-- **Purpose**: Audit Google Ads accounts, analyze campaign spend efficiency, evaluate creative variants, and diagnose conversion tracking discrepancies via the Google Ads API.
-- **Deliverables & References**: Funnel-as-Code audit scripts, conversion diagnostic reports, and budget optimization matrices ([`references/`](skills/google-ads-funnel/)).
-- **Example Prompt**: `"Audit our Google Ads conversion funnel and identify campaigns with high spend and dropped conversion tag attribution."`
-
 ---
 
-### 4. UI/UX Design, Technical Drawing & Visual Explanations
+### 3. UI/UX Design, Technical Drawing & Visual Explanations
 
 #### [`design-critique`](skills/design-critique/) — 7-Pillar UI/UX & WCAG Accessibility Audit
 - **Purpose**: Evaluate UI mockups, wireframes, screenshots, and frontend code (React, Tailwind CSS, HTML/CSS) across a 7-pillar rubric covering visual hierarchy, usability heuristics, CTA clarity, design token alignment, and WCAG 2.1 AA/AAA accessibility.
@@ -277,7 +249,7 @@ Each skill below follows a standard directory architecture (`SKILL.md`, [`README
 
 ---
 
-### 5. Presentations & Executive Communication
+### 4. Presentations & Executive Communication
 
 #### [`zen-pitch`](skills/zen-pitch/) — Research-to-Narrative Presentation Zen Pitch Decks
 - **Purpose**: Research a problem domain, synthesize findings into a numbered requirements spine (`R1..Rn`), map every requirement to a concrete resolution, and compile a persuasive Presentation Zen slide deck in Marp HTML/PDF/PPTX.
@@ -301,9 +273,9 @@ Each skill below follows a standard directory architecture (`SKILL.md`, [`README
 
 ---
 
-### 6. Software Engineering, Testing & Developer Operations
+### 5. Software Engineering, Testing & Developer Operations
 
-> **Note:** Foundational development workflow skills (Socratic brainstorming, TDD execution planning, isolated Git worktree management, systematic root-cause debugging, and subagent-driven development) are provided by [`obra/superpowers`](https://github.com/obra/superpowers).
+> **Note:** Foundational development workflow skills (Socratic brainstorming, TDD execution planning, isolated Git worktree management, systematic root-cause debugging, and subagent-driven development) are provided by [`obra/superpowers`](https://github.com/obra/superpowers), while official Google Cloud, ADK, Agent Platform, and Google Ads skills are provided by [`google/skills`](https://github.com/google/skills) and [`google/agents-cli`](https://github.com/google/agents-cli).
 
 #### [`webapp-testing`](skills/webapp-testing/) — Automated Playwright Web Application Verification
 - **Purpose**: Test local and staging web applications with Playwright, managing dev-server lifecycles, DOM assertions, network interception, console error capture, and screenshots.
