@@ -50,7 +50,7 @@ Before submitting a PR, verify:
 - [ ] `README.md` exists with usage examples and reference table
 - [ ] At least 2 decoupled reference files exist in `references/*.md` and are linked from `SKILL.md`
 - [ ] All scripts are executable (`chmod +x`), use `set -euo pipefail` (Bash) or `shell=False` (Python), and run on both macOS and Linux
-- [ ] `python3 scripts/validate_skills.py` passes all 5 Core Pillars (`16/16 PASS`)
+- [ ] `python3 scripts/validate_skills.py` passes all 5 Core Pillars (`17/17 PASS`)
 - [ ] `python3 -m unittest discover -s tests -v` passes all unit tests
 - [ ] The skill works when installed via `scripts/install.sh <skill-name>`
 - [ ] The skill works when copied manually to `~/.gemini/config/skills/<name>/`
