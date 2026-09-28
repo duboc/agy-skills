@@ -47,7 +47,7 @@ skills/<skill-name>/
 
 ---
 
-## 2. Antigravity Skill Activation & Routing Table (All 17 Skills)
+## 2. Antigravity Skill Activation & Routing Table (All 16 Skills)
 
 When a request matches any of the trigger intents below, activate the corresponding skill by reading its `SKILL.md` entry point first, then load the relevant `references/` guides on demand. For general agentic coding workflows (`obra/superpowers`) and official Google product skills (`google/skills` and `google/agents-cli`), see the [**Community & Official Upstream Skills Traceback**](README.md#community--official-upstream-skills-traceback) in [`README.md`](README.md).
 
@@ -83,7 +83,7 @@ When a request matches any of the trigger intents below, activate the correspond
 | **`zen-presenter`** | Build Presentation Zen decks and research-backed persuasive pitch decks in pure Google Cloud HTML, convert to local `.pptx`/`.docx`/`.xlsx` via headless LibreOffice (`soffice --headless`), and upload to Google Workspace (`Slides`, `Docs`, `Sheets`) | [`skills/zen-presenter/SKILL.md`](skills/zen-presenter/SKILL.md) | [`zen-design-principles.md`](skills/zen-presenter/references/zen-design-principles.md), [`research-and-spine.md`](skills/zen-presenter/references/research-and-spine.md), [`visual-themes.md`](skills/zen-presenter/references/visual-themes.md), [`diagram-guide.md`](skills/zen-presenter/references/diagram-guide.md), [`html-libreoffice-workspace-pipeline.md`](skills/zen-presenter/references/html-libreoffice-workspace-pipeline.md) |
 | **`clarity-presenter`** | Build SCQA + assertion-evidence dual-perspective decks in pure Google Cloud HTML, convert to local `.pptx`/`.docx`/`.xlsx` via headless LibreOffice (`soffice --headless`), and upload to Google Workspace (`Slides`, `Docs`, `Sheets`) | [`skills/clarity-presenter/SKILL.md`](skills/clarity-presenter/SKILL.md) | [`scqa-framework-guide.md`](skills/clarity-presenter/references/scqa-framework-guide.md), [`assertion-evidence-guide.md`](skills/clarity-presenter/references/assertion-evidence-guide.md), [`dual-perspective-guide.md`](skills/clarity-presenter/references/dual-perspective-guide.md), [`visual-themes.md`](skills/clarity-presenter/references/visual-themes.md), [`diagram-guide.md`](skills/clarity-presenter/references/diagram-guide.md), [`html-libreoffice-workspace-pipeline.md`](skills/clarity-presenter/references/html-libreoffice-workspace-pipeline.md) |
 
-### 2.5 Software Engineering, Testing & Developer Operations (5 Skills)
+### 2.5 Software Engineering, Testing & Developer Operations (4 Skills)
 
 | Skill Name | Trigger Intents & When to Activate | Entry Point (`SKILL.md`) | On-Demand Reference Guides (`references/`) |
 | :--- | :--- | :--- | :--- |
@@ -91,7 +91,6 @@ When a request matches any of the trigger intents below, activate the correspond
 | **`spring-boot-upgrader`** | Plan and execute phased Spring Boot migrations (including Spring Boot 4.0, Spring Framework 7, Jakarta EE, and Jackson 3 upgrades) | [`skills/spring-boot-upgrader/SKILL.md`](skills/spring-boot-upgrader/SKILL.md) | [`migration-guide.md`](skills/spring-boot-upgrader/references/migration-guide.md), [`jackson3-migration.md`](skills/spring-boot-upgrader/references/jackson3-migration.md), [`starter-renames.md`](skills/spring-boot-upgrader/references/starter-renames.md) |
 | **`documentation`** | Write and maintain READMEs, API references, Architecture Decision Records (ADRs), and runbooks following Diátaxis and the Google Developer Documentation Style Guide | [`skills/documentation/SKILL.md`](skills/documentation/SKILL.md) | [`diataxis-and-google-style-guide.md`](skills/documentation/references/diataxis-and-google-style-guide.md), [`document-types.md`](skills/documentation/references/document-types.md) |
 | **`developer-growth-analysis`** | Analyze coding agent session histories to identify recurring engineering friction points, architectural patterns, and curated learning paths | [`skills/developer-growth-analysis/SKILL.md`](skills/developer-growth-analysis/SKILL.md) | [`analysis-framework.md`](skills/developer-growth-analysis/references/analysis-framework.md), [`report-template.md`](skills/developer-growth-analysis/references/report-template.md) |
-| **`organizing-google-drive`** | Audit, classify, and reorganize Google Drive or macOS Google Drive for Desktop (`DriveFS`) mounts containing `.gdoc`/`.gsheet`/`.gslides` pointers, `st_blocks == 0` dataless cloud stubs, and active or retired Obsidian/markdown vaults | [`skills/organizing-google-drive/SKILL.md`](skills/organizing-google-drive/SKILL.md) | [`drivefs-mechanics-and-vault-rescue.md`](skills/organizing-google-drive/references/drivefs-mechanics-and-vault-rescue.md), [`two-stage-classification-and-routing-policy.md`](skills/organizing-google-drive/references/two-stage-classification-and-routing-policy.md) |
 
 ---
 
@@ -112,14 +111,14 @@ Every skill in `duboc/agy-skills` is continuously validated against **5 Core Ven
 Before committing any modification to a skill, validator, or documentation file, run both the 5-pillar validator and the unit test suite from the repository root:
 
 ```bash
-# 1. Run the 5-Pillar Skill Security & Context Hygiene Validator across all 17 skills
+# 1. Run the 5-Pillar Skill Security & Context Hygiene Validator across all 16 skills
 python3 scripts/validate_skills.py
 
 # 2. Run the unit test suite for the validator and repository guardrails
 python3 -m unittest discover -s tests -v
 ```
 
-Both commands must complete with a `0` exit code (`17/17 skills passed all 5 Core Pillars` and `OK` on all unit tests).
+Both commands must complete with a `0` exit code (`16/16 skills passed all 5 Core Pillars` and `OK` on all unit tests).
 
 ---
 

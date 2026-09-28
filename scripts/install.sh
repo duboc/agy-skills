@@ -25,7 +25,7 @@ Examples:
   $(basename "$0") app-security-audit
   $(basename "$0") app-security-audit --scope user
 
-Available skills (17):
+Available skills (16):
   app-security-audit            Google Cloud, GenAI/Gemini, BFF proxy, CGNAT & 8h+ kiosk security audit
   clarity-presenter             SCQA + assertion-evidence Google Cloud HTML decks -> LibreOffice -> Google Workspace
   cloud-architecture-diagram    Draw a deployed system as a Google Cloud reference architecture
@@ -35,7 +35,6 @@ Available skills (17):
   documentation                 Write READMEs, API references, ADRs, and runbooks per Google Developer style
   feature-spec                  Write engineering-ready PRDs, INVEST stories, Given/When/Then criteria & MoSCoW scope
   gdoc-engineering-spec         Build Pageless, multi-tab Google Docs engineering specs, RFCs & runbooks
-  organizing-google-drive       Audit, classify, and reorganize Google Drive / macOS DriveFS mounts safely
   research-skill-graph-agy      Investigate questions through 6 analytical lenses in a local .research/ graph
   spring-boot-upgrader          Migrate Spring Boot apps to 4.0 with phased upgrade plans
   technical-drawing             Create precise, dimensioned orthographic technical drawings in SVG

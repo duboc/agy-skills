@@ -47,7 +47,7 @@ Agy Skills extend your coding agent with repeatable engineering workflows across
 
 ## Quickstart Installation & Antigravity `AGENTS.md` Discovery
 
-Antigravity automatically discovers [`AGENTS.md`](AGENTS.md) (and [`GEMINI.md`](GEMINI.md) for Gemini CLI compatibility) when traversing from the working directory to the repository root, and uses progressive disclosure to load installed skills from `.agents/skills/<skill-name>/SKILL.md` (workspace scope) or `~/.gemini/config/skills/<skill-name>/SKILL.md` (user global scope). See [**`AGENTS.md`**](AGENTS.md) for the complete **17-Skill Activation & Routing Table** and **Antigravity Agent Operational Guidelines**.
+Antigravity automatically discovers [`AGENTS.md`](AGENTS.md) (and [`GEMINI.md`](GEMINI.md) for Gemini CLI compatibility) when traversing from the working directory to the repository root, and uses progressive disclosure to load installed skills from `.agents/skills/<skill-name>/SKILL.md` (workspace scope) or `~/.gemini/config/skills/<skill-name>/SKILL.md` (user global scope). See [**`AGENTS.md`**](AGENTS.md) for the complete **16-Skill Activation & Routing Table** and **Antigravity Agent Operational Guidelines**.
 
 ### Method 1: Install a single skill via `curl` (recommended)
 
@@ -104,7 +104,6 @@ cp -r skills/app-security-audit ~/.gemini/config/skills/app-security-audit
 | **[`spring-boot-upgrader`](skills/spring-boot-upgrader/)** | Engineering & Ops | Migrate Spring Boot applications to version 4.0 with phased upgrade plans and Jackson 3 migration rules | Dependency migration plan, updated build files, compatibility fixes | `curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh \| bash -s -- spring-boot-upgrader` |
 | **[`documentation`](skills/documentation/)** | Engineering & Ops | Write and maintain technical documentation, READMEs, API references, ADRs, and operational runbooks | Developer documentation, API reference guides, runbooks | `curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh \| bash -s -- documentation` |
 | **[`developer-growth-analysis`](skills/developer-growth-analysis/)** | Engineering & Ops | Analyze session history to identify engineering patterns, recurring friction points, and learning paths | Developer growth report with targeted technical resources | `curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh \| bash -s -- developer-growth-analysis` |
-| **[`organizing-google-drive`](skills/organizing-google-drive/)** | Engineering & Ops | Audit, classify, and safely reorganize Google Drive or macOS `DriveFS` mounts containing `.gdoc`/`.gsheet`/`.gslides` pointers, `st_blocks == 0` dataless stubs, and active/retired Obsidian vaults | Two-stage hybrid classifier, deterministic `compute_target_path()` policy, reversible `execution_manifest.json` | `curl -fsSL https://raw.githubusercontent.com/duboc/agy-skills/main/scripts/install.sh \| bash -s -- organizing-google-drive` |
 
 ---
 
@@ -288,11 +287,6 @@ Each skill below follows a standard directory architecture (`SKILL.md`, [`README
 - **Purpose**: Analyze coding agent session histories to identify recurring debugging friction points, architectural patterns, and targeted engineering learning resources.
 - **Deliverables & References**: Structured developer growth report with actionable workflow improvements and curated technical reading ([`references/`](skills/developer-growth-analysis/)).
 - **Example Prompt**: `"Analyze my recent coding sessions and generate a retrospective on recurring async concurrency and testing patterns."`
-
-#### [`organizing-google-drive`](skills/organizing-google-drive/) — DriveFS & Hybrid AI Google Drive Reorganization
-- **Purpose**: Audit, batch-classify, and safely reorganize Google Drive or macOS Google Drive for Desktop (`DriveFS`) mounts containing `.gdoc`/`.gsheet`/`.gslides` JSON pointers, `st_blocks == 0` cloud-evicted (`SF_DATALESS`) stubs, and active or retired Obsidian/markdown vaults.
-- **Deliverables & References**: Two-stage hybrid classification pipeline, deterministic `compute_target_path()` routing engine, Google Sheet / CSV review staging, reversible `execution_manifest.json`, [`references/drivefs-mechanics-and-vault-rescue.md`](skills/organizing-google-drive/references/drivefs-mechanics-and-vault-rescue.md), and [`references/two-stage-classification-and-routing-policy.md`](skills/organizing-google-drive/references/two-stage-classification-and-routing-policy.md).
-- **Example Prompt**: `"Audit and reorganize my Google Drive for Desktop mount into a numbered taxonomy while keeping my active Obsidian vault untouched and rescuing live Google Docs from retired vaults."`
 
 ---
 
